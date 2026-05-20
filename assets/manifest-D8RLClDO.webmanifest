@@ -1,0 +1,18 @@
+﻿{
+  "name": "짐패스",
+  "short_name": "짐패스",
+  "description": "헬스장, 이제 한 달씩 가볍게",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F8FA",
+  "theme_color": "#111827",
+  "lang": "ko-KR",
+  "icons": [
+    {
+      "src": "images/gym-muscle-factory.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
