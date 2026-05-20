@@ -10,6 +10,7 @@ npm run dev
 ```
 
 브라우저에서 `http://localhost:5173`으로 접속하면 됩니다.
+개발 서버에서는 `http://localhost:5173/index.source.html`이 소스 앱 진입점입니다.
 
 ## GitHub Pages 배포
 
@@ -18,6 +19,7 @@ npm run build
 ```
 
 빌드 결과는 `docs/` 폴더에 생성됩니다. GitHub Pages는 `main` 브랜치의 `/docs` 폴더를 배포 대상으로 사용하면 `https://djmonnar.github.io/gym/`에서 바로 열립니다.
+현재 레포는 Pages가 `main` 브랜치 루트를 보더라도 앱이 뜨도록 빌드된 `index.html`, `assets/`, `images/`도 함께 갱신합니다.
 
 ## 기술 스택
 
