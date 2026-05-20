@@ -22,11 +22,11 @@ type ButtonProps = {
 
 export function Button({ children, onClick, variant = "primary", className, disabled }: ButtonProps) {
   const variants = {
-    primary: "bg-lime text-brand shadow-soft hover:translate-y-[-1px]",
-    dark: "bg-brand text-white shadow-soft hover:translate-y-[-1px]",
-    ghost: "bg-white text-brand hover:bg-gray-50",
-    line: "border border-gray-200 bg-white text-brand hover:border-brand",
-    danger: "bg-rose-50 text-rose-700 hover:bg-rose-100"
+    primary: "bg-[linear-gradient(135deg,#FF1F3D,#B91C1C)] text-white shadow-glow hover:translate-y-[-1px]",
+    dark: "bg-brand text-white shadow-soft ring-1 ring-white/10 hover:translate-y-[-1px]",
+    ghost: "bg-white/8 text-white ring-1 ring-white/10 hover:bg-white/12",
+    line: "border border-red-500/25 bg-white text-brand hover:border-red-500",
+    danger: "bg-red-500/10 text-red-600 ring-1 ring-red-500/20 hover:bg-red-500/15"
   };
 
   return (
@@ -35,7 +35,7 @@ export function Button({ children, onClick, variant = "primary", className, disa
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "inline-flex min-h-12 items-center justify-center gap-2 rounded-[18px] px-5 py-3 text-sm font-bold transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45",
+        "inline-flex min-h-12 items-center justify-center gap-2 rounded-[18px] px-5 py-3 text-sm font-black tracking-[-0.01em] transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45",
         variants[variant],
         className
       )}
@@ -46,19 +46,19 @@ export function Button({ children, onClick, variant = "primary", className, disa
 }
 
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <section className={cn("rounded-[24px] bg-card p-5 shadow-soft", className)}>{children}</section>;
+  return <section className={cn("rounded-[24px] bg-card p-5 shadow-soft ring-1 ring-black/5", className)}>{children}</section>;
 }
 
 export function Badge({ children, tone = "gray" }: { children: ReactNode; tone?: "lime" | "blue" | "gray" | "red" | "green" }) {
   const tones = {
-    lime: "bg-lime text-brand",
-    blue: "bg-blue/10 text-blue",
-    gray: "bg-gray-100 text-gray-700",
-    red: "bg-rose-100 text-rose-700",
+    lime: "bg-red-500 text-white shadow-[0_10px_28px_rgba(255,31,61,0.28)]",
+    blue: "bg-zinc-950 text-red-400 ring-1 ring-red-500/30",
+    gray: "bg-zinc-100 text-zinc-700",
+    red: "bg-red-600 text-white",
     green: "bg-emerald-100 text-emerald-700"
   };
 
-  return <span className={cn("inline-flex items-center rounded-full px-3 py-1 text-xs font-bold", tones[tone])}>{children}</span>;
+  return <span className={cn("inline-flex items-center rounded-full px-3 py-1 text-xs font-black tracking-[-0.01em]", tones[tone])}>{children}</span>;
 }
 
 export function ScreenHeader({
@@ -75,15 +75,15 @@ export function ScreenHeader({
   return (
     <header className="mb-5 flex items-start justify-between gap-4">
       <div className="min-w-0">
-        {eyebrow ? <p className="mb-1 text-sm font-bold text-blue">{eyebrow}</p> : null}
-        <h1 className="text-[28px] font-black leading-tight text-brand">{title}</h1>
+        {eyebrow ? <p className="mb-1 text-xs font-black uppercase tracking-[0.12em] text-red-500">{eyebrow}</p> : null}
+        <h1 className="text-[28px] font-black leading-[1.05] tracking-[-0.04em] text-brand">{title}</h1>
       </div>
       <div className="flex shrink-0 items-center gap-2">
         {onBack ? (
           <button
             type="button"
             onClick={onBack}
-            className="grid size-11 place-items-center rounded-full bg-white text-brand shadow-soft"
+            className="grid size-11 place-items-center rounded-full bg-brand text-white shadow-soft ring-1 ring-white/10"
             aria-label="이전 화면"
           >
             ←
@@ -109,19 +109,21 @@ export function AppShell({
   appMode?: "customer" | "admin";
 }) {
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,#ffffff_0,#F7F8FA_38%,#eef2f7_100%)] px-4 py-6 text-brand">
-      <div className="relative mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-[430px] flex-col overflow-hidden rounded-[34px] border border-white/70 bg-surface shadow-lift ring-8 ring-white/55">
-        <div className="flex items-center justify-between border-b border-white/60 bg-white/85 px-5 py-3 backdrop-blur">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_50%_-10%,rgba(255,31,61,0.42),transparent_34%),radial-gradient(circle_at_12%_86%,rgba(185,28,28,0.28),transparent_34%),#050506] px-3 py-5 text-brand">
+      <div className="relative mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-[430px] flex-col overflow-hidden rounded-[38px] border border-white/10 bg-[#111114] shadow-glow ring-8 ring-black/45">
+        <div className="flex items-center justify-between border-b border-white/10 bg-black/65 px-5 py-3 text-white backdrop-blur-xl">
           <div className="flex items-center gap-2">
-            <img src="brand/gympass-icon.svg" alt="짐패스 로고" className="size-8 rounded-2xl shadow-soft" />
+            <img src="brand/gympass-icon.svg" alt="짐패스 로고" className="size-9 rounded-2xl shadow-glow" />
             <div>
-              <p className="text-sm font-black">짐패스</p>
-              <p className="text-[11px] font-semibold text-gray-500">헬스장, 이제 한 달씩 가볍게</p>
+              <p className="text-sm font-black tracking-[-0.03em]">짐패스</p>
+              <p className="text-[11px] font-bold text-white/55">MONTHLY GYM PASS</p>
             </div>
           </div>
-          <Badge tone={appMode === "admin" ? "blue" : "lime"}>{appMode === "admin" ? "사장님" : "PWA"}</Badge>
+          <Badge tone={appMode === "admin" ? "blue" : "lime"}>{appMode === "admin" ? "사장님" : "LIVE"}</Badge>
         </div>
-        <div className="scrollbar-none flex-1 overflow-y-auto px-5 py-5 pb-28">{children}</div>
+        <div key={active} className="scrollbar-none flex-1 overflow-y-auto bg-[linear-gradient(180deg,#F5F5F6_0%,#EDEEF1_48%,#111114_100%)] px-5 py-5 pb-32">
+          {children}
+        </div>
         {showTabs ? <BottomNav active={active} navigate={navigate} /> : null}
       </div>
     </main>
@@ -138,7 +140,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
   ];
 
   return (
-    <nav className="absolute bottom-0 left-1/2 z-20 grid w-full max-w-[430px] -translate-x-1/2 grid-cols-5 border-t border-gray-100 bg-white/95 px-3 pb-3 pt-2 backdrop-blur">
+    <nav className="fixed bottom-6 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-[390px] -translate-x-1/2 grid-cols-5 rounded-[28px] border border-white/10 bg-black/82 px-2 py-2 shadow-glow backdrop-blur-xl">
       {items.map((item) => {
         const isActive = active === item.screen;
         return (
@@ -147,8 +149,8 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
             type="button"
             onClick={() => navigate(item.screen)}
             className={cn(
-              "flex h-[58px] flex-col items-center justify-center gap-1 rounded-[18px] text-[11px] font-bold transition",
-              isActive ? "bg-brand text-lime" : "text-gray-500 hover:bg-gray-50 hover:text-brand"
+              "flex h-[58px] flex-col items-center justify-center gap-1 rounded-[21px] text-[10px] font-black tracking-[-0.02em] transition",
+              isActive ? "bg-red-600 text-white shadow-[0_14px_36px_rgba(255,31,61,0.34)]" : "text-white/52 hover:bg-white/8 hover:text-white"
             )}
           >
             {item.icon}
@@ -161,7 +163,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
 }
 
 export function Stat({ label, value, tone = "dark" }: { label: string; value: string; tone?: "dark" | "blue" | "lime" }) {
-  const toneClass = tone === "lime" ? "bg-lime text-brand" : tone === "blue" ? "bg-blue text-white" : "bg-brand text-white";
+  const toneClass = tone === "lime" ? "bg-red-600 text-white" : tone === "blue" ? "bg-zinc-950 text-white" : "bg-brand text-white";
 
   return (
     <div className={cn("rounded-[22px] p-4", toneClass)}>
@@ -187,7 +189,7 @@ export function MapPlaceholder() {
   return (
     <div className="relative h-40 overflow-hidden rounded-[24px] bg-gray-100">
       <div className="absolute inset-0 bg-[linear-gradient(135deg,#e5e7eb_25%,transparent_25%),linear-gradient(225deg,#e5e7eb_25%,transparent_25%),linear-gradient(45deg,#e5e7eb_25%,transparent_25%),linear-gradient(315deg,#e5e7eb_25%,#f8fafc_25%)] bg-[length:28px_28px] bg-[position:14px_0,14px_0,0_0,0_0]" />
-      <div className="absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-blue text-white shadow-soft">
+      <div className="absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-red-600 text-white shadow-soft">
         <MapPin size={23} />
       </div>
     </div>
@@ -199,7 +201,7 @@ export function Checklist({ items }: { items: string[] }) {
     <ul className="space-y-2">
       {items.map((item) => (
         <li key={item} className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <ListChecks className="text-blue" size={17} />
+          <ListChecks className="text-red-600" size={17} />
           {item}
         </li>
       ))}

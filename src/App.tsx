@@ -56,7 +56,10 @@ export default function App() {
   const showTabs = !["splash", "onboarding", "login", "location", "complete"].includes(screen);
   const appMode = screen.toString().startsWith("admin") ? "admin" : "customer";
 
-  const navigate = (next: ScreenId) => setScreen(next);
+  const navigate = (next: ScreenId) => {
+    setScreen(next);
+    window.scrollTo(0, 0);
+  };
   const selectGym = (gym: Gym) => {
     setSelectedGym(gym);
     navigate("detail");
@@ -171,23 +174,25 @@ export default function App() {
 
 function SplashScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
   return (
-    <div className="flex min-h-[640px] flex-col justify-between py-6">
-      <div className="flex items-center justify-between">
-        <Badge tone="lime">월구독 헬스장</Badge>
-        <span className="text-xs font-bold text-gray-400">Prototype</span>
+    <div className="relative flex min-h-[640px] flex-col justify-between overflow-hidden rounded-[30px] bg-[radial-gradient(circle_at_72%_4%,rgba(255,31,61,0.42),transparent_34%),linear-gradient(180deg,#101014,#050506)] p-6 text-white shadow-glow">
+      <div className="pointer-events-none absolute -right-16 top-20 h-56 w-56 rounded-full border-[34px] border-red-600/25" />
+      <div className="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full bg-red-600/20 blur-3xl" />
+      <div className="relative flex items-center justify-between">
+        <Badge tone="lime">MONTHLY GYM PASS</Badge>
+        <span className="text-xs font-black tracking-[0.18em] text-white/45">SHOWCASE</span>
       </div>
-      <div className="space-y-6">
+      <div className="relative space-y-7">
         <img src="brand/gympass-icon.svg" alt="짐패스 로고" className="size-24 rounded-[28px] shadow-lift" />
         <div>
-          <h1 className="text-5xl font-black leading-tight text-brand">짐패스</h1>
-          <p className="mt-3 text-xl font-extrabold text-gray-700">헬스장, 이제 한 달씩 가볍게</p>
-          <p className="mt-4 text-sm font-semibold leading-6 text-gray-500">
-            1년권 부담 없이 내 주변 헬스장을 월 단위로 구독하고, 결제와 해지를 앱에서 투명하게 확인하세요.
+          <h1 className="text-[64px] font-black leading-[0.9] tracking-[-0.08em] text-white">짐패스</h1>
+          <p className="mt-4 text-2xl font-black leading-tight tracking-[-0.05em] text-red-400">한 달씩 끊고, 오늘 바로 입장.</p>
+          <p className="mt-4 max-w-[290px] text-sm font-bold leading-6 text-white/62">
+            1년권 영업은 끝. 내 주변 GYM을 고르고 QR로 입장하는 강렬한 월구독 피트니스 앱.
           </p>
         </div>
       </div>
-      <Button variant="dark" className="w-full" onClick={() => navigate("onboarding")}>
-        시작하기
+      <Button className="relative w-full" onClick={() => navigate("onboarding")}>
+        지금 입장하기
       </Button>
     </div>
   );
@@ -203,18 +208,18 @@ function OnboardingScreen({ navigate }: { navigate: (screen: ScreenId) => void }
   return (
     <div className="space-y-6">
       <ScreenHeader title="운동 루틴을 더 가볍게 시작하세요" eyebrow="짐패스가 바꾸는 구독 경험" />
-      <div className="overflow-hidden rounded-[30px] bg-brand p-5 text-white shadow-lift">
-        <img src="images/gym-muscle-factory.png" alt="프리미엄 헬스장 내부" className="h-56 w-full rounded-[24px] object-cover" />
+      <div className="overflow-hidden rounded-[30px] bg-[linear-gradient(135deg,#09090B,#2B050B)] p-5 text-white shadow-glow">
+        <img src="images/gym-muscle-factory.png" alt="프리미엄 헬스장 내부" className="h-56 w-full rounded-[24px] object-cover opacity-90 saturate-150" />
         <div className="mt-5">
-          <Badge tone="lime">오늘 결제하면 바로 이용 가능</Badge>
-          <h2 className="mt-3 text-2xl font-black">1년권 대신 한 달 구독</h2>
+          <Badge tone="lime">오늘 결제 · 오늘 입장</Badge>
+          <h2 className="mt-3 text-3xl font-black leading-tight tracking-[-0.05em]">1년권 대신 한 달 구독</h2>
           <p className="mt-2 text-sm font-semibold leading-6 text-white/70">지역 헬스장을 비교하고, 원하는 구독권만 선택하세요.</p>
         </div>
       </div>
       <div className="space-y-3">
         {points.map(([title, body]) => (
           <Card key={title} className="flex items-center gap-4 p-4">
-            <div className="grid size-10 place-items-center rounded-2xl bg-lime text-brand">
+            <div className="grid size-10 place-items-center rounded-2xl bg-red-600 text-white shadow-[0_12px_30px_rgba(255,31,61,0.25)]">
               <Check size={20} />
             </div>
             <div>
@@ -238,14 +243,14 @@ function LoginScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
       <Card className="space-y-4">
         <InfoRow label="휴대폰 번호" value="010 2345 9182" icon={<Phone size={17} />} />
         <InfoRow label="인증 상태" value="간편 인증 준비 완료" icon={<ShieldCheck size={17} />} />
-        <Button variant="dark" className="w-full" onClick={() => navigate("location")}>
+        <Button className="w-full" onClick={() => navigate("location")}>
           3초 로그인 계속하기
         </Button>
         <button type="button" className="w-full text-center text-sm font-bold text-gray-500">
           사장님 계정으로 들어가기
         </button>
       </Card>
-      <Card className="bg-blue text-white">
+      <Card className="bg-[linear-gradient(135deg,#111114,#B91C1C)] text-white">
         <p className="text-sm font-bold text-white/75">로그인 후 가능한 기능</p>
         <p className="mt-2 text-xl font-black">QR 이용권, 결제 내역, 환불 문의까지 한 번에 관리</p>
       </Card>
@@ -259,7 +264,7 @@ function LocationScreen({ navigate }: { navigate: (screen: ScreenId) => void }) 
       <div className="space-y-6">
         <ScreenHeader title="내 주변 헬스장을 빠르게 보여드릴게요" eyebrow="위치 권한 안내" />
         <Card className="space-y-5">
-          <div className="grid h-56 place-items-center rounded-[26px] bg-[linear-gradient(135deg,#111827,#2563EB)] text-white">
+          <div className="grid h-56 place-items-center rounded-[26px] bg-[linear-gradient(135deg,#09090B,#B91C1C)] text-white">
             <div className="grid size-24 place-items-center rounded-full bg-white/15">
               <LocateFixed size={42} />
             </div>
@@ -285,46 +290,47 @@ function LocationScreen({ navigate }: { navigate: (screen: ScreenId) => void }) 
 function HomeScreen({ navigate, selectGym }: { navigate: (screen: ScreenId) => void; selectGym: (gym: Gym) => void }) {
   return (
     <div className="space-y-6">
-      <header className="flex items-start justify-between gap-3">
+      <header className="flex items-start justify-between gap-3 rounded-[28px] bg-white/75 p-4 shadow-soft backdrop-blur">
         <div>
-          <p className="text-sm font-bold text-blue">현재 위치 · 진주 가좌동</p>
-          <h1 className="mt-1 text-[28px] font-black leading-tight">효승님, 오늘 운동 갈까요?</h1>
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-red-600">진주 가좌동 · READY</p>
+          <h1 className="mt-2 text-[30px] font-black leading-[1.02] tracking-[-0.06em]">효승님,<br />오늘 찢으러 갈까요?</h1>
         </div>
-        <button className="grid size-11 place-items-center rounded-full bg-white shadow-soft" type="button" aria-label="알림">
+        <button className="grid size-11 place-items-center rounded-full bg-brand text-white shadow-soft" type="button" aria-label="알림">
           <Bell size={20} />
         </button>
       </header>
-      <section className="overflow-hidden rounded-[30px] bg-brand text-white shadow-lift">
-        <div className="p-6">
-          <Badge tone="lime">월 단위 자유 구독</Badge>
-          <h2 className="mt-4 text-3xl font-black leading-tight">1년권 부담 없이, 한 달씩 구독</h2>
-          <p className="mt-3 text-sm font-semibold leading-6 text-white/70">주변 헬스장 가격과 조건을 비교하고 오늘 바로 QR로 입장하세요.</p>
+      <section className="relative overflow-hidden rounded-[32px] bg-[linear-gradient(145deg,#070708_0%,#1A0A0D_58%,#B91C1C_130%)] text-white shadow-glow">
+        <div className="absolute right-[-58px] top-[-52px] h-44 w-44 rounded-full bg-red-600/35 blur-2xl" />
+        <div className="relative p-6">
+          <Badge tone="lime">NO CONTRACT · MONTHLY</Badge>
+          <h2 className="mt-5 text-[38px] font-black leading-[0.95] tracking-[-0.07em]">1년권 말고<br />한 달씩 간다</h2>
+          <p className="mt-4 text-sm font-bold leading-6 text-white/68">가격, 거리, 운영시간을 비교하고 결제 즉시 QR로 입장하세요.</p>
           <Button className="mt-5" onClick={() => navigate("search")}>
             내 주변 헬스장 보기
           </Button>
         </div>
-        <img src="images/gym-fitness-lounge.png" alt="헬스장 추천 이미지" className="h-44 w-full object-cover" />
+        <img src="images/gym-fitness-lounge.png" alt="헬스장 추천 이미지" className="h-48 w-full object-cover opacity-85 saturate-150" />
       </section>
       <button type="button" onClick={() => navigate("shop")} className="block w-full text-left">
-        <Card className="overflow-hidden bg-white p-0">
+        <Card className="overflow-hidden bg-[linear-gradient(135deg,#FFFFFF,#FFF1F2)] p-0">
           <div className="grid grid-cols-[1fr_128px] items-stretch">
             <div className="p-5">
               <Badge tone="blue">GYMSHOP</Badge>
-              <h2 className="mt-3 text-2xl font-black leading-tight">운동 끝나고 바로 단백질 채우기</h2>
+              <h2 className="mt-3 text-[26px] font-black leading-[1.02] tracking-[-0.06em]">운동 끝나고<br />바로 단백질</h2>
               <p className="mt-2 text-sm font-semibold leading-6 text-gray-500">구독 회원 전용 닭가슴살 특가와 장바구니 구매 흐름을 확인하세요.</p>
-              <div className="mt-4 inline-flex items-center gap-2 text-sm font-black text-brand">
+              <div className="mt-4 inline-flex items-center gap-2 text-sm font-black text-red-600">
                 상품 보러가기 <ChevronRight size={16} />
               </div>
             </div>
-            <div className="relative bg-lime">
-              <img src="images/gymshop-chicken-breast.png" alt="GYMSHOP 닭가슴살 상품" className="h-full min-h-44 w-full object-cover mix-blend-multiply" />
+            <div className="relative bg-red-600">
+              <img src="images/gymshop-chicken-breast.png" alt="GYMSHOP 닭가슴살 상품" className="h-full min-h-44 w-full object-cover mix-blend-multiply saturate-150" />
             </div>
           </div>
         </Card>
       </button>
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-black">추천 헬스장</h2>
-        <button type="button" onClick={() => navigate("search")} className="text-sm font-black text-blue">
+        <button type="button" onClick={() => navigate("search")} className="text-sm font-black text-red-600">
           전체 보기
         </button>
       </div>

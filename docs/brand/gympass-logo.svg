@@ -1,15 +1,15 @@
 <svg width="720" height="180" viewBox="0 0 720 180" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="720" height="180" rx="42" fill="#FFFFFF"/>
   <rect x="34" y="34" width="112" height="112" rx="32" fill="#111827"/>
-  <path d="M57 91C57 69.461 74.461 52 96 52H100C121.539 52 139 69.461 139 91V95C139 116.539 121.539 134 100 134H96C74.461 134 57 116.539 57 95V91Z" fill="#D7FF3F"/>
+  <path d="M57 91C57 69.461 74.461 52 96 52H100C121.539 52 139 69.461 139 91V95C139 116.539 121.539 134 100 134H96C74.461 134 57 116.539 57 95V91Z" fill="#FF1F3D"/>
   <path d="M98 45V141" stroke="#111827" stroke-width="14" stroke-linecap="round"/>
   <path d="M50 93H146" stroke="#111827" stroke-width="14" stroke-linecap="round"/>
   <path d="M69 71L126 128" stroke="#111827" stroke-width="11" stroke-linecap="round"/>
   <path d="M126 71L69 128" stroke="#111827" stroke-width="11" stroke-linecap="round"/>
   <circle cx="98" cy="93" r="19" fill="#111827"/>
-  <path d="M156 25L164 43L182 51L164 59L156 77L148 59L130 51L148 43L156 25Z" fill="#D7FF3F"/>
+  <path d="M156 25L164 43L182 51L164 59L156 77L148 59L130 51L148 43L156 25Z" fill="#FF1F3D"/>
   <text x="176" y="103" fill="#111827" font-family="Pretendard, Inter, Arial, sans-serif" font-size="58" font-weight="900" letter-spacing="-1">짐패스</text>
-  <text x="176" y="136" fill="#2563EB" font-family="Pretendard, Inter, Arial, sans-serif" font-size="23" font-weight="800">헬스장, 이제 한 달씩 가볍게</text>
-  <rect x="553" y="55" width="122" height="54" rx="27" fill="#D7FF3F"/>
-  <text x="586" y="90" fill="#111827" font-family="Pretendard, Inter, Arial, sans-serif" font-size="20" font-weight="900">PASS</text>
+  <text x="176" y="136" fill="#B91C1C" font-family="Pretendard, Inter, Arial, sans-serif" font-size="23" font-weight="800">헬스장, 이제 한 달씩 가볍게</text>
+  <rect x="553" y="55" width="122" height="54" rx="27" fill="#FF1F3D"/>
+  <text x="586" y="90" fill="#FFFFFF" font-family="Pretendard, Inter, Arial, sans-serif" font-size="20" font-weight="900">PASS</text>
 </svg>

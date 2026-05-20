@@ -1,31 +1,33 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="630" fill="#F7F8FA"/>
-  <circle cx="1006" cy="91" r="170" fill="#D7FF3F"/>
-  <circle cx="1020" cy="509" r="124" fill="#2563EB" fill-opacity="0.18"/>
-  <circle cx="146" cy="526" r="142" fill="#111827" fill-opacity="0.08"/>
-  <rect x="72" y="72" width="1056" height="486" rx="58" fill="#FFFFFF"/>
-  <rect x="72" y="72" width="1056" height="486" rx="58" stroke="#E5E7EB" stroke-width="2"/>
-  <rect x="134" y="136" width="136" height="136" rx="40" fill="#111827"/>
-  <path d="M163 205C163 177.386 185.386 155 213 155H219C246.614 155 269 177.386 269 205V211C269 238.614 246.614 261 219 261H213C185.386 261 163 238.614 163 211V205Z" fill="#D7FF3F"/>
-  <path d="M216 145V272" stroke="#111827" stroke-width="18" stroke-linecap="round"/>
-  <path d="M153 208H280" stroke="#111827" stroke-width="18" stroke-linecap="round"/>
-  <path d="M178 179L253 254" stroke="#111827" stroke-width="14" stroke-linecap="round"/>
-  <path d="M253 179L178 254" stroke="#111827" stroke-width="14" stroke-linecap="round"/>
-  <circle cx="216" cy="208" r="25" fill="#111827"/>
-  <path d="M286 119L298 147L326 159L298 171L286 199L274 171L246 159L274 147L286 119Z" fill="#D7FF3F"/>
-  <text x="134" y="352" fill="#111827" font-family="Pretendard, Inter, Arial, sans-serif" font-size="92" font-weight="900" letter-spacing="-3">짐패스</text>
-  <text x="134" y="419" fill="#111827" font-family="Pretendard, Inter, Arial, sans-serif" font-size="43" font-weight="850">헬스장, 이제 한 달씩 가볍게</text>
-  <text x="134" y="478" fill="#6B7280" font-family="Pretendard, Inter, Arial, sans-serif" font-size="30" font-weight="700">월구독 헬스장 · QR 이용권 · GYMSHOP</text>
-  <rect x="736" y="137" width="300" height="396" rx="46" fill="#111827"/>
-  <rect x="768" y="171" width="236" height="192" rx="32" fill="#F7F8FA"/>
-  <rect x="795" y="199" width="92" height="132" rx="24" fill="#D7FF3F"/>
-  <path d="M817 252H862" stroke="#111827" stroke-width="10" stroke-linecap="round"/>
-  <path d="M840 229V275" stroke="#111827" stroke-width="10" stroke-linecap="round"/>
-  <path d="M913 213H968" stroke="#2563EB" stroke-width="14" stroke-linecap="round"/>
-  <path d="M913 256H968" stroke="#D7FF3F" stroke-width="14" stroke-linecap="round"/>
-  <path d="M913 299H946" stroke="#111827" stroke-width="14" stroke-linecap="round"/>
-  <rect x="768" y="392" width="236" height="56" rx="28" fill="#D7FF3F"/>
-  <text x="823" y="429" fill="#111827" font-family="Pretendard, Inter, Arial, sans-serif" font-size="22" font-weight="900">구독 시작</text>
-  <rect x="768" y="466" width="106" height="28" rx="14" fill="#FFFFFF" fill-opacity="0.16"/>
-  <rect x="892" y="466" width="112" height="28" rx="14" fill="#FFFFFF" fill-opacity="0.16"/>
+  <rect width="1200" height="630" fill="#050506"/>
+  <path d="M0 0H1200V630H0V0Z" fill="url(#bg)"/>
+  <circle cx="1032" cy="88" r="210" fill="#FF1F3D" fill-opacity="0.42"/>
+  <circle cx="106" cy="548" r="206" fill="#B91C1C" fill-opacity="0.22"/>
+  <path d="M671 52H1090C1126.45 52 1156 81.549 1156 118V512C1156 548.451 1126.45 578 1090 578H671C634.549 578 605 548.451 605 512V118C605 81.549 634.549 52 671 52Z" fill="#111114" stroke="#2A2A31" stroke-width="2"/>
+  <path d="M637 380L1124 176V512C1124 530.778 1108.78 546 1090 546H671C652.222 546 637 530.778 637 512V380Z" fill="#1E0509"/>
+  <rect x="656" y="92" width="142" height="142" rx="42" fill="#09090B"/>
+  <path d="M685 164C685 136.386 707.386 114 735 114H741C768.614 114 791 136.386 791 164V170C791 197.614 768.614 220 741 220H735C707.386 220 685 197.614 685 170V164Z" fill="#FF1F3D"/>
+  <path d="M738 104V231" stroke="#09090B" stroke-width="18" stroke-linecap="round"/>
+  <path d="M675 167H802" stroke="#09090B" stroke-width="18" stroke-linecap="round"/>
+  <path d="M700 138L775 213" stroke="#09090B" stroke-width="14" stroke-linecap="round"/>
+  <path d="M775 138L700 213" stroke="#09090B" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="738" cy="167" r="25" fill="#09090B"/>
+  <rect x="656" y="277" width="420" height="44" rx="22" fill="#FF1F3D"/>
+  <rect x="656" y="349" width="318" height="30" rx="15" fill="#FFFFFF" fill-opacity="0.14"/>
+  <rect x="656" y="401" width="226" height="30" rx="15" fill="#FFFFFF" fill-opacity="0.14"/>
+  <rect x="656" y="474" width="230" height="58" rx="29" fill="#FFFFFF"/>
+  <text x="714" y="512" fill="#09090B" font-family="Pretendard, Inter, Arial, sans-serif" font-size="24" font-weight="900">입장하기</text>
+  <text x="72" y="148" fill="#FF1F3D" font-family="Pretendard, Inter, Arial, sans-serif" font-size="28" font-weight="900" letter-spacing="5">MONTHLY GYM PASS</text>
+  <text x="72" y="292" fill="#FFFFFF" font-family="Pretendard, Inter, Arial, sans-serif" font-size="104" font-weight="900" letter-spacing="-5">짐패스</text>
+  <text x="72" y="368" fill="#FFFFFF" font-family="Pretendard, Inter, Arial, sans-serif" font-size="46" font-weight="900" letter-spacing="-1">한 달씩 끊고, 오늘 바로 입장.</text>
+  <text x="72" y="430" fill="#A1A1AA" font-family="Pretendard, Inter, Arial, sans-serif" font-size="30" font-weight="800">QR 이용권 · 구독관리 · GYMSHOP</text>
+  <rect x="72" y="486" width="226" height="58" rx="29" fill="#FF1F3D"/>
+  <text x="126" y="524" fill="#FFFFFF" font-family="Pretendard, Inter, Arial, sans-serif" font-size="23" font-weight="900">지금 시작</text>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#08080A"/>
+      <stop offset="0.58" stop-color="#101014"/>
+      <stop offset="1" stop-color="#2A050B"/>
+    </linearGradient>
+  </defs>
 </svg>

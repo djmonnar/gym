@@ -7,7 +7,7 @@
 }
 
 html {
-  background: #f7f8fa;
+  background: #050506;
 }
 
 body {
@@ -15,11 +15,27 @@ body {
   min-width: 320px;
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   color: #111827;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
 }
 
 button,
 input {
   font: inherit;
+}
+
+h1,
+h2,
+h3,
+p,
+span,
+button {
+  word-break: keep-all;
+}
+
+::selection {
+  background: #ff1f3d;
+  color: #ffffff;
 }
 
 .scrollbar-none {
