@@ -27,7 +27,6 @@ import {
   ShoppingBag,
   ShoppingCart,
   SlidersHorizontal,
-  Sparkles,
   Star,
   Truck,
   UserRound,
@@ -178,9 +177,7 @@ function SplashScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
         <span className="text-xs font-bold text-gray-400">Prototype</span>
       </div>
       <div className="space-y-6">
-        <div className="grid size-24 place-items-center rounded-[28px] bg-brand text-lime shadow-lift">
-          <Sparkles size={38} strokeWidth={2.6} />
-        </div>
+        <img src="brand/gympass-icon.svg" alt="짐패스 로고" className="size-24 rounded-[28px] shadow-lift" />
         <div>
           <h1 className="text-5xl font-black leading-tight text-brand">짐패스</h1>
           <p className="mt-3 text-xl font-extrabold text-gray-700">헬스장, 이제 한 달씩 가볍게</p>

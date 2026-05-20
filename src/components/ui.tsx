@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import {
   CreditCard,
-  Dumbbell,
   Home,
   ListChecks,
   MapPin,
@@ -114,9 +113,7 @@ export function AppShell({
       <div className="relative mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-[430px] flex-col overflow-hidden rounded-[34px] border border-white/70 bg-surface shadow-lift ring-8 ring-white/55">
         <div className="flex items-center justify-between border-b border-white/60 bg-white/85 px-5 py-3 backdrop-blur">
           <div className="flex items-center gap-2">
-            <div className="grid size-8 place-items-center rounded-2xl bg-brand text-lime">
-              <Dumbbell size={17} strokeWidth={2.6} />
-            </div>
+            <img src="brand/gympass-icon.svg" alt="짐패스 로고" className="size-8 rounded-2xl shadow-soft" />
             <div>
               <p className="text-sm font-black">짐패스</p>
               <p className="text-[11px] font-semibold text-gray-500">헬스장, 이제 한 달씩 가볍게</p>

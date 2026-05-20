@@ -11,7 +11,7 @@ if (existsSync(docsSource)) {
 
 await cp(docsIndex, "index.html");
 
-for (const dir of ["assets", "images"]) {
+for (const dir of ["assets", "images", "brand", "og"]) {
   await rm(dir, { recursive: true, force: true });
   await mkdir(dir, { recursive: true });
   await cp(`docs/${dir}`, dir, { recursive: true });
