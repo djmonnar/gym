@@ -11,6 +11,14 @@ npm run dev
 
 브라우저에서 `http://localhost:5173`으로 접속하면 됩니다.
 
+## GitHub Pages 배포
+
+```bash
+npm run build
+```
+
+빌드 결과는 `docs/` 폴더에 생성됩니다. GitHub Pages는 `main` 브랜치의 `/docs` 폴더를 배포 대상으로 사용하면 `https://djmonnar.github.io/gym/`에서 바로 열립니다.
+
 ## 기술 스택
 
 - Vite

@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+﻿import { useMemo, useState, type ReactNode } from "react";
 import {
   AlertCircle,
   Bell,
@@ -207,7 +207,7 @@ function OnboardingScreen({ navigate }: { navigate: (screen: ScreenId) => void }
     <div className="space-y-6">
       <ScreenHeader title="운동 루틴을 더 가볍게 시작하세요" eyebrow="짐패스가 바꾸는 구독 경험" />
       <div className="overflow-hidden rounded-[30px] bg-brand p-5 text-white shadow-lift">
-        <img src="/images/gym-muscle-factory.png" alt="프리미엄 헬스장 내부" className="h-56 w-full rounded-[24px] object-cover" />
+        <img src="images/gym-muscle-factory.png" alt="프리미엄 헬스장 내부" className="h-56 w-full rounded-[24px] object-cover" />
         <div className="mt-5">
           <Badge tone="lime">오늘 결제하면 바로 이용 가능</Badge>
           <h2 className="mt-3 text-2xl font-black">1년권 대신 한 달 구독</h2>
@@ -306,7 +306,7 @@ function HomeScreen({ navigate, selectGym }: { navigate: (screen: ScreenId) => v
             내 주변 헬스장 보기
           </Button>
         </div>
-        <img src="/images/gym-fitness-lounge.png" alt="헬스장 추천 이미지" className="h-44 w-full object-cover" />
+        <img src="images/gym-fitness-lounge.png" alt="헬스장 추천 이미지" className="h-44 w-full object-cover" />
       </section>
       <button type="button" onClick={() => navigate("shop")} className="block w-full text-left">
         <Card className="overflow-hidden bg-white p-0">
@@ -320,7 +320,7 @@ function HomeScreen({ navigate, selectGym }: { navigate: (screen: ScreenId) => v
               </div>
             </div>
             <div className="relative bg-lime">
-              <img src="/images/gymshop-chicken-breast.png" alt="GYMSHOP 닭가슴살 상품" className="h-full min-h-44 w-full object-cover mix-blend-multiply" />
+              <img src="images/gymshop-chicken-breast.png" alt="GYMSHOP 닭가슴살 상품" className="h-full min-h-44 w-full object-cover mix-blend-multiply" />
             </div>
           </div>
         </Card>

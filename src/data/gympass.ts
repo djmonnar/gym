@@ -1,4 +1,4 @@
-import type { AdminMember, Gym, PaymentRecord, Plan, ShopProduct } from "../types";
+﻿import type { AdminMember, Gym, PaymentRecord, Plan, ShopProduct } from "../types";
 
 export const gyms: Gym[] = [
   {
@@ -9,7 +9,7 @@ export const gyms: Gym[] = [
     monthlyPrice: 39000,
     hours: "24시",
     rating: 4.8,
-    image: "/images/gym-muscle-factory.png",
+    image: "images/gym-muscle-factory.png",
     tags: ["주차 가능", "샤워실", "락커"],
     facilities: ["24시간 무인 입장", "프리웨이트 존", "샤워실", "개인 락커", "무료 주차 2시간"],
     trainers: ["김도윤 트레이너 · 체형 교정", "박서연 트레이너 · 여성 근력"]
@@ -22,7 +22,7 @@ export const gyms: Gym[] = [
     monthlyPrice: 45000,
     hours: "06:00 - 24:00",
     rating: 4.7,
-    image: "/images/gym-fitness-lounge.png",
+    image: "images/gym-fitness-lounge.png",
     tags: ["PT 가능", "샤워실", "스트레칭"],
     facilities: ["PT 상담 가능", "유산소 라운지", "여성 파우더룸", "무료 운동복", "수건 제공"],
     trainers: ["이하준 트레이너 · 감량 프로그램", "정민지 트레이너 · 초보자 루틴"]
@@ -35,7 +35,7 @@ export const gyms: Gym[] = [
     monthlyPrice: 34900,
     hours: "05:30 - 23:30",
     rating: 4.6,
-    image: "/images/gym-body-lab.png",
+    image: "images/gym-body-lab.png",
     tags: ["첫 달 할인", "월 4만원 이하", "주차 가능"],
     facilities: ["첫 달 할인 적용", "스쿼트랙 4대", "인바디 측정", "샤워실", "무료 주차"],
     trainers: ["윤태민 트레이너 · 웨이트 입문", "한유진 트레이너 · 자세 분석"]
@@ -125,7 +125,7 @@ export const shopProducts: ShopProduct[] = [
     subtitle: "운동 끝나고 바로 먹는 촉촉한 단백질 루틴",
     price: 3200,
     originalPrice: 3900,
-    image: "/images/gymshop-chicken-breast.png",
+    image: "images/gymshop-chicken-breast.png",
     badge: "회원 전용 18% 할인",
     tags: ["단백질 24g", "저지방", "전자레인지 1분", "냉장 배송"],
     nutrition: [
