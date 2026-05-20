@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #f7f8fa;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  color: #111827;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.qr-pattern {
+  background:
+    linear-gradient(90deg, #111827 12px, transparent 12px) 0 0 / 28px 28px,
+    linear-gradient(#111827 12px, transparent 12px) 0 0 / 28px 28px,
+    linear-gradient(90deg, transparent 10px, rgba(17, 24, 39, 0.18) 10px 18px, transparent 18px) 4px 4px / 36px 36px,
+    #ffffff;
+}
