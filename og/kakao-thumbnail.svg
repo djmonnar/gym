@@ -1,33 +1,26 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="1200" height="630" fill="#050506"/>
   <path d="M0 0H1200V630H0V0Z" fill="url(#bg)"/>
-  <circle cx="1032" cy="88" r="210" fill="#FF1F3D" fill-opacity="0.42"/>
-  <circle cx="106" cy="548" r="206" fill="#B91C1C" fill-opacity="0.22"/>
-  <path d="M671 52H1090C1126.45 52 1156 81.549 1156 118V512C1156 548.451 1126.45 578 1090 578H671C634.549 578 605 548.451 605 512V118C605 81.549 634.549 52 671 52Z" fill="#111114" stroke="#2A2A31" stroke-width="2"/>
-  <path d="M637 380L1124 176V512C1124 530.778 1108.78 546 1090 546H671C652.222 546 637 530.778 637 512V380Z" fill="#1E0509"/>
-  <rect x="656" y="92" width="142" height="142" rx="42" fill="#09090B"/>
-  <path d="M685 164C685 136.386 707.386 114 735 114H741C768.614 114 791 136.386 791 164V170C791 197.614 768.614 220 741 220H735C707.386 220 685 197.614 685 170V164Z" fill="#FF1F3D"/>
-  <path d="M738 104V231" stroke="#09090B" stroke-width="18" stroke-linecap="round"/>
-  <path d="M675 167H802" stroke="#09090B" stroke-width="18" stroke-linecap="round"/>
-  <path d="M700 138L775 213" stroke="#09090B" stroke-width="14" stroke-linecap="round"/>
-  <path d="M775 138L700 213" stroke="#09090B" stroke-width="14" stroke-linecap="round"/>
-  <circle cx="738" cy="167" r="25" fill="#09090B"/>
-  <rect x="656" y="277" width="420" height="44" rx="22" fill="#FF1F3D"/>
-  <rect x="656" y="349" width="318" height="30" rx="15" fill="#FFFFFF" fill-opacity="0.14"/>
-  <rect x="656" y="401" width="226" height="30" rx="15" fill="#FFFFFF" fill-opacity="0.14"/>
-  <rect x="656" y="474" width="230" height="58" rx="29" fill="#FFFFFF"/>
-  <text x="714" y="512" fill="#09090B" font-family="Pretendard, Inter, Arial, sans-serif" font-size="24" font-weight="900">입장하기</text>
-  <text x="72" y="148" fill="#FF1F3D" font-family="Pretendard, Inter, Arial, sans-serif" font-size="28" font-weight="900" letter-spacing="5">MONTHLY GYM PASS</text>
-  <text x="72" y="292" fill="#FFFFFF" font-family="Pretendard, Inter, Arial, sans-serif" font-size="104" font-weight="900" letter-spacing="-5">짐패스</text>
-  <text x="72" y="368" fill="#FFFFFF" font-family="Pretendard, Inter, Arial, sans-serif" font-size="46" font-weight="900" letter-spacing="-1">한 달씩 끊고, 오늘 바로 입장.</text>
-  <text x="72" y="430" fill="#A1A1AA" font-family="Pretendard, Inter, Arial, sans-serif" font-size="30" font-weight="800">QR 이용권 · 구독관리 · GYMSHOP</text>
-  <rect x="72" y="486" width="226" height="58" rx="29" fill="#FF1F3D"/>
-  <text x="126" y="524" fill="#FFFFFF" font-family="Pretendard, Inter, Arial, sans-serif" font-size="23" font-weight="900">지금 시작</text>
+  <rect x="48" y="48" width="1104" height="534" rx="44" fill="#0A0A0C" stroke="#222226" stroke-width="2"/>
+  <rect x="934" y="48" width="218" height="534" rx="44" fill="#E50914"/>
+  <path d="M676 98H985C1016 98 1041 123 1041 154V506C1041 537 1016 562 985 562H676C645 562 620 537 620 506V154C620 123 645 98 676 98Z" fill="#111114" stroke="#2F2F34" stroke-width="2"/>
+  <rect x="660" y="146" width="260" height="166" rx="28" fill="#E50914"/>
+  <path d="M700 184H746V230H700V184ZM714 198V216H732V198H714ZM835 184H881V230H835V184ZM849 198V216H867V198H849ZM700 244H746V290H700V244ZM714 258V276H732V258H714ZM773 188H787V202H773V188ZM801 188H815V216H801V188ZM773 216H815V230H773V216ZM759 244H787V258H759V244ZM801 244H815V272H801V244ZM829 244H843V258H829V244ZM843 258H881V272H843V258ZM759 272H773V286H759V272ZM787 272H829V286H787V272Z" fill="#FFFFFF"/>
+  <rect x="660" y="350" width="260" height="42" rx="21" fill="#FFFFFF" fill-opacity="0.1"/>
+  <rect x="660" y="412" width="212" height="42" rx="21" fill="#FFFFFF" fill-opacity="0.1"/>
+  <rect x="660" y="482" width="158" height="42" rx="21" fill="#FFFFFF"/>
+  <text x="704" y="509" fill="#0A0A0C" font-family="Pretendard, Inter, Arial, sans-serif" font-size="20" font-weight="900">QR 입장</text>
+  <text x="96" y="150" fill="#E50914" font-family="Pretendard, Inter, Arial, sans-serif" font-size="24" font-weight="900">MONTHLY GYM PASS</text>
+  <text x="96" y="286" fill="#FFFFFF" font-family="Pretendard, Inter, Arial, sans-serif" font-size="118" font-weight="900">짐패스</text>
+  <text x="96" y="364" fill="#FFFFFF" font-family="Pretendard, Inter, Arial, sans-serif" font-size="46" font-weight="900">헬스장, 이제 한 달씩</text>
+  <text x="96" y="432" fill="#A1A1AA" font-family="Pretendard, Inter, Arial, sans-serif" font-size="28" font-weight="800">구독 상태 · QR 이용권 · 결제 내역</text>
+  <rect x="96" y="494" width="214" height="58" rx="29" fill="#E50914"/>
+  <text x="151" y="532" fill="#FFFFFF" font-family="Pretendard, Inter, Arial, sans-serif" font-size="22" font-weight="900">바로 입장</text>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#08080A"/>
-      <stop offset="0.58" stop-color="#101014"/>
-      <stop offset="1" stop-color="#2A050B"/>
-    </linearGradient>
+    <radialGradient id="bg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(992 58) rotate(134) scale(572 808)">
+      <stop stop-color="#611017"/>
+      <stop offset="0.38" stop-color="#17171A"/>
+      <stop offset="1" stop-color="#050506"/>
+    </radialGradient>
   </defs>
 </svg>
