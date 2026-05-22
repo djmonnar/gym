@@ -299,6 +299,25 @@ function HomeScreen({ navigate, selectGym }: { navigate: (screen: ScreenId) => v
           <Bell size={20} />
         </button>
       </header>
+      <section className="grid grid-cols-[1fr_108px] overflow-hidden rounded-[30px] bg-[#09090B] text-white shadow-glow">
+        <div className="p-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge tone="lime">이용중</Badge>
+            <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-black text-white/70">D-30</span>
+          </div>
+          <h2 className="mt-4 text-[30px] font-black leading-[0.98] tracking-[-0.06em]">머슬팩토리<br />오늘 입장 가능</h2>
+          <p className="mt-3 text-xs font-bold leading-5 text-white/56">다음 결제 2026.06.20 · 현대카드 1842</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => navigate("pass")}
+          className="m-4 grid place-items-center rounded-[26px] bg-[linear-gradient(135deg,#FF1F3D,#B91C1C)] text-center shadow-[0_18px_48px_rgba(255,31,61,0.32)]"
+          aria-label="QR 이용권 열기"
+        >
+          <QrCode size={38} />
+          <span className="mt-2 text-xs font-black">QR PASS</span>
+        </button>
+      </section>
       <section className="relative overflow-hidden rounded-[32px] bg-[linear-gradient(145deg,#070708_0%,#1A0A0D_58%,#B91C1C_130%)] text-white shadow-glow">
         <div className="absolute right-[-58px] top-[-52px] h-44 w-44 rounded-full bg-red-600/35 blur-2xl" />
         <div className="relative p-6">
@@ -387,7 +406,7 @@ function SearchScreen({
               onClick={() => toggleFilter(filter)}
               className={cn(
                 "shrink-0 rounded-full border px-4 py-2 text-sm font-bold transition",
-                active ? "border-brand bg-brand text-lime" : "border-gray-200 bg-white text-gray-600"
+                active ? "border-red-600 bg-red-600 text-white" : "border-gray-200 bg-white text-gray-600"
               )}
             >
               {filter}
@@ -401,7 +420,7 @@ function SearchScreen({
             key={mode}
             type="button"
             onClick={() => setViewMode(mode)}
-            className={cn("rounded-[16px] py-3 text-sm font-black", viewMode === mode ? "bg-lime text-brand" : "text-gray-500")}
+            className={cn("rounded-[16px] py-3 text-sm font-black", viewMode === mode ? "bg-red-600 text-white" : "text-gray-500")}
           >
             {mode === "list" ? "리스트 보기" : "지도 보기"}
           </button>
@@ -452,7 +471,7 @@ function DetailScreen({ gym, navigate }: { gym: Gym; navigate: (screen: ScreenId
         <div className="space-y-3">
           {gym.trainers.map((trainer) => (
             <div key={trainer} className="flex items-center gap-3 rounded-[18px] bg-gray-50 p-3">
-              <div className="grid size-10 place-items-center rounded-full bg-blue/10 text-blue">
+              <div className="grid size-10 place-items-center rounded-full bg-red-600/10 text-red-600">
                 <UserRound size={19} />
               </div>
               <p className="text-sm font-bold text-gray-700">{trainer}</p>
@@ -498,7 +517,7 @@ function PlanScreen({
                   </div>
                   <p className="mt-1 text-sm font-semibold text-gray-500">{plan.description}</p>
                 </div>
-                <div className={cn("grid size-9 place-items-center rounded-full", selected ? "bg-lime text-brand" : "bg-gray-100 text-gray-400")}>
+                <div className={cn("grid size-9 place-items-center rounded-full", selected ? "bg-red-600 text-white" : "bg-gray-100 text-gray-400")}>
                   <Check size={19} />
                 </div>
               </div>
@@ -556,7 +575,7 @@ function CheckoutScreen({
       <Card className="space-y-4">
         <div className="flex items-center justify-between rounded-[20px] bg-gray-50 p-4">
           <div className="flex items-center gap-3">
-            <CreditCard size={22} className="text-blue" />
+            <CreditCard size={22} className="text-red-600" />
             <div>
               <p className="font-black">카드 등록</p>
               <p className="text-xs font-bold text-gray-500">현대카드 1842 · 더미 결제 수단</p>
@@ -579,7 +598,7 @@ function CheckoutScreen({
 function CompleteScreen({ gym, navigate }: { gym: Gym; navigate: (screen: ScreenId) => void }) {
   return (
     <div className="flex min-h-[640px] flex-col items-center justify-center text-center">
-      <div className="grid size-28 place-items-center rounded-full bg-lime text-brand shadow-lift">
+      <div className="grid size-28 place-items-center rounded-full bg-red-600 text-white shadow-lift">
         <CheckCircle2 size={58} strokeWidth={2.4} />
       </div>
       <h1 className="mt-7 text-3xl font-black">구독권이 발급되었습니다</h1>
@@ -665,7 +684,7 @@ function HistoryScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
   return (
     <div className="space-y-5">
       <ScreenHeader title="결제 내역" eyebrow="구독 결제를 쉽게 확인" />
-      <Card className="bg-blue text-white">
+      <Card className="bg-zinc-950 text-white">
         <p className="text-sm font-bold text-white/75">이번 달 결제</p>
         <p className="mt-2 text-3xl font-black">39,000원</p>
         <p className="mt-2 text-sm font-semibold text-white/70">영수증, 환불 상태, 실패 내역까지 날짜별로 정리됩니다.</p>
@@ -686,7 +705,7 @@ function SupportScreen() {
     <div className="space-y-5">
       <ScreenHeader title="고객센터/환불 안내" eyebrow="구독과 결제를 투명하게" />
       <Card className="bg-brand text-white">
-        <Headphones size={30} className="text-lime" />
+        <Headphones size={30} className="text-red-400" />
         <h2 className="mt-4 text-2xl font-black">구독/결제/환불은 앱에서 투명하게 확인할 수 있습니다</h2>
         <p className="mt-2 text-sm font-semibold leading-6 text-white/70">문의 전 결제 내역과 구독 상태를 먼저 확인하면 더 빠르게 처리됩니다.</p>
       </Card>
@@ -733,7 +752,7 @@ function MyPage({
     <div className="space-y-5">
       <ScreenHeader title="마이페이지" eyebrow="계정과 구독 관리" />
       <Card className="flex items-center gap-4">
-        <div className="grid size-16 place-items-center rounded-[22px] bg-lime text-brand">
+        <div className="grid size-16 place-items-center rounded-[22px] bg-red-600 text-white">
           <UserRound size={30} />
         </div>
         <div>
@@ -748,7 +767,7 @@ function MyPage({
             <h2 className="mt-3 text-xl font-black">{selectedGym.name}</h2>
             <p className="mt-1 text-sm font-bold text-gray-500">{selectedPlan.name} · 2026.06.19까지</p>
           </div>
-          <QrCode size={32} className="text-blue" />
+          <QrCode size={32} className="text-red-600" />
         </div>
       </Card>
       <MenuButton icon={<ShoppingBag size={20} />} label="GYMSHOP 상품 구매" onClick={() => navigate("shop")} />
@@ -788,7 +807,7 @@ function ShopScreen({
           >
             <ShoppingCart size={20} />
             {cartQuantity > 0 ? (
-              <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-lime text-[10px] font-black text-brand">
+              <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-red-600 text-[10px] font-black text-white">
                 {cartQuantity}
               </span>
             ) : null}
@@ -826,7 +845,7 @@ function ShopScreen({
           </div>
         </Card>
       </button>
-      <Card className="bg-blue text-white">
+      <Card className="bg-zinc-950 text-white">
         <PackageCheck size={28} className="text-white" />
         <h2 className="mt-3 text-xl font-black">장바구니와 구매 화면까지 포함</h2>
         <p className="mt-2 text-sm font-semibold leading-6 text-white/75">실제 결제 연동 없이도 상품 상세, 수량 변경, 주문 확인, 구매 완료 UX를 볼 수 있습니다.</p>
@@ -981,7 +1000,7 @@ function ShopCompleteScreen({
 }) {
   return (
     <div className="flex min-h-[640px] flex-col justify-center space-y-6 text-center">
-      <div className="mx-auto grid size-28 place-items-center rounded-full bg-lime text-brand shadow-lift">
+      <div className="mx-auto grid size-28 place-items-center rounded-full bg-red-600 text-white shadow-lift">
         <PackageCheck size={58} strokeWidth={2.4} />
       </div>
       <div>
@@ -1021,7 +1040,7 @@ function QuantityStepper({ quantity, setQuantity }: { quantity: number; setQuant
       <button
         type="button"
         onClick={() => setQuantity(Math.min(20, quantity + 1))}
-        className="grid size-9 place-items-center rounded-full bg-brand text-lime shadow-soft"
+        className="grid size-9 place-items-center rounded-full bg-brand text-red-400 shadow-soft"
         aria-label="수량 늘리기"
       >
         <Plus size={16} />
@@ -1080,7 +1099,7 @@ function AdminMembers({ status, setStatus }: { status: MemberStatus; setStatus: 
             key={item}
             type="button"
             onClick={() => setStatus(item)}
-            className={cn("shrink-0 rounded-full px-4 py-2 text-sm font-bold", status === item ? "bg-brand text-lime" : "bg-white text-gray-600")}
+            className={cn("shrink-0 rounded-full px-4 py-2 text-sm font-bold", status === item ? "bg-brand text-red-400" : "bg-white text-gray-600")}
           >
             {item}
           </button>
@@ -1104,7 +1123,7 @@ function AdminQr({ result, setResult, notify }: { result: MemberStatus; setResul
       <Card className="text-center">
         <div className="grid h-64 place-items-center rounded-[28px] border-2 border-dashed border-gray-300 bg-gray-50">
           <div>
-            <ScanLine className="mx-auto text-blue" size={58} />
+            <ScanLine className="mx-auto text-red-600" size={58} />
             <p className="mt-4 font-black">QR 스캔 영역</p>
             <p className="mt-1 text-sm font-semibold text-gray-500">카메라 연동 전 placeholder</p>
           </div>
@@ -1123,7 +1142,7 @@ function AdminQr({ result, setResult, notify }: { result: MemberStatus; setResul
             key={status}
             type="button"
             onClick={() => setResult(status)}
-            className={cn("shrink-0 rounded-full px-4 py-2 text-sm font-bold", result === status ? "bg-brand text-lime" : "bg-white text-gray-600")}
+            className={cn("shrink-0 rounded-full px-4 py-2 text-sm font-bold", result === status ? "bg-brand text-red-400" : "bg-white text-gray-600")}
           >
             {status}
           </button>
@@ -1147,7 +1166,7 @@ function GymCard({ gym, onClick, compact = false }: { gym: Gym; onClick: () => v
                 {gym.distance} · {gym.hours}
               </p>
             </div>
-            <div className="flex items-center gap-1 text-sm font-black text-blue">
+            <div className="flex items-center gap-1 text-sm font-black text-red-600">
               <Star size={16} fill="currentColor" />
               {gym.rating}
             </div>
@@ -1206,7 +1225,7 @@ function MenuButton({ icon, label, onClick }: { icon: ReactNode; label: string; 
   return (
     <button type="button" onClick={onClick} className="flex w-full items-center justify-between rounded-[22px] bg-white p-4 text-left shadow-soft">
       <span className="flex items-center gap-3 text-sm font-black">
-        <span className="grid size-10 place-items-center rounded-2xl bg-gray-100 text-blue">{icon}</span>
+        <span className="grid size-10 place-items-center rounded-2xl bg-gray-100 text-red-600">{icon}</span>
         {label}
       </span>
       <ChevronRight size={18} className="text-gray-400" />
@@ -1241,8 +1260,8 @@ function QrResultCard({ status }: { status: MemberStatus }) {
   const config = {
     이용중: { title: "유효한 이용권", body: "오늘 입장 가능한 정상 구독권입니다.", className: "bg-emerald-500 text-white", icon: <CheckCircle2 size={34} /> },
     만료: { title: "만료된 이용권", body: "이용 기간이 종료되어 입장이 제한됩니다.", className: "bg-rose-500 text-white", icon: <AlertCircle size={34} /> },
-    해지예약: { title: "해지 예약 상태", body: "현재 기간까지는 이용 가능하며 다음 결제는 진행되지 않습니다.", className: "bg-lime text-brand", icon: <Settings size={34} /> },
-    만료예정: { title: "만료 예정 이용권", body: "곧 만료되지만 오늘은 입장 가능합니다.", className: "bg-blue text-white", icon: <Clock size={34} /> }
+    해지예약: { title: "해지 예약 상태", body: "현재 기간까지는 이용 가능하며 다음 결제는 진행되지 않습니다.", className: "bg-red-600 text-white", icon: <Settings size={34} /> },
+    만료예정: { title: "만료 예정 이용권", body: "곧 만료되지만 오늘은 입장 가능합니다.", className: "bg-zinc-950 text-white", icon: <Clock size={34} /> }
   } satisfies Record<MemberStatus, { title: string; body: string; className: string; icon: ReactNode }>;
 
   const item = config[status];

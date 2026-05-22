@@ -24,7 +24,7 @@ export function Button({ children, onClick, variant = "primary", className, disa
   const variants = {
     primary: "bg-[linear-gradient(135deg,#FF1F3D,#B91C1C)] text-white shadow-glow hover:translate-y-[-1px]",
     dark: "bg-brand text-white shadow-soft ring-1 ring-white/10 hover:translate-y-[-1px]",
-    ghost: "bg-white/8 text-white ring-1 ring-white/10 hover:bg-white/12",
+    ghost: "bg-zinc-100 text-brand ring-1 ring-zinc-200 hover:bg-white",
     line: "border border-red-500/25 bg-white text-brand hover:border-red-500",
     danger: "bg-red-500/10 text-red-600 ring-1 ring-red-500/20 hover:bg-red-500/15"
   };
@@ -121,7 +121,7 @@ export function AppShell({
           </div>
           <Badge tone={appMode === "admin" ? "blue" : "lime"}>{appMode === "admin" ? "사장님" : "LIVE"}</Badge>
         </div>
-        <div key={active} className="scrollbar-none flex-1 overflow-y-auto bg-[linear-gradient(180deg,#F5F5F6_0%,#EDEEF1_48%,#111114_100%)] px-5 py-5 pb-32">
+        <div key={active} className="scrollbar-none flex-1 overflow-y-auto bg-[linear-gradient(180deg,#F7F7F8_0%,#ECEEF1_58%,#D9DDE3_100%)] px-5 py-5 pb-32">
           {children}
         </div>
         {showTabs ? <BottomNav active={active} navigate={navigate} /> : null}
