@@ -141,7 +141,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
   ];
 
   return (
-    <nav className="fixed bottom-6 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-[390px] -translate-x-1/2 grid-cols-5 rounded-[28px] border border-white/10 bg-black/85 px-2 py-2 shadow-glow backdrop-blur-xl">
+    <nav className="fixed bottom-6 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-[390px] -translate-x-1/2 grid-cols-5 rounded-[28px] border border-black/10 bg-white px-2 py-2 shadow-[0_22px_70px_rgba(0,0,0,0.36),0_0_0_1px_rgba(255,255,255,0.95)]">
       {items.map((item) => {
         const isActive = active === item.screen;
         return (
@@ -151,7 +151,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
             onClick={() => navigate(item.screen)}
             className={cn(
               "flex h-[58px] flex-col items-center justify-center gap-1 rounded-[21px] text-[10px] font-black transition",
-              isActive ? "bg-red-600 text-white shadow-[0_14px_36px_rgba(249,22,47,0.34)]" : "text-white/52 hover:bg-white/10 hover:text-white"
+              isActive ? "bg-red-600 text-white shadow-[0_14px_36px_rgba(249,22,47,0.34)]" : "text-zinc-500 hover:bg-zinc-100 hover:text-brand"
             )}
           >
             {item.icon}
