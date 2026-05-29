@@ -461,6 +461,18 @@ function HomeScreen({ navigate, selectGym }: { navigate: (screen: ScreenId) => v
           <GymCard key={gym.id} gym={gym} onClick={() => selectGym(gym)} />
         ))}
       </div>
+      <Card className="bg-zinc-950 text-white">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <Badge tone="lime">월구독 핵심 정보</Badge>
+            <h2 className="mt-4 text-2xl font-black leading-tight">가격, 다음 결제일, QR 입장을 홈에서 바로 확인</h2>
+            <p className="mt-3 text-sm font-semibold leading-6 text-white/70">
+              장기 약정 없이 한 달 단위로 결제하고, 해지 예약과 환불 안내는 구독 관리에서 확인할 수 있습니다.
+            </p>
+          </div>
+          <ReceiptText className="shrink-0 text-red-400" size={30} />
+        </div>
+      </Card>
     </div>
   );
 }
@@ -528,6 +540,13 @@ function SearchScreen({
             {mode === "list" ? "리스트 보기" : "지도 보기"}
           </button>
         ))}
+      </div>
+      <div className="flex items-center justify-between rounded-[22px] bg-zinc-950 px-4 py-3 text-white shadow-soft">
+        <div>
+          <p className="text-xs font-black text-red-300">검색 결과 {visibleGyms.length}개</p>
+          <p className="mt-1 text-sm font-bold text-white/70">모든 카드에 월 가격이 바로 표시됩니다.</p>
+        </div>
+        <Badge tone="lime">가격순 비교</Badge>
       </div>
       {viewMode === "map" ? <MapPlaceholder /> : null}
       <div className="space-y-4">
@@ -770,6 +789,16 @@ function SubscriptionScreen({ plan, openCancel, notify }: { plan: Plan; openCanc
         <InfoRow label="다음 결제일" value="2026.06.20" icon={<CalendarDays size={17} />} />
         <InfoRow label="결제 예정 금액" value={formatWon(plan.price)} />
         <InfoRow label="결제 수단" value="현대카드 1842" icon={<CreditCard size={17} />} />
+      </Card>
+      <Card>
+        <h2 className="mb-3 text-lg font-black">해지/환불 요약</h2>
+        <Checklist
+          items={[
+            "다음 결제일 전 해지 예약 시 2026.06.20 결제가 중단됩니다.",
+            "QR 입장 전 결제 건은 고객센터에서 전액 환불 요청이 가능합니다.",
+            "입장 기록이 있으면 남은 기간과 매장 정책을 기준으로 환불 금액을 안내합니다."
+          ]}
+        />
       </Card>
       <div className="grid grid-cols-1 gap-3">
         <Button variant="line" onClick={() => notify("결제수단 변경 UI가 열렸습니다.")}>
@@ -1179,6 +1208,14 @@ function AdminHome({ navigate }: { navigate: (screen: ScreenId) => void }) {
               <p className="text-sm font-bold text-gray-700">{log}</p>
             </div>
           ))}
+        </div>
+      </Card>
+      <Card>
+        <h2 className="mb-4 text-lg font-black">오늘 처리할 일</h2>
+        <div className="space-y-3">
+          <InfoRow label="QR 확인 필요" value="2건" icon={<ScanLine size={17} />} />
+          <InfoRow label="환불 문의" value="1건" icon={<Headphones size={17} />} />
+          <InfoRow label="결제 실패 회원" value="4명" icon={<AlertCircle size={17} />} />
         </div>
       </Card>
     </div>
