@@ -42,7 +42,7 @@ import {
   Utensils,
   X
 } from "lucide-react";
-import { adminMembers, dietRecommendation, entryLogs, filters, gyms, paymentRecords, plans, ptTrainers, qrVerificationResults, shopProducts, weeklyRoutine } from "./data/gympass";
+import { activePass, adminMembers, dietRecommendation, entryLogs, filters, gyms, paymentRecords, plans, ptTrainers, qrVerificationResults, shopProducts, weeklyRoutine } from "./data/gympass";
 import type { AdminMember, Gym, MemberStatus, PaymentRecord, Plan, QrVerificationStatus, ScreenId, ShopProduct } from "./types";
 import { AppShell, Badge, Button, Card, Checklist, InfoRow, MapPlaceholder, ScreenHeader, Stat, cn } from "./components/ui";
 
@@ -760,15 +760,15 @@ function CompleteScreen({ gym, navigate }: { gym: Gym; navigate: (screen: Screen
   );
 }
 
-function PassScreen({ gym, plan, navigate }: { gym: Gym; plan: Plan; navigate: (screen: ScreenId) => void }) {
+function PassScreen({ gym, navigate }: { gym: Gym; plan: Plan; navigate: (screen: ScreenId) => void }) {
   const [remaining, setRemaining] = useState(30);
-  const [tokenSeed, setTokenSeed] = useState(8214);
+  const [issueNumber, setIssueNumber] = useState(8214);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
       setRemaining((current) => {
         if (current <= 1) {
-          setTokenSeed((seed) => seed + 1);
+          setIssueNumber((seed) => seed + 1);
           return 30;
         }
 
@@ -779,8 +779,9 @@ function PassScreen({ gym, plan, navigate }: { gym: Gym; plan: Plan; navigate: (
     return () => window.clearInterval(timer);
   }, []);
 
-  const token = `TMP-GP-${tokenSeed}-${remaining.toString().padStart(2, "0")}`;
+  const seconds = remaining.toString().padStart(2, "0");
   const progress = `${(remaining / 30) * 100}%`;
+  const refreshMessage = issueNumber > 8214 && remaining > 28 ? "새 QR이 발급되었습니다" : "현재 QR이 활성화되어 있습니다";
 
   return (
     <div className="space-y-5">
@@ -790,46 +791,69 @@ function PassScreen({ gym, plan, navigate }: { gym: Gym; plan: Plan; navigate: (
         <div className="p-5">
           <div className="flex items-center justify-between gap-3">
             <Badge tone="lime">이용중</Badge>
-            <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-black text-white/70">{plan.name}</span>
+            <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-black text-white/70">{activePass.planName}</span>
           </div>
-          <h2 className="mt-4 text-2xl font-black">{gym.name}</h2>
-          <p className="mt-1 text-sm font-bold text-white/62">2026.06.19까지 · 서버 검증용 임시 토큰 사용</p>
+          <h2 className="mt-4 text-2xl font-black">{activePass.gymName}</h2>
+          <p className="mt-1 text-sm font-bold text-white/62">{activePass.expiresAt}까지 · 서버 검증용 임시 토큰 사용</p>
         </div>
       </Card>
 
-      <Card className="text-center">
-        <div className="mx-auto flex size-52 flex-col items-center justify-center rounded-[30px] border-8 border-white bg-[linear-gradient(145deg,#111827,#0F172A)] shadow-inner ring-1 ring-brand/10">
-          <div className="qr-pattern grid size-36 place-items-center rounded-[20px] bg-white">
-            <QrCode size={82} className="text-brand" />
+      <Card className="space-y-5 text-center">
+        <div className="flex items-center justify-between gap-3 text-left">
+          <Badge tone="lime">동적 QR 이용권</Badge>
+          <span className="rounded-full bg-[#EEF4FF] px-3 py-1 text-[11px] font-black text-blue">{refreshMessage}</span>
+        </div>
+        <div className="mx-auto flex size-56 flex-col items-center justify-center rounded-[32px] border-8 border-white bg-[linear-gradient(145deg,#111827,#0F172A)] shadow-inner ring-1 ring-brand/10">
+          <div className="qr-pattern grid size-40 place-items-center rounded-[22px] bg-white">
+            <QrCode size={90} className="text-brand" />
           </div>
-          <p className="mt-3 rounded-full bg-lime px-3 py-1 text-[11px] font-black text-brand">{token}</p>
+          <p className="mt-3 rounded-full bg-lime px-3 py-1 text-[11px] font-black text-brand">
+            checkin_token: {activePass.maskedToken}
+          </p>
+          <p className="mt-2 text-[10px] font-black text-white/50">발급 회차 #{issueNumber}</p>
         </div>
-        <div className="mt-5 flex items-center justify-center gap-2 text-brand">
+        <div className="flex items-center justify-center gap-2 text-brand">
           <Clock size={18} />
-          <p className="text-3xl font-black">{remaining}초</p>
+          <p className="text-3xl font-black">남은 시간 00:{seconds}</p>
         </div>
-        <div className="mt-3 h-2 overflow-hidden rounded-full bg-gray-100">
+        <div className="h-2 overflow-hidden rounded-full bg-gray-100">
           <div className="h-full rounded-full bg-lime transition-all" style={{ width: progress }} />
         </div>
-        <p className="mt-3 text-sm font-black text-brand">30초마다 새 QR이 생성됩니다</p>
-        <p className="mt-1 text-xs font-bold leading-5 text-gray-500">QR 안에는 회원권 ID가 아니라 서버 검증용 임시 토큰이 들어갑니다.</p>
+        <div className="grid grid-cols-2 gap-3 text-left">
+          <InfoMini label="회원명" value={activePass.memberName} />
+          <InfoMini label="회원번호" value={activePass.memberId} />
+          <InfoMini label="이용권" value={activePass.planName} />
+          <InfoMini label="이용 지점" value={activePass.gymName} />
+          <InfoMini label="남은 기간" value={activePass.remainingDays} />
+          <InfoMini label="다음 결제일" value={activePass.nextBillingDate} />
+        </div>
       </Card>
 
       <Card className="space-y-3 border border-blue/10 bg-[#EEF4FF]">
         <div className="flex items-start gap-3">
           <LockKeyhole className="mt-0.5 shrink-0 text-blue" size={22} />
           <div>
-            <h3 className="font-black text-brand">캡처한 QR은 사용할 수 없습니다</h3>
-            <p className="mt-1 text-sm font-bold leading-6 text-gray-600">관리자 스캔 시 토큰 발급 시간과 사용 여부를 함께 검증합니다.</p>
+            <h3 className="font-black text-brand">QR 보안 안내</h3>
+            <p className="mt-1 text-sm font-bold leading-6 text-gray-600">QR에는 회원권 ID가 아닌 서버 검증용 임시 토큰만 포함됩니다</p>
           </div>
         </div>
-        <InfoRow label="토큰 정책" value="1회 스캔 후 폐기" icon={<KeyRound size={17} />} />
-        <InfoRow label="갱신 주기" value="30초" icon={<RefreshCw size={17} />} />
+        <InfoRow label="갱신 주기" value="30초마다 새 QR이 생성됩니다" icon={<RefreshCw size={17} />} />
+        <InfoRow label="캡처 방지" value="캡처한 QR은 사용할 수 없습니다" icon={<ShieldCheck size={17} />} />
+        <InfoRow label="토큰 정책" value="QR은 1회 스캔 후 즉시 폐기됩니다" icon={<KeyRound size={17} />} />
       </Card>
 
-      <Card className="grid grid-cols-2 gap-3">
-        <InfoMini label="남은 이용 기간" value="24일" />
-        <InfoMini label="이용 가능 지점" value="경상대점" />
+      <Card className="space-y-3">
+        <div className="flex items-start gap-3">
+          <AlertCircle className="mt-0.5 shrink-0 text-rose-500" size={22} />
+          <div>
+            <h3 className="font-black text-brand">부정사용 방지 안내</h3>
+            <ul className="mt-3 space-y-2 text-sm font-bold leading-6 text-gray-600">
+              <li>화면 캡처본은 입장에 사용할 수 없습니다.</li>
+              <li>직원 스캔 시 서버에서 실시간으로 유효성을 확인합니다.</li>
+              <li>이미 사용된 QR은 다시 사용할 수 없습니다.</li>
+            </ul>
+          </div>
+        </div>
       </Card>
       <div className="grid grid-cols-2 gap-3">
         <Button variant="line" onClick={() => navigate("subscription")}>구독 관리</Button>

@@ -49,6 +49,17 @@ export type Plan = {
   recommended?: boolean;
 };
 
+export type PassInfo = {
+  memberName: string;
+  memberId: string;
+  gymName: string;
+  planName: string;
+  expiresAt: string;
+  nextBillingDate: string;
+  remainingDays: string;
+  maskedToken: string;
+};
+
 export type PaymentRecord = {
   id: string;
   date: string;

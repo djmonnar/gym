@@ -1,5 +1,7 @@
 ﻿import type { AdminMember, DietRecommendation, Gym, PaymentRecord, Plan, PtTrainer, QrVerificationResult, RoutinePlan, ShopProduct } from "../types";
 
+import type { PassInfo } from "../types";
+
 export const gyms: Gym[] = [
   {
     id: "muscle-factory",
@@ -68,6 +70,17 @@ export const plans: Plan[] = [
     benefits: ["동일 브랜드 지점 이용", "락커 우선 배정", "월 1회 인바디 리포트", "PT 상담 쿠폰"]
   }
 ];
+
+export const activePass: PassInfo = {
+  memberName: "김예림",
+  memberId: "M-1042",
+  gymName: "머슬팩토리 경상대점",
+  planName: "1개월 베이직",
+  expiresAt: "2026.06.19",
+  nextBillingDate: "2026.06.20",
+  remainingDays: "24일",
+  maskedToken: "gp_live_****_7K2M"
+};
 
 export const paymentRecords: PaymentRecord[] = [
   {
