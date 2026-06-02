@@ -398,83 +398,147 @@ function LocationScreen({ navigate }: { navigate: (screen: ScreenId) => void }) 
 }
 
 function HomeScreen({ navigate, selectGym }: { navigate: (screen: ScreenId) => void; selectGym: (gym: Gym) => void }) {
+  const todayRoutine = weeklyRoutine.days[1] ?? weeklyRoutine.days[0];
+  const recommendedTrainer = ptTrainers[0];
+  const recommendedProduct = shopProducts[0];
+
   return (
-    <div className="space-y-7">
-      <section className="relative min-h-[500px] overflow-hidden rounded-[34px] bg-black text-white shadow-glow">
-        <img src="images/gympass-qr-entry.png" alt="짐패스 QR 입장 히어로" className="absolute inset-0 h-full w-full object-cover object-[62%_center] opacity-95" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.42)_0%,rgba(0,0,0,0.18)_34%,rgba(0,0,0,0.94)_100%)]" />
-        <div className="relative flex min-h-[500px] flex-col justify-between p-5">
-          <div>
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-black uppercase text-lime">진주 가좌동 · READY</p>
-                <h1 className="mt-3 max-w-[250px] text-[31px] font-black leading-[1.14]">김예림님,<br />오늘 운동 갈까요?</h1>
-              </div>
-              <button className="grid size-11 place-items-center rounded-full bg-white/12 text-white shadow-soft ring-1 ring-white/20 backdrop-blur" type="button" aria-label="알림">
-                <Bell size={20} />
-              </button>
+    <div className="space-y-6">
+      <section className="overflow-hidden rounded-[34px] bg-brand text-white shadow-glow">
+        <div className="relative min-h-[250px] p-5">
+          <img src="images/gympass-qr-entry.png" alt="짐패스 QR 입장 히어로" className="absolute inset-0 h-full w-full object-cover object-[62%_center] opacity-45" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.22)_0%,rgba(17,24,39,0.92)_100%)]" />
+          <div className="relative flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-black uppercase text-lime">현재 위치 · 진주 가좌동</p>
+              <h1 className="mt-3 text-[31px] font-black leading-[1.12]">
+                김예림님,<br />오늘 운동 갈까요?
+              </h1>
+              <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1 text-xs font-black text-white/75 ring-1 ring-white/15">
+                <CalendarDays size={14} />
+                2026.06.02 화요일
+              </p>
             </div>
-            <div className="mt-5 h-32 overflow-hidden rounded-[26px] shadow-soft ring-1 ring-white/15">
-              <img src="images/gympass-share-art.png" alt="짐패스 QR 체크인 앱 이미지" className="h-full w-full object-cover object-[72%_center]" />
-            </div>
+            <button className="grid size-11 place-items-center rounded-full bg-white/12 text-white shadow-soft ring-1 ring-white/20 backdrop-blur" type="button" aria-label="알림">
+              <Bell size={20} />
+            </button>
           </div>
-          <div className="space-y-4">
-            <div className="rounded-[28px] bg-white/10 p-4 shadow-lift ring-1 ring-white/15 backdrop-blur-md">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge tone="lime">이용중</Badge>
-                <span className="rounded-full bg-white/12 px-3 py-1 text-xs font-black text-white/80">D-30</span>
-              </div>
-              <div className="mt-4 grid grid-cols-[1fr_92px] items-end gap-4">
-                <div>
-                  <h2 className="text-[30px] font-black leading-[1.02]">머슬팩토리<br />오늘 입장 가능</h2>
-                  <p className="mt-3 text-xs font-bold leading-5 text-white/70">다음 결제 2026.06.20 · 현대카드 1842</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => navigate("pass")}
-                  className="grid h-24 place-items-center rounded-[24px] bg-lime text-brand text-center shadow-soft"
-                  aria-label="QR 이용권 열기"
-                >
-                  <QrCode size={34} />
-                  <span className="text-[11px] font-black">QR PASS</span>
-                </button>
-              </div>
-            </div>
-            <div className="rounded-[28px] bg-white p-4 text-brand shadow-soft">
-              <Badge tone="blue">NO CONTRACT · MONTHLY</Badge>
-              <h2 className="mt-3 text-[28px] font-black leading-[1.04]">1년권 말고<br />한 달씩 가볍게</h2>
-              <p className="mt-3 text-sm font-bold leading-6 text-gray-600">가격, 거리, 운영시간을 비교하고 결제 즉시 QR로 입장하세요.</p>
-              <Button className="mt-4 w-full" onClick={() => navigate("search")}>
-                내 주변 헬스장 보기
-              </Button>
-            </div>
+          <div className="relative mt-7 grid grid-cols-3 gap-3">
+            <Stat label="남은 기간" value={activePass.remainingDays} tone="lime" />
+            <Stat label="오늘 루틴" value={todayRoutine.focus} tone="blue" />
+            <Stat label="식단" value="520kcal" />
           </div>
         </div>
       </section>
-      <button type="button" onClick={() => navigate("shop")} className="block w-full text-left">
-        <Card className="overflow-hidden bg-white p-0">
-          <div className="grid grid-cols-[1fr_138px] items-stretch">
-            <div className="p-5">
-              <Badge tone="blue">GYMSHOP</Badge>
-              <h2 className="mt-4 text-[25px] font-black leading-[1.08]">운동 끝나고<br />바로 단백질</h2>
-              <p className="mt-3 text-sm font-semibold leading-6 text-gray-500">구독 회원 전용 상품을 장바구니에 담고 구매 흐름까지 확인하세요.</p>
-              <div className="mt-4 inline-flex items-center gap-2 text-sm font-black text-blue">
-                상품 보러가기 <ChevronRight size={16} />
-              </div>
-            </div>
-            <div className="relative bg-zinc-100">
-              <img src="images/gymshop-chicken-breast.png" alt="GYMSHOP 닭가슴살 상품" className="h-full min-h-48 w-full object-cover" />
-            </div>
+
+      <Card className="bg-white">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <Badge tone="lime">현재 이용중</Badge>
+            <h2 className="mt-4 text-2xl font-black leading-tight">{activePass.gymName}</h2>
+            <p className="mt-2 text-sm font-bold text-gray-500">{activePass.planName}</p>
           </div>
-        </Card>
-      </button>
-      <div className="grid grid-cols-3 gap-3">
-        <QuickFeature icon={<Dumbbell size={20} />} label="PT" body="상담" onClick={() => navigate("pt")} />
-        <QuickFeature icon={<Activity size={20} />} label="루틴" body="주 4회" onClick={() => navigate("routine")} />
-        <QuickFeature icon={<Utensils size={20} />} label="AI 식단" body="520kcal" onClick={() => navigate("diet")} />
+          <div className="grid size-16 place-items-center rounded-[22px] bg-brand text-lime">
+            <QrCode size={32} />
+          </div>
+        </div>
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <InfoMini label="남은 기간" value={activePass.remainingDays} />
+          <InfoMini label="다음 결제일" value={activePass.nextBillingDate} />
+        </div>
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <Button onClick={() => navigate("pass")}>
+            <QrCode size={18} />
+            QR 이용권
+          </Button>
+          <Button variant="line" onClick={() => navigate("subscription")}>
+            <CreditCard size={18} />
+            구독 관리
+          </Button>
+        </div>
+      </Card>
+
+      <div>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-xl font-black">빠른 메뉴</h2>
+          <span className="text-xs font-black text-gray-400">짐패스 바로가기</span>
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          <QuickFeature icon={<QrCode size={20} />} label="QR 입장" body="30초 토큰" onClick={() => navigate("pass")} />
+          <QuickFeature icon={<CreditCard size={20} />} label="구독 관리" body="결제/해지" onClick={() => navigate("subscription")} />
+          <QuickFeature icon={<Dumbbell size={20} />} label="PT 신청" body="상담" onClick={() => navigate("pt")} />
+          <QuickFeature icon={<Activity size={20} />} label="루틴" body={weeklyRoutine.frequency} onClick={() => navigate("routine")} />
+          <QuickFeature icon={<Utensils size={20} />} label="AI 식단" body={dietRecommendation.calories} onClick={() => navigate("diet")} />
+          <QuickFeature icon={<ShoppingBag size={20} />} label="상품 주문" body="회원 할인" onClick={() => navigate("shop")} />
+        </div>
       </div>
+
+      <Card className="bg-brand text-white">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <Badge tone="lime">오늘의 루틴</Badge>
+            <h2 className="mt-4 text-3xl font-black leading-tight">{todayRoutine.focus}</h2>
+            <p className="mt-2 text-sm font-semibold leading-6 text-white/70">{weeklyRoutine.goal} 목표 · 예상 운동 시간 45분</p>
+          </div>
+          <Activity className="shrink-0 text-lime" size={32} />
+        </div>
+        <Button className="mt-5 w-full" onClick={() => navigate("routine")}>
+          루틴 보기
+        </Button>
+      </Card>
+
+      <Card className="space-y-5">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <Badge tone="blue">오늘 추천 식단</Badge>
+            <h2 className="mt-4 text-2xl font-black leading-tight">{dietRecommendation.todayMenu}</h2>
+            <p className="mt-2 text-sm font-bold text-gray-500">
+              {dietRecommendation.calories} · {dietRecommendation.protein}
+            </p>
+          </div>
+          <Utensils className="shrink-0 text-blue" size={30} />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <Button variant="line" onClick={() => navigate("diet")}>식단 보기</Button>
+          <Button variant="dark" onClick={() => navigate("shop")}>상품 주문</Button>
+        </div>
+      </Card>
+
+      <Card>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <Badge tone="lime">추천 트레이너</Badge>
+            <h2 className="mt-4 text-2xl font-black">{recommendedTrainer.name}</h2>
+            <p className="mt-2 text-sm font-bold text-gray-500">{recommendedTrainer.specialty}</p>
+            <p className="mt-3 text-xl font-black">1회 {formatWon(recommendedTrainer.price)}</p>
+          </div>
+          <UserCheck className="shrink-0 text-blue" size={30} />
+        </div>
+        <Button className="mt-5 w-full" onClick={() => navigate("pt")}>
+          PT 상담 신청
+        </Button>
+      </Card>
+
+      <Card className="overflow-hidden p-0">
+        <div className="grid grid-cols-[1fr_132px]">
+          <div className="p-5">
+            <Badge tone="blue">GYMSHOP 추천</Badge>
+            <h2 className="mt-4 text-xl font-black leading-tight">{recommendedProduct.name}</h2>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <p className="text-2xl font-black">{formatWon(recommendedProduct.price)}</p>
+              <Badge tone="lime">{recommendedProduct.badge}</Badge>
+            </div>
+            <Button variant="line" className="mt-5 w-full" onClick={() => navigate("shop")}>
+              상품 보기
+              <ChevronRight size={16} />
+            </Button>
+          </div>
+          <img src={recommendedProduct.image} alt={recommendedProduct.name} className="h-full min-h-56 w-full object-cover" />
+        </div>
+      </Card>
+
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-black">추천 헬스장</h2>
+        <h2 className="text-xl font-black">주변 추천 헬스장</h2>
         <button type="button" onClick={() => navigate("search")} className="text-sm font-black text-blue">
           전체 보기
         </button>
@@ -484,18 +548,6 @@ function HomeScreen({ navigate, selectGym }: { navigate: (screen: ScreenId) => v
           <GymCard key={gym.id} gym={gym} onClick={() => selectGym(gym)} />
         ))}
       </div>
-      <Card className="bg-zinc-950 text-white">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <Badge tone="lime">월구독 핵심 정보</Badge>
-            <h2 className="mt-4 text-2xl font-black leading-tight">가격, 다음 결제일, QR 입장을 홈에서 바로 확인</h2>
-            <p className="mt-3 text-sm font-semibold leading-6 text-white/70">
-              장기 약정 없이 한 달 단위로 결제하고, 해지 예약과 환불 안내는 구독 관리에서 확인할 수 있습니다.
-            </p>
-          </div>
-          <ReceiptText className="shrink-0 text-lime" size={30} />
-        </div>
-      </Card>
     </div>
   );
 }
