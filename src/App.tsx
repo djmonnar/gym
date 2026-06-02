@@ -221,33 +221,38 @@ export default function App() {
 
 function SplashScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
   return (
-    <div className="relative flex min-h-[640px] flex-col justify-between overflow-hidden rounded-[34px] bg-black text-white shadow-glow">
-      <img src="images/gympass-onboarding-hero.png" alt="짐패스 앱 프리뷰" className="absolute inset-0 h-full w-full object-cover object-[50%_44%] opacity-86" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.22)_0%,rgba(0,0,0,0.34)_42%,rgba(0,0,0,0.96)_100%)]" />
+    <div className="relative flex min-h-[640px] flex-col justify-between overflow-hidden rounded-[34px] bg-brand text-white shadow-glow">
+      <img src="images/gympass-onboarding-hero.png" alt="짐패스 앱 프리뷰" className="absolute inset-0 h-full w-full object-cover object-[50%_44%] opacity-60" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.32)_0%,rgba(17,24,39,0.54)_42%,rgba(17,24,39,0.98)_100%)]" />
       <div className="relative p-5">
         <div className="flex items-center justify-between">
           <img src="brand/gympass-icon.svg" alt="짐패스 로고" className="size-12 rounded-[18px] shadow-lift ring-1 ring-white/15" />
-          <Badge tone="lime">MONTHLY PASS</Badge>
+          <Badge tone="lime">MONTHLY FITNESS</Badge>
         </div>
       </div>
-      <div className="relative p-5">
-        <div className="rounded-[30px] bg-white/10 p-5 shadow-lift ring-1 ring-white/15 backdrop-blur-md">
+      <div className="relative space-y-6 p-5">
+        <div>
           <Badge tone="blue">진주 가좌동 · QR 입장</Badge>
-          <h1 className="mt-4 text-[52px] font-black leading-[0.98] text-white">짐패스</h1>
-          <p className="mt-4 text-[25px] font-black leading-[1.14] text-white">헬스장, 이제<br />한 달씩 가볍게</p>
-          <p className="mt-4 text-sm font-semibold leading-6 text-white/72">
-            주변 GYM을 비교하고 결제하면 QR 이용권이 바로 열립니다.
+          <h1 className="mt-5 text-[56px] font-black leading-none text-white">짐패스</h1>
+          <p className="mt-4 max-w-[310px] text-[27px] font-black leading-[1.12] text-white">헬스장, 이제 한 달씩 가볍게</p>
+          <p className="mt-4 max-w-[310px] text-sm font-semibold leading-6 text-white/76">
+            내 주변 헬스장을 한 달씩 구독하고 QR로 바로 입장하세요
           </p>
-          <div className="mt-5 grid grid-cols-3 gap-2">
-            {["월구독", "즉시입장", "투명결제"].map((item) => (
-              <div key={item} className="rounded-2xl bg-black/45 px-2 py-3 text-center text-xs font-black text-white ring-1 ring-white/10">
-                {item}
-              </div>
-            ))}
-          </div>
-          <Button className="mt-5 w-full" onClick={() => navigate("onboarding")}>
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {["월구독", "동적 QR", "AI 루틴"].map((item) => (
+            <div key={item} className="rounded-2xl bg-white/10 px-2 py-3 text-center text-xs font-black text-white ring-1 ring-white/10 backdrop-blur">
+              {item}
+            </div>
+          ))}
+        </div>
+        <div className="space-y-3">
+          <Button className="w-full" onClick={() => navigate("onboarding")}>
             30초 둘러보기
           </Button>
+          <button type="button" onClick={() => navigate("login")} className="w-full rounded-[18px] px-5 py-3 text-sm font-black text-white/78 transition hover:bg-white/10">
+            이미 계정이 있어요
+          </button>
         </div>
       </div>
     </div>
@@ -255,48 +260,91 @@ function SplashScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
 }
 
 function OnboardingScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
-  const points = [
-    ["한 달씩", "오래 묶이지 않고 필요한 만큼만 이용"],
-    ["바로 입장", "결제 후 QR 이용권으로 즉시 체크인"],
-    ["투명한 관리", "결제 내역, 해지, 환불 안내를 한곳에서 확인"]
+  const [step, setStep] = useState(0);
+  const steps = [
+    {
+      eyebrow: "MONTHLY PASS",
+      title: "비싼 1년권 말고, 헬스장도 한 달씩",
+      description: "가격과 거리, 운영시간을 비교하고 원하는 헬스장을 월 단위로 시작하세요.",
+      tags: ["월구독", "가격 비교", "가까운 헬스장"],
+      icon: <Dumbbell size={34} />,
+      image: "images/gympass-onboarding-hero.png"
+    },
+    {
+      eyebrow: "SECURE CHECK-IN",
+      title: "결제하면 QR 이용권이 바로 열립니다",
+      description: "30초마다 갱신되는 동적 QR로 빠르고 안전하게 입장할 수 있습니다.",
+      tags: ["동적 QR", "캡처 방지", "1회용 토큰"],
+      icon: <QrCode size={34} />,
+      image: "images/gympass-qr-entry.png"
+    },
+    {
+      eyebrow: "FITNESS CARE",
+      title: "PT, 루틴, AI 식단까지 한 번에",
+      description: "운동 목표에 맞춰 PT 상담, 주간 루틴, 맞춤 식단, 상품 주문까지 연결합니다.",
+      tags: ["PT 신청", "운동 루틴", "AI 식단", "GYMSHOP"],
+      icon: <Sparkles size={34} />,
+      image: "images/gympass-share-art.png"
+    }
   ];
+  const current = steps[step];
+  const isLast = step === steps.length - 1;
 
   return (
-    <div className="flex min-h-[640px] flex-col justify-between space-y-6">
+    <div className="flex min-h-[640px] flex-col justify-between">
       <div className="space-y-5">
         <div className="flex items-center justify-between">
-          <Badge tone="blue">STEP 1</Badge>
-          <div className="flex gap-1.5">
-            <span className="h-2 w-8 rounded-full bg-lime" />
-            <span className="size-2 rounded-full bg-zinc-300" />
-            <span className="size-2 rounded-full bg-zinc-300" />
+          <button type="button" onClick={() => navigate("location")} className="text-sm font-black text-gray-500">
+            건너뛰기
+          </button>
+          <div className="flex gap-2" aria-label="온보딩 진행 상태">
+            {steps.map((item, index) => (
+              <span key={item.title} className={cn("h-2 rounded-full transition-all", index === step ? "w-9 bg-lime" : "w-2 bg-zinc-300")} />
+            ))}
           </div>
         </div>
-        <div className="overflow-hidden rounded-[32px] bg-zinc-950 text-white shadow-glow">
-          <img src="images/gympass-onboarding-hero.png" alt="짐패스 월구독 화면" className="h-80 w-full object-cover object-[50%_38%]" />
-          <div className="p-5">
-            <Badge tone="lime">오늘 결제 · 오늘 입장</Badge>
-            <h1 className="mt-4 text-[34px] font-black leading-[1.08]">긴 계약 없이<br />필요한 만큼만</h1>
-            <p className="mt-3 text-sm font-semibold leading-6 text-white/72">근처 헬스장을 비교하고, 월 구독권을 고르고, QR로 바로 입장하세요.</p>
-          </div>
-        </div>
-        <div className="grid gap-3">
-          {points.map(([title, body]) => (
-            <Card key={title} className="flex items-center gap-4 p-4">
-              <div className="grid size-10 shrink-0 place-items-center rounded-2xl bg-lime text-brand shadow-[0_12px_30px_rgba(255,31,61,0.25)]">
-                <Check size={20} />
+        <Card className="overflow-hidden bg-brand p-0 text-white">
+          <div className="relative h-72">
+            <img src={current.image} alt={current.title} className="absolute inset-0 h-full w-full object-cover object-[54%_40%] opacity-68" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.06),rgba(17,24,39,0.92))]" />
+            <div className="relative flex h-full flex-col justify-between p-5">
+              <div className="flex items-center justify-between">
+                <Badge tone="lime">{current.eyebrow}</Badge>
+                <div className="grid size-14 place-items-center rounded-[20px] bg-white/12 text-lime ring-1 ring-white/15">
+                  {current.icon}
+                </div>
               </div>
               <div>
-                <p className="font-black leading-5">{title}</p>
-                <p className="mt-1 text-sm font-semibold leading-5 text-gray-500">{body}</p>
+                <h1 className="text-[33px] font-black leading-[1.08]">{current.title}</h1>
+                <p className="mt-3 text-sm font-semibold leading-6 text-white/72">{current.description}</p>
               </div>
-            </Card>
-          ))}
-        </div>
+            </div>
+          </div>
+          <div className="p-5">
+            <p className="text-xs font-black text-white/48">STEP {step + 1} / {steps.length}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {current.tags.map((tag) => (
+                <Badge key={tag} tone={tag.includes("QR") || tag.includes("AI") ? "blue" : "lime"}>{tag}</Badge>
+              ))}
+            </div>
+          </div>
+        </Card>
+        <Card className="bg-white">
+          <div className="grid grid-cols-3 gap-3">
+            <InfoMini label="월구독" value="1개월" />
+            <InfoMini label="입장" value="QR" />
+            <InfoMini label="관리" value="통합" />
+          </div>
+        </Card>
       </div>
-      <Button className="w-full" onClick={() => navigate("login")}>
-        다음으로
-      </Button>
+      <div className="grid grid-cols-[0.85fr_1.15fr] gap-3">
+        <Button variant="line" onClick={() => (step === 0 ? navigate("splash") : setStep((currentStep) => currentStep - 1))}>
+          이전
+        </Button>
+        <Button onClick={() => (isLast ? navigate("login") : setStep((currentStep) => currentStep + 1))}>
+          {isLast ? "짐패스 시작하기" : "다음"}
+        </Button>
+      </div>
     </div>
   );
 }
@@ -336,10 +384,16 @@ function LoginScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
       </div>
       <div className="space-y-3">
         <Button className="w-full" onClick={() => navigate("location")}>
-          3초 로그인 계속하기
+          김예림님으로 체험하기
+        </Button>
+        <button type="button" onClick={() => navigate("location")} className="flex min-h-12 w-full items-center justify-center rounded-[18px] bg-[#FEE500] px-5 py-3 text-sm font-black text-[#191919] shadow-soft transition active:scale-[0.98]">
+          카카오로 계속하기
+        </button>
+        <Button variant="line" className="w-full" onClick={() => navigate("location")}>
+          휴대폰 번호로 시작하기
         </Button>
         <Button variant="ghost" className="w-full" onClick={() => navigate("adminHome")}>
-          사장님 계정으로 보기
+          사장님 계정 보기
         </Button>
       </div>
     </div>
@@ -350,7 +404,7 @@ function LocationScreen({ navigate }: { navigate: (screen: ScreenId) => void }) 
   return (
     <div className="flex min-h-[640px] flex-col justify-between">
       <div className="space-y-6">
-        <ScreenHeader title="주변 헬스장을 바로 비교할게요" eyebrow="위치 권한 안내" />
+        <ScreenHeader title="가까운 헬스장을 정확히 추천할게요" eyebrow="위치 권한 안내" />
         <Card className="overflow-hidden p-0">
           <div className="relative h-80 bg-zinc-950 text-white">
             <img src="images/gympass-onboarding-hero.png" alt="위치 기반 헬스장 추천" className="absolute inset-0 h-full w-full object-cover object-[63%_42%] opacity-55" />
@@ -370,7 +424,7 @@ function LocationScreen({ navigate }: { navigate: (screen: ScreenId) => void }) 
                         <p className="font-black">{gym.name}</p>
                         <p className="mt-1 text-xs font-bold text-white/65">{gym.distance} · 월 {gym.monthlyPrice.toLocaleString("ko-KR")}원</p>
                       </div>
-                      <Badge tone="red">{gym.hours}</Badge>
+                      <Badge tone="blue">{gym.hours}</Badge>
                     </div>
                   </div>
                 ))}
@@ -378,10 +432,13 @@ function LocationScreen({ navigate }: { navigate: (screen: ScreenId) => void }) 
             </div>
           </div>
           <div className="space-y-4 p-5">
-            <p className="text-sm font-semibold leading-6 text-gray-600">
-              현재 위치는 헬스장 거리 계산과 주변 추천에만 사용됩니다. 결제나 구독 정보와는 별도로 안전하게 관리됩니다.
-            </p>
+            <div className="rounded-[22px] bg-[#EEF4FF] p-4 ring-1 ring-blue/10">
+              <Badge tone="blue">거리 계산 전용</Badge>
+              <p className="mt-3 text-lg font-black leading-6 text-brand">거리 계산과 주변 헬스장 추천에만 사용됩니다</p>
+              <p className="mt-2 text-sm font-semibold leading-6 text-gray-600">결제, 구독권, QR 토큰 정보와는 별도로 관리하며 더미 UI에서는 실제 위치를 저장하지 않습니다.</p>
+            </div>
             <InfoRow label="예상 위치" value="진주 가좌동" icon={<Map size={17} />} />
+            <InfoRow label="사용 목적" value="거리 계산 · 주변 추천" icon={<LocateFixed size={17} />} />
           </div>
         </Card>
       </div>
