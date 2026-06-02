@@ -158,7 +158,7 @@ export default function App() {
           />
         );
       case "complete":
-        return <CompleteScreen gym={selectedGym} navigate={navigate} />;
+        return <CompleteScreen gym={selectedGym} plan={selectedPlan} navigate={navigate} />;
       case "pass":
         return <PassScreen gym={selectedGym} plan={selectedPlan} navigate={navigate} />;
       case "subscription":
@@ -695,33 +695,51 @@ function DetailScreen({ gym, navigate }: { gym: Gym; navigate: (screen: ScreenId
     <div className="space-y-5">
       <ScreenHeader title={gym.name} eyebrow="헬스장 상세" onBack={() => navigate("home")} />
       <section className="overflow-hidden rounded-[30px] bg-white shadow-soft">
-        <img src={gym.image} alt={`${gym.name} 이미지`} className="h-64 w-full object-cover" />
-        <div className="p-5">
-          <div className="flex flex-wrap gap-2">
-            <Badge tone="lime">오늘 결제하면 바로 이용 가능</Badge>
-            <Badge tone="blue">평점 {gym.rating}</Badge>
+        <div className="relative h-72">
+          <img src={gym.image} alt={`${gym.name} 이미지`} className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.05),rgba(17,24,39,0.86))]" />
+          <div className="relative flex h-full flex-col justify-between p-5 text-white">
+            <div className="flex flex-wrap gap-2">
+              <Badge tone="lime">오늘 결제하면 바로 이용 가능</Badge>
+              <Badge tone="blue">평점 {gym.rating}</Badge>
+            </div>
+            <div>
+              <h2 className="text-[31px] font-black leading-tight">{gym.name}</h2>
+              <p className="mt-2 text-sm font-bold text-white/72">{gym.distance} · {gym.hours} · {gym.location}</p>
+            </div>
           </div>
-          <h2 className="mt-4 text-3xl font-black">{formatWon(gym.monthlyPrice)} / 월</h2>
-          <p className="mt-2 text-sm font-semibold text-gray-500">
-            {gym.location} · {gym.distance}
-          </p>
+        </div>
+        <div className="p-5">
+          <p className="text-sm font-bold text-gray-500">월 구독 시작가</p>
+          <h3 className="mt-1 text-4xl font-black">{formatWon(gym.monthlyPrice)}</h3>
+          <div className="mt-4 grid grid-cols-3 gap-3">
+            <InfoMini label="거리" value={gym.distance} />
+            <InfoMini label="운영" value={gym.hours} />
+            <InfoMini label="평점" value={`${gym.rating}`} />
+          </div>
         </div>
       </section>
-      <Card>
-        <h3 className="mb-4 text-lg font-black">시설 정보</h3>
-        <div className="space-y-3">
-          <InfoRow label="운영시간" value={gym.hours} icon={<Clock size={17} />} />
-          <InfoRow label="주차" value={gym.tags.includes("주차 가능") ? "가능" : "매장 문의"} />
-          <InfoRow label="샤워실" value={gym.facilities.includes("샤워실") ? "제공" : "제공 여부 확인"} />
-          <InfoRow label="락커" value={gym.facilities.includes("개인 락커") ? "개인 락커" : "공용 락커"} />
+      <Card className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-black">시설 정보</h3>
+          <Badge tone="gray">구독 포함</Badge>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {gym.facilities.slice(0, 5).map((facility) => (
+            <div key={facility} className="flex min-h-16 items-center gap-3 rounded-[18px] bg-gray-50 p-3">
+              <CheckCircle2 className="shrink-0 text-blue" size={18} />
+              <p className="text-sm font-black leading-5 text-gray-700">{facility}</p>
+            </div>
+          ))}
         </div>
       </Card>
       <Card>
-        <h3 className="mb-4 text-lg font-black">포함 시설</h3>
-        <Checklist items={gym.facilities} />
-      </Card>
-      <Card>
-        <h3 className="mb-4 text-lg font-black">트레이너 소개</h3>
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-lg font-black">트레이너 미리보기</h3>
+          <button type="button" onClick={() => navigate("pt")} className="text-sm font-black text-blue">
+            PT 보기
+          </button>
+        </div>
         <div className="space-y-3">
           {gym.trainers.map((trainer) => (
             <div key={trainer} className="flex items-center gap-3 rounded-[18px] bg-gray-50 p-3">
@@ -732,6 +750,18 @@ function DetailScreen({ gym, navigate }: { gym: Gym; navigate: (screen: ScreenId
             </div>
           ))}
         </div>
+      </Card>
+      <Card className="space-y-3 border border-blue/10 bg-[#EEF4FF]">
+        <div className="flex items-start gap-3">
+          <ShieldCheck className="mt-0.5 shrink-0 text-blue" size={22} />
+          <div>
+            <h3 className="font-black text-brand">구독 전 확인 사항</h3>
+            <p className="mt-1 text-sm font-semibold leading-6 text-gray-600">결제 전에 이용 방식과 환불 기준을 확인해 주세요.</p>
+          </div>
+        </div>
+        <InfoRow label="입장 방식" value="QR 이용권으로 입장" icon={<QrCode size={17} />} />
+        <InfoRow label="해지 후 이용" value="현재 이용 기간까지 사용 가능" icon={<CalendarDays size={17} />} />
+        <InfoRow label="환불 기준" value="입장 기록과 이용 기간 기준 안내" icon={<ReceiptText size={17} />} />
       </Card>
       <Card>
         <h3 className="mb-4 text-lg font-black">위치</h3>
@@ -758,16 +788,22 @@ function PlanScreen({
   return (
     <div className="space-y-5">
       <ScreenHeader title="구독권 선택" eyebrow="원하는 만큼만 결제" onBack={() => navigate("detail")} />
+      <Card className="bg-brand text-white">
+        <Badge tone="lime">QR PASS INCLUDED</Badge>
+        <h2 className="mt-4 text-2xl font-black leading-tight">선택한 구독권은 결제 완료 즉시 QR 이용권으로 바뀝니다</h2>
+        <p className="mt-3 text-sm font-semibold leading-6 text-white/70">모든 구독권은 QR 입장, 해지 예약, 결제 내역 기록을 기본으로 포함합니다.</p>
+      </Card>
       {plans.map((plan) => {
         const selected = selectedPlan.id === plan.id;
+        const benefitItems = Array.from(new Set([...plan.benefits, "QR 입장 포함", "해지 예약 가능", "결제 내역 자동 기록"]));
         return (
           <button key={plan.id} type="button" onClick={() => setSelectedPlan(plan)} className="block w-full text-left">
-            <Card className={cn("border-2 transition", selected ? "border-lime shadow-lift" : "border-transparent")}>
+            <Card className={cn("border-2 transition", selected ? "border-lime bg-white shadow-lift ring-lime/30" : "border-transparent")}>
               <div className="mb-4 flex items-start justify-between gap-3">
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-xl font-black">{plan.name}</h2>
-                    {plan.recommended ? <Badge tone="blue">추천</Badge> : null}
+                    {plan.recommended ? <Badge tone="lime">첫 시작 추천</Badge> : null}
                   </div>
                   <p className="mt-1 text-sm font-semibold text-gray-500">{plan.description}</p>
                 </div>
@@ -775,15 +811,20 @@ function PlanScreen({
                   <Check size={19} />
                 </div>
               </div>
-              <p className="mb-4 text-3xl font-black">{formatWon(plan.price)}</p>
-              <Checklist items={plan.benefits} />
+              <div className="mb-4 flex items-end justify-between gap-4">
+                <p className="text-3xl font-black">{formatWon(plan.price)}</p>
+                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-black text-gray-600">월 단위</span>
+              </div>
+              <Checklist items={benefitItems} />
             </Card>
           </button>
         );
       })}
-      <Button className="w-full" onClick={() => navigate("checkout")}>
-        선택한 구독권 결제하기
-      </Button>
+      <div className="sticky bottom-2 z-10 rounded-[24px] bg-white/90 p-2 shadow-lift backdrop-blur">
+        <Button className="w-full" onClick={() => navigate("checkout")}>
+          선택한 구독권 결제하기
+        </Button>
+      </div>
     </div>
   );
 }
@@ -814,17 +855,45 @@ function CheckoutScreen({
   return (
     <div className="space-y-5">
       <ScreenHeader title="결제 확인" eyebrow="실제 결제는 진행되지 않습니다" onBack={() => navigate("plans")} />
+      <Card className="bg-brand text-white">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <Badge tone="lime">더미 결제</Badge>
+            <h2 className="mt-4 text-3xl font-black">{formatWon(plan.price)}</h2>
+            <p className="mt-2 text-sm font-semibold text-white/70">실제 결제는 진행되지 않는 더미 결제입니다</p>
+          </div>
+          <CreditCard className="shrink-0 text-lime" size={32} />
+        </div>
+      </Card>
       <Card className="space-y-3">
-        <InfoRow label="선택한 헬스장" value={gym.name} />
-        <InfoRow label="선택한 구독권" value={plan.name} />
+        <h2 className="text-lg font-black">결제 요약</h2>
+        <InfoRow label="헬스장명" value={gym.name} />
+        <InfoRow label="구독권명" value={plan.name} />
         <InfoRow label="결제 금액" value={formatWon(plan.price)} icon={<CircleDollarSign size={17} />} />
         <InfoRow label="다음 결제 예정일" value="2026.06.20" icon={<CalendarDays size={17} />} />
+        <InfoRow label="이용 시작일" value="2026.05.20" />
+        <InfoRow label="이용 종료일" value="2026.06.19" />
+      </Card>
+      <Card className="space-y-3 border border-blue/10 bg-[#EEF4FF]">
+        <div className="flex items-start gap-3">
+          <QrCode className="mt-0.5 shrink-0 text-blue" size={22} />
+          <div>
+            <h2 className="font-black text-brand">QR 발급 예정</h2>
+            <p className="mt-1 text-sm font-bold leading-6 text-gray-600">결제 완료 즉시 동적 QR 이용권이 발급됩니다</p>
+          </div>
+        </div>
+        <InfoRow label="갱신" value="QR은 30초마다 갱신됩니다" icon={<RefreshCw size={17} />} />
+        <InfoRow label="보안" value="캡처한 QR은 사용할 수 없습니다" icon={<ShieldCheck size={17} />} />
       </Card>
       <Card>
-        <h2 className="mb-3 text-lg font-black">환불/해지 안내</h2>
-        <p className="text-sm font-semibold leading-6 text-gray-600">
-          구독 해지는 다음 결제일부터 적용되며, 이미 결제된 이용권은 현재 이용 종료일까지 사용할 수 있습니다. 환불 가능 여부는 이용 시작일과 입장 기록에 따라 앱에서 확인됩니다.
-        </p>
+        <h2 className="mb-4 text-lg font-black">환불/해지 요약</h2>
+        <Checklist
+          items={[
+            "해지 예약 후에도 현재 이용 종료일까지 사용할 수 있습니다.",
+            "환불 가능 여부는 입장 기록과 이용 기간을 기준으로 안내됩니다.",
+            "다음 결제 예정일 전 해지하면 다음 달 자동 결제가 중단됩니다."
+          ]}
+        />
       </Card>
       <Card className="space-y-4">
         <div className="flex items-center justify-between rounded-[20px] bg-gray-50 p-4">
@@ -849,22 +918,50 @@ function CheckoutScreen({
   );
 }
 
-function CompleteScreen({ gym, navigate }: { gym: Gym; navigate: (screen: ScreenId) => void }) {
+function CompleteScreen({ gym, plan, navigate }: { gym: Gym; plan: Plan; navigate: (screen: ScreenId) => void }) {
   return (
-    <div className="flex min-h-[640px] flex-col items-center justify-center text-center">
-      <div className="grid size-28 place-items-center rounded-full bg-lime text-brand shadow-lift">
+    <div className="flex min-h-[640px] flex-col justify-center space-y-6 text-center">
+      <div className="mx-auto grid size-28 place-items-center rounded-full bg-lime text-brand shadow-lift">
         <CheckCircle2 size={58} strokeWidth={2.4} />
       </div>
-      <h1 className="mt-7 text-3xl font-black">구독권이 발급되었습니다</h1>
-      <p className="mt-3 text-sm font-semibold leading-6 text-gray-500">이제 QR 이용권을 직원에게 보여주고 바로 입장할 수 있어요.</p>
-      <Card className="mt-8 w-full space-y-3 text-left">
+      <div>
+        <Badge tone="blue">결제 완료</Badge>
+        <h1 className="mt-4 text-3xl font-black">구독권이 발급되었습니다</h1>
+        <p className="mt-3 text-sm font-semibold leading-6 text-gray-500">이제 QR 이용권을 직원에게 보여주고 바로 입장할 수 있어요.</p>
+      </div>
+      <Card className="w-full space-y-3 text-left">
         <InfoRow label="헬스장명" value={gym.name} />
+        <InfoRow label="구독권" value={plan.name} />
         <InfoRow label="이용 시작일" value="2026.05.20" />
         <InfoRow label="이용 종료일" value="2026.06.19" />
       </Card>
-      <Button className="mt-8 w-full" onClick={() => navigate("pass")}>
-        내 이용권 확인하기
-      </Button>
+      <Card className="overflow-hidden bg-brand p-0 text-white">
+        <div className="p-5">
+          <Badge tone="lime">QR 이용권 미리보기</Badge>
+          <div className="mt-5 grid grid-cols-[92px_1fr] items-center gap-4 text-left">
+            <div className="qr-pattern grid size-24 place-items-center rounded-[22px] bg-white">
+              <QrCode className="text-brand" size={54} />
+            </div>
+            <div>
+              <p className="text-sm font-black">{activePass.maskedToken}</p>
+              <p className="mt-2 text-xs font-semibold leading-5 text-white/65">30초마다 새 QR 생성 · 1회 스캔 후 폐기</p>
+            </div>
+          </div>
+        </div>
+      </Card>
+      <Card className="space-y-3 text-left">
+        <h2 className="text-lg font-black">QR 보안 안내</h2>
+        <InfoRow label="갱신 주기" value="30초마다 새 QR 생성" icon={<RefreshCw size={17} />} />
+        <InfoRow label="사용 정책" value="1회 스캔 후 폐기" icon={<KeyRound size={17} />} />
+      </Card>
+      <div className="grid grid-cols-1 gap-3">
+        <Button className="w-full" onClick={() => navigate("pass")}>
+          내 QR 이용권 확인하기
+        </Button>
+        <Button variant="line" className="w-full" onClick={() => navigate("home")}>
+          홈으로 이동
+        </Button>
+      </div>
     </div>
   );
 }
