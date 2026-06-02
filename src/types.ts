@@ -14,6 +14,9 @@ export type CustomerScreen =
   | "history"
   | "support"
   | "my"
+  | "pt"
+  | "routine"
+  | "diet"
   | "shop"
   | "shopDetail"
   | "cart"
@@ -74,6 +77,8 @@ export type ShopProduct = {
 
 export type MemberStatus = "이용중" | "만료예정" | "해지예약" | "만료";
 
+export type QrVerificationStatus = "입장 가능" | "만료된 QR" | "이미 사용된 QR" | "다른 지점 이용권" | "회원권 만료";
+
 export type AdminMember = {
   id: string;
   name: string;
@@ -81,4 +86,49 @@ export type AdminMember = {
   plan: string;
   expiresAt: string;
   status: MemberStatus;
+};
+
+export type QrVerificationResult = {
+  status: QrVerificationStatus;
+  memberName: string;
+  memberId: string;
+  plan: string;
+  remainingDays: string;
+  branch: string;
+  message: string;
+};
+
+export type PtTrainer = {
+  id: string;
+  name: string;
+  specialty: string;
+  price: number;
+  rating: number;
+  description: string;
+};
+
+export type RoutineDay = {
+  day: string;
+  focus: string;
+  detail: string;
+};
+
+export type RoutinePlan = {
+  memberName: string;
+  goal: string;
+  frequency: string;
+  days: RoutineDay[];
+};
+
+export type DietRecommendation = {
+  memberName: string;
+  source: string;
+  settings: Array<{
+    label: string;
+    value: string;
+  }>;
+  todayMenu: string;
+  calories: string;
+  protein: string;
+  note: string;
 };

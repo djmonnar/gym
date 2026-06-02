@@ -1,4 +1,4 @@
-﻿import type { AdminMember, Gym, PaymentRecord, Plan, ShopProduct } from "../types";
+﻿import type { AdminMember, DietRecommendation, Gym, PaymentRecord, Plan, PtTrainer, QrVerificationResult, RoutinePlan, ShopProduct } from "../types";
 
 export const gyms: Gym[] = [
   {
@@ -111,12 +111,114 @@ export const adminMembers: AdminMember[] = [
   { id: "M-1028", name: "최나은", phone: "010-19**-63**", plan: "첫 달 체험권", expiresAt: "2026.05.01", status: "만료" }
 ];
 
+export const qrVerificationResults: QrVerificationResult[] = [
+  {
+    status: "입장 가능",
+    memberName: "김예림",
+    memberId: "M-1042",
+    plan: "1개월 베이직",
+    remainingDays: "24일",
+    branch: "머슬팩토리 경상대점",
+    message: "정상 토큰입니다. 1회 스캔 후 즉시 폐기됩니다."
+  },
+  {
+    status: "만료된 QR",
+    memberName: "김예림",
+    memberId: "M-1042",
+    plan: "1개월 베이직",
+    remainingDays: "24일",
+    branch: "머슬팩토리 경상대점",
+    message: "30초 유효 시간이 지난 QR입니다. 회원 앱에서 새 QR을 요청해야 합니다."
+  },
+  {
+    status: "이미 사용된 QR",
+    memberName: "김예림",
+    memberId: "M-1042",
+    plan: "1개월 베이직",
+    remainingDays: "24일",
+    branch: "머슬팩토리 경상대점",
+    message: "이미 입장 처리된 토큰입니다. 캡처본 또는 재사용 시도로 볼 수 있습니다."
+  },
+  {
+    status: "다른 지점 이용권",
+    memberName: "이지원",
+    memberId: "M-1041",
+    plan: "프리미엄 패스",
+    remainingDays: "11일",
+    branch: "진주 피트니스 라운지",
+    message: "이용권 지점이 현재 매장과 다릅니다. 제휴 지점 권한을 확인하세요."
+  },
+  {
+    status: "회원권 만료",
+    memberName: "최나은",
+    memberId: "M-1028",
+    plan: "첫 달 체험권",
+    remainingDays: "0일",
+    branch: "머슬팩토리 경상대점",
+    message: "회원권 기간이 종료되어 입장할 수 없습니다. 재구독 안내가 필요합니다."
+  }
+];
+
 export const entryLogs = [
   "김예림님 16:22 입장",
   "정민지님 15:48 입장",
   "이지원님 14:10 입장",
   "박서준님 12:35 입장"
 ];
+
+export const ptTrainers: PtTrainer[] = [
+  {
+    id: "pt-kim",
+    name: "김도윤 트레이너",
+    specialty: "감량·초보자 전문",
+    price: 55000,
+    rating: 4.9,
+    description: "처음 운동하는 회원을 위한 기초 자세와 감량 루틴을 설계합니다."
+  },
+  {
+    id: "pt-lee",
+    name: "이서현 트레이너",
+    specialty: "여성 체형교정",
+    price: 60000,
+    rating: 4.8,
+    description: "골반, 어깨 라인, 코어 안정성을 중심으로 체형 교정을 돕습니다."
+  },
+  {
+    id: "pt-park",
+    name: "박민재 트레이너",
+    specialty: "근력·바디프로필",
+    price: 65000,
+    rating: 4.9,
+    description: "근력 향상과 바디프로필 준비를 위한 주기화 프로그램을 제공합니다."
+  }
+];
+
+export const weeklyRoutine: RoutinePlan = {
+  memberName: "김예림",
+  goal: "감량",
+  frequency: "주 4회",
+  days: [
+    { day: "월", focus: "하체", detail: "스쿼트, 레그프레스, 힙브릿지 중심" },
+    { day: "수", focus: "등/이두", detail: "랫풀다운, 시티드로우, 덤벨컬" },
+    { day: "금", focus: "가슴/삼두", detail: "체스트프레스, 푸시업, 케이블 푸시다운" },
+    { day: "토", focus: "유산소", detail: "인터벌 러닝 25분과 코어 10분" }
+  ]
+};
+
+export const dietRecommendation: DietRecommendation = {
+  memberName: "김예림",
+  source: "본사 식단표 기반 맞춤 식단",
+  settings: [
+    { label: "목표", value: "감량" },
+    { label: "운동량", value: "주 4회" },
+    { label: "제외 음식", value: "새우" },
+    { label: "예산", value: "주 7만원" }
+  ],
+  todayMenu: "닭가슴살 현미볼 + 미역국",
+  calories: "약 520kcal",
+  protein: "단백질 42g",
+  note: "운동일 저녁 기준으로 탄수화물은 낮추고 단백질은 충분히 맞춘 추천입니다."
+};
 
 export const shopProducts: ShopProduct[] = [
   {
@@ -142,3 +244,4 @@ export const shopProducts: ShopProduct[] = [
     shipping: "오늘 18시 전 주문 시 내일 도착 예정"
   }
 ];
+

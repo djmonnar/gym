@@ -23,10 +23,10 @@ type ButtonProps = {
 
 export function Button({ children, onClick, variant = "primary", className, disabled }: ButtonProps) {
   const variants = {
-    primary: "bg-[linear-gradient(135deg,#F9162F,#B70F1E)] text-white shadow-glow hover:translate-y-[-1px]",
+    primary: "bg-lime text-brand shadow-soft hover:translate-y-[-1px]",
     dark: "bg-brand text-white shadow-soft ring-1 ring-white/10 hover:translate-y-[-1px]",
     ghost: "bg-zinc-100 text-brand ring-1 ring-zinc-200 hover:bg-white",
-    line: "border border-red-500/25 bg-white text-brand hover:border-red-500",
+    line: "border border-blue/20 bg-white text-brand hover:border-blue",
     danger: "bg-red-500/10 text-red-600 ring-1 ring-red-500/20 hover:bg-red-500/15"
   };
 
@@ -52,8 +52,8 @@ export function Card({ children, className }: { children: ReactNode; className?:
 
 export function Badge({ children, tone = "gray" }: { children: ReactNode; tone?: "lime" | "blue" | "gray" | "red" | "green" }) {
   const tones = {
-    lime: "bg-red-600 text-white shadow-[0_10px_28px_rgba(249,22,47,0.28)]",
-    blue: "bg-zinc-950 text-red-300 ring-1 ring-red-500/30",
+    lime: "bg-lime text-brand shadow-[0_10px_28px_rgba(215,255,63,0.24)]",
+    blue: "bg-blue text-white ring-1 ring-blue/30",
     gray: "bg-zinc-100 text-zinc-700",
     red: "bg-red-600 text-white",
     green: "bg-emerald-100 text-emerald-700"
@@ -76,7 +76,7 @@ export function ScreenHeader({
   return (
     <header className="mb-6 flex items-start justify-between gap-4">
       <div className="min-w-0">
-        {eyebrow ? <p className="mb-2 text-xs font-black uppercase text-red-600">{eyebrow}</p> : null}
+        {eyebrow ? <p className="mb-2 text-xs font-black uppercase text-blue">{eyebrow}</p> : null}
         <h1 className="text-[28px] font-black leading-[1.08] text-brand">{title}</h1>
       </div>
       <div className="flex shrink-0 items-center gap-2">
@@ -110,9 +110,9 @@ export function AppShell({
   appMode?: "customer" | "admin";
 }) {
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_50%_-10%,rgba(249,22,47,0.36),transparent_34%),radial-gradient(circle_at_12%_86%,rgba(185,28,28,0.2),transparent_34%),#050506] px-3 py-5 text-brand">
-      <div className="relative mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-[430px] flex-col overflow-hidden rounded-[38px] border border-white/10 bg-[#111114] shadow-glow ring-8 ring-black/45">
-        <div className="flex items-center justify-between border-b border-white/10 bg-black/70 px-5 py-3 text-white backdrop-blur-xl">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_50%_-10%,rgba(215,255,63,0.25),transparent_34%),radial-gradient(circle_at_12%_86%,rgba(37,99,235,0.18),transparent_34%),#111827] px-3 py-5 text-brand">
+      <div className="relative mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-[430px] flex-col overflow-hidden rounded-[38px] border border-white/10 bg-surface shadow-glow ring-8 ring-black/25">
+        <div className="flex items-center justify-between border-b border-white/10 bg-brand/90 px-5 py-3 text-white backdrop-blur-xl">
           <div className="flex items-center gap-2">
             <img src="brand/gympass-icon.svg" alt="짐패스 로고" className="size-9 rounded-2xl shadow-glow" />
             <div>
@@ -141,7 +141,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
   ];
 
   return (
-    <nav className="fixed bottom-6 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-[390px] -translate-x-1/2 grid-cols-5 rounded-[28px] border border-black/10 bg-white px-2 py-2 shadow-[0_22px_70px_rgba(0,0,0,0.36),0_0_0_1px_rgba(255,255,255,0.95)]">
+    <nav className="fixed bottom-6 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-[390px] -translate-x-1/2 grid-cols-5 rounded-[28px] border border-black/10 bg-white px-2 py-2 shadow-[0_22px_70px_rgba(17,24,39,0.26),0_0_0_1px_rgba(255,255,255,0.95)]">
       {items.map((item) => {
         const isActive = active === item.screen;
         return (
@@ -151,7 +151,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
             onClick={() => navigate(item.screen)}
             className={cn(
               "flex h-[58px] flex-col items-center justify-center gap-1 rounded-[21px] text-[10px] font-black transition",
-              isActive ? "bg-red-600 text-white shadow-[0_14px_36px_rgba(249,22,47,0.34)]" : "text-zinc-500 hover:bg-zinc-100 hover:text-brand"
+              isActive ? "bg-brand text-lime shadow-[0_14px_36px_rgba(17,24,39,0.22)]" : "text-zinc-500 hover:bg-zinc-100 hover:text-brand"
             )}
           >
             {item.icon}
@@ -164,7 +164,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
 }
 
 export function Stat({ label, value, tone = "dark" }: { label: string; value: string; tone?: "dark" | "blue" | "lime" }) {
-  const toneClass = tone === "lime" ? "bg-red-600 text-white" : tone === "blue" ? "bg-zinc-950 text-white" : "bg-brand text-white";
+  const toneClass = tone === "lime" ? "bg-lime text-brand" : tone === "blue" ? "bg-blue text-white" : "bg-brand text-white";
 
   return (
     <div className={cn("rounded-[22px] p-4", toneClass)}>
@@ -190,7 +190,7 @@ export function MapPlaceholder() {
   return (
     <div className="relative h-40 overflow-hidden rounded-[24px] bg-gray-100">
       <div className="absolute inset-0 bg-[linear-gradient(135deg,#e5e7eb_25%,transparent_25%),linear-gradient(225deg,#e5e7eb_25%,transparent_25%),linear-gradient(45deg,#e5e7eb_25%,transparent_25%),linear-gradient(315deg,#e5e7eb_25%,#f8fafc_25%)] bg-[length:28px_28px] bg-[position:14px_0,14px_0,0_0,0_0]" />
-      <div className="absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-red-600 text-white shadow-soft">
+      <div className="absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-blue text-white shadow-soft">
         <MapPin size={23} />
       </div>
     </div>
@@ -202,7 +202,7 @@ export function Checklist({ items }: { items: string[] }) {
     <ul className="space-y-2.5">
       {items.map((item) => (
         <li key={item} className="flex items-start gap-2 text-sm font-semibold leading-6 text-gray-700">
-          <ListChecks className="mt-0.5 shrink-0 text-red-600" size={17} />
+          <ListChecks className="mt-0.5 shrink-0 text-blue" size={17} />
           <span>{item}</span>
         </li>
       ))}
