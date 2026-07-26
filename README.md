@@ -2,7 +2,7 @@
 
 헬스·요가·필라테스·피트니스 시설을 월 단위로 구독하고, QR 입장부터 PT, 운동 루틴, AI 식단, 상품 주문까지 연결하는 모바일 우선 PWA 스타일 프론트엔드 프로토타입입니다.
 
-현재 버전은 실제 결제, 로그인, 지도 API, Firebase, AI 서버를 연결하지 않고 더미 데이터와 로컬 상태로 서비스 흐름을 검증합니다.
+현재 버전은 Firebase 앱 초기화까지 연결되어 있으며 화면 데이터는 `src/lib/repo/*`의 더미 저장소를 사용합니다. 실제 로그인, Firestore 읽기·쓰기, Storage 업로드, 결제, 지도 API, AI 서버 호출은 아직 실행하지 않습니다.
 
 ## 실행 방법
 
@@ -29,6 +29,7 @@ npm run build
 - Tailwind CSS
 - lucide-react
 - sharp 이미지 렌더링 스크립트
+- Firebase Web SDK
 
 ## 주요 화면
 
@@ -57,6 +58,19 @@ npm run build
 - 가로형 로고: `public/brand/returnpass-logo.png`
 - 공유 이미지 원본: `public/og/returnpass-og-master.png`
 - 향후 시설, 트레이너, 콘텐츠, 상품, 챌린지 이미지도 동일하게 ChatGPT Image 2로 제작
+- 요가·필라테스 시설 카드 3종도 ChatGPT Image 2로 제작
+
+## Firebase 설정
+
+`src/lib/firebase.ts`에서 Firebase 앱을 초기화합니다. Auth, Firestore, Storage는 초기 번들 크기를 줄이기 위해 실제 사용 시 동적으로 불러옵니다.
+
+```bash
+Copy-Item .env.example .env.local
+```
+
+`.env.local`에 Firebase 웹 앱 구성값을 입력합니다. 실제 서비스 사용 전 Firebase Console에서 Authentication 제공자, Firestore 데이터베이스, Storage를 각각 활성화하고 보안 규칙을 설정해야 합니다.
+
+Firebase 웹 API 키는 클라이언트에 포함되는 식별값입니다. Google Cloud Console에서 HTTP 리퍼러와 사용 API를 리턴패스 배포 도메인으로 제한하는 것을 권장합니다.
 
 ## 구현된 보강
 
@@ -82,7 +96,9 @@ npm run build
 src/
   App.tsx                 화면 라우팅과 로컬 상태
   components/ui.tsx       버튼, 카드, 배지, 앱 프레임, 하단 탭바
-  data/gympass.ts         시설, 구독권, QR, PT, 루틴, 식단, 관리자, 상품 더미 데이터
+  data/returnpass.ts      시설, 구독권, QR, 트레이너, 콘텐츠, AI, 커뮤니티, 상품 더미 데이터
+  lib/firebase.ts         Firebase 앱 초기화와 지연 로드 서비스
+  lib/repo/               화면과 데이터 소스를 분리하는 리포지토리 계층
   types.ts                화면과 도메인 데이터 타입
   styles.css              Tailwind 기본 스타일과 QR 패턴
 public/
@@ -94,4 +110,4 @@ scripts/
   publish-pages.mjs        GitHub Pages 배포 파일 복사
 ```
 
-다음 단계에서는 `src/data/returnpass.ts`와 `src/lib/repo/*` 데이터 계층을 추가해 화면이 더미 저장소와 Firebase 저장소를 같은 인터페이스로 사용할 수 있게 확장합니다.
+다음 단계에서는 신규 screen id와 역할별 라우팅을 추가하고, 이후 Firebase 구현 저장소가 `ReturnPassRepository` 인터페이스를 구현하도록 교체합니다.

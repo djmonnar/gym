@@ -1,0 +1,56 @@
+import type {
+  AdminEntryLog,
+  AdminMember,
+  AiDietPlan,
+  AiRoutine,
+  Challenge,
+  Content,
+  DietRecommendation,
+  Facility,
+  FacilityCategory,
+  PassInfo,
+  PaymentRecord,
+  Plan,
+  Post,
+  Product,
+  QrVerificationResult,
+  RoutinePlan,
+  Trainer
+} from "../../types";
+
+export type FacilityCategoryOption = {
+  id: FacilityCategory;
+  label: string;
+};
+
+export type ReturnPassSnapshot = {
+  facilities: Facility[];
+  gyms: Facility[];
+  filters: string[];
+  facilityCategories: readonly FacilityCategoryOption[];
+  plans: Plan[];
+  activePass: PassInfo;
+  paymentRecords: PaymentRecord[];
+  adminMembers: AdminMember[];
+  qrVerificationResults: QrVerificationResult[];
+  entryLogs: AdminEntryLog[];
+  ptTrainers: Trainer[];
+  weeklyRoutine: RoutinePlan;
+  dietRecommendation: DietRecommendation;
+  shopProducts: Product[];
+  contents: Content[];
+  aiDietPlan: AiDietPlan;
+  aiRoutine: AiRoutine;
+  communityPosts: Post[];
+  challenges: Challenge[];
+};
+
+export interface ReturnPassRepository {
+  getSnapshot(): Readonly<ReturnPassSnapshot>;
+  listFacilities(category?: FacilityCategory): Promise<Facility[]>;
+  listTrainers(facilityId?: string): Promise<Trainer[]>;
+  listContents(): Promise<Content[]>;
+  listProducts(): Promise<Product[]>;
+  listCommunityPosts(facilityId?: string): Promise<Post[]>;
+  listChallenges(): Promise<Challenge[]>;
+}

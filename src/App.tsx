@@ -42,8 +42,23 @@ import {
   Utensils,
   X
 } from "lucide-react";
-import { activePass, adminMembers, dietRecommendation, entryLogs, filters, gyms, paymentRecords, plans, ptTrainers, qrVerificationResults, shopProducts, weeklyRoutine } from "./data/gympass";
+import { prototypeData } from "./lib/repo";
 import type { AdminMember, Gym, MemberStatus, PaymentRecord, Plan, QrVerificationStatus, ScreenId, ShopProduct } from "./types";
+
+const {
+  activePass,
+  adminMembers,
+  dietRecommendation,
+  entryLogs,
+  filters,
+  gyms,
+  paymentRecords,
+  plans,
+  ptTrainers,
+  qrVerificationResults,
+  shopProducts,
+  weeklyRoutine
+} = prototypeData;
 import { AppShell, Badge, Button, Card, Checklist, InfoRow, MapPlaceholder, ScreenHeader, Stat, cn } from "./components/ui";
 
 const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;

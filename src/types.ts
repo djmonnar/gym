@@ -26,6 +26,10 @@ export type AdminScreen = "adminHome" | "adminMembers" | "adminQr";
 
 export type ScreenId = CustomerScreen | AdminScreen;
 
+export type Role = "member" | "trainer" | "owner" | "vendor" | "hq";
+
+export type FacilityCategory = "gym" | "yoga" | "pilates" | "crossfit" | "boxing";
+
 export type Gym = {
   id: string;
   name: string;
@@ -38,6 +42,20 @@ export type Gym = {
   tags: string[];
   facilities: string[];
   trainers: string[];
+};
+
+export type Facility = Gym & {
+  category: FacilityCategory;
+  images: string[];
+  holidays: string[];
+  amenities: string[];
+  congestion: {
+    level: "여유" | "보통" | "혼잡";
+    updatedAt: string;
+  };
+  ownerUids: string[];
+  status: "pending" | "active" | "paused";
+  commissionRate: number;
 };
 
 export type Plan = {
@@ -86,6 +104,25 @@ export type ShopProduct = {
   shipping: string;
 };
 
+export type SellerType = "hq" | "vendor" | "facility";
+
+export type FulfillmentType = "delivery" | "pickup" | "both";
+
+export type Product = ShopProduct & {
+  sellerType: SellerType;
+  sellerId: string;
+  sellerName: string;
+  fulfillment: FulfillmentType;
+  category: "보충제·단백질" | "닭가슴살·도시락" | "소도구" | "의류" | "시설 픽업";
+  stock: number;
+  status: "active" | "soldOut" | "hidden";
+  foodInfo?: {
+    origin: string;
+    expiry: string;
+    nutrition: string;
+  };
+};
+
 export type MemberStatus = "이용중" | "만료예정" | "해지예약" | "만료";
 
 export type QrVerificationStatus = "입장 가능" | "만료된 QR" | "이미 사용된 QR" | "다른 지점 이용권" | "회원권 만료";
@@ -129,6 +166,56 @@ export type PtTrainer = {
   description: string;
 };
 
+export type TrainerGender = "여성" | "남성";
+
+export type TrainerIntensity = "고강도" | "중강도" | "점진적";
+
+export type TrainerTone = "직설·푸시형" | "담백·프로형" | "다정·응원형";
+
+export type TrainerTeach = "원리까지 설명" | "핵심만" | "따라하기";
+
+export type TrainerDietInvolve = "매일 체크" | "주 1회 피드백" | "운동만";
+
+export type Trainer = PtTrainer & {
+  uid: string;
+  facilityIds: string[];
+  gender: TrainerGender;
+  career: string;
+  certs: string[];
+  intro: string;
+  videoUrl: string;
+  tags: {
+    specialties: string[];
+    intensity: TrainerIntensity;
+    tone: TrainerTone;
+    teach: TrainerTeach;
+    dietInvolve: TrainerDietInvolve;
+    careExp: string[];
+  };
+  timeSlots: string[];
+  reviewCount: number;
+  cases: Array<{
+    title: string;
+    summary: string;
+  }>;
+  payoutRate: number;
+  status: "pending" | "active" | "paused";
+};
+
+export type MatchAnswers = {
+  goal: "체중감량" | "근력·벌크업" | "체형교정·자세" | "통증·재활" | "체력·컨디션";
+  level: "입문" | "6개월↓" | "1년↑" | "3년↑";
+  intensity: "몰아치는 고강도" | "꾸준한 중강도" | "천천히 점진적";
+  tone: TrainerTone;
+  teach: TrainerTeach;
+  diet: "매일 체크해주길" | "주 1회 피드백" | "운동만";
+  time: "새벽" | "오전" | "오후" | "야간" | "주말";
+  genderPref: TrainerGender | "무관";
+  care: "무릎" | "허리" | "어깨" | "목" | "없음";
+  freq: "주 1회" | "주 2회" | "주 3회";
+  budget: "월 20만원 이하" | "월 40만원 이하" | "월 60만원 이하" | "예산 무관";
+};
+
 export type RoutineDay = {
   day: string;
   focus: string;
@@ -153,4 +240,129 @@ export type DietRecommendation = {
   calories: string;
   protein: string;
   note: string;
+};
+
+export type ContentType = "video" | "article" | "mealPlan" | "program";
+
+export type ContentAccess = "public" | "subscriber" | "pt";
+
+export type Content = {
+  id: string;
+  type: ContentType;
+  title: string;
+  summary: string;
+  thumbnail: string;
+  level: "입문" | "초급" | "중급" | "고급";
+  bodyParts: string[];
+  durationMin: number;
+  access: ContentAccess;
+  tags: string[];
+  author: string;
+  publishedAt: string;
+  videoUrl?: string;
+  body?: string;
+};
+
+export type AiDietMealItem = {
+  food: string;
+  qty: string;
+  kcal: number;
+};
+
+export type AiDietPlan = {
+  id: string;
+  summary: {
+    targetKcal: number;
+    protein_g: number;
+    carb_g: number;
+    fat_g: number;
+    note: string;
+  };
+  weeks: Array<{
+    week: number;
+    days: Array<{
+      date: string;
+      meals: Array<{
+        type: "breakfast" | "lunch" | "dinner" | "snack";
+        name: string;
+        items: AiDietMealItem[];
+        kcal: number;
+        recipe: string;
+      }>;
+      totalKcal: number;
+    }>;
+  }>;
+  groceryList: Array<{
+    name: string;
+    qty: string;
+    shopProductId: string | null;
+  }>;
+  swaps: Array<{
+    from: string;
+    to: string;
+    reason: string;
+  }>;
+};
+
+export type AiRoutineExercise = {
+  name: string;
+  sets: number;
+  reps: string;
+  restSec: number;
+  alternative: string;
+  contentId?: string;
+};
+
+export type AiRoutine = {
+  id: string;
+  memberName: string;
+  goal: string;
+  frequency: number;
+  weeks: Array<{
+    week: number;
+    days: Array<{
+      day: string;
+      focus: string;
+      durationMin: number;
+      exercises: AiRoutineExercise[];
+    }>;
+  }>;
+  regeneratedCount: number;
+  regenerateLimit: number;
+};
+
+export type PostType = "proof" | "qna" | "notice" | "free";
+
+export type Post = {
+  id: string;
+  uid: string;
+  authorName: string;
+  type: PostType;
+  facilityId: string | null;
+  challengeId: string | null;
+  text: string;
+  images: string[];
+  likes: number;
+  commentCount: number;
+  status: "open" | "blinded" | "deleted";
+  reportCount: number;
+  createdAt: string;
+  tags: string[];
+};
+
+export type Challenge = {
+  id: string;
+  host: "hq" | "facility";
+  hostName: string;
+  title: string;
+  description: string;
+  period: {
+    startAt: string;
+    endAt: string;
+  };
+  rule: string;
+  reward: string;
+  participantCount: number;
+  badgeName: string;
+  image: string;
 };
