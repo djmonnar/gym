@@ -97,6 +97,17 @@ export type AdminMember = {
   plan: string;
   expiresAt: string;
   status: MemberStatus;
+  lastEntryAt: string;
+};
+
+export type AdminEntryLogStatus = "입장 승인" | "해지예약 상태 입장" | "입장 거절";
+
+export type AdminEntryLog = {
+  id: string;
+  memberName: string;
+  time: string;
+  status: AdminEntryLogStatus;
+  plan: string;
 };
 
 export type QrVerificationResult = {

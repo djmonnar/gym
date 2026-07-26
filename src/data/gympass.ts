@@ -1,6 +1,7 @@
 ﻿import type { AdminMember, DietRecommendation, Gym, PaymentRecord, Plan, PtTrainer, QrVerificationResult, RoutinePlan, ShopProduct } from "../types";
 
 import type { PassInfo } from "../types";
+import type { AdminEntryLog } from "../types";
 
 export const gyms: Gym[] = [
   {
@@ -118,10 +119,10 @@ export const paymentRecords: PaymentRecord[] = [
 ];
 
 export const adminMembers: AdminMember[] = [
-  { id: "M-1042", name: "김예림", phone: "010-23**-91**", plan: "1개월 베이직", expiresAt: "2026.06.19", status: "이용중" },
-  { id: "M-1041", name: "이지원", phone: "010-77**-44**", plan: "프리미엄 패스", expiresAt: "2026.05.24", status: "만료예정" },
-  { id: "M-1039", name: "박서준", phone: "010-54**-28**", plan: "1개월 베이직", expiresAt: "2026.06.02", status: "해지예약" },
-  { id: "M-1028", name: "최나은", phone: "010-19**-63**", plan: "첫 달 체험권", expiresAt: "2026.05.01", status: "만료" }
+  { id: "M-1042", name: "김예림", phone: "010-23**-91**", plan: "1개월 베이직", expiresAt: "2026.06.19", status: "이용중", lastEntryAt: "16:22" },
+  { id: "M-1041", name: "이지원", phone: "010-77**-44**", plan: "프리미엄 패스", expiresAt: "2026.05.24", status: "만료예정", lastEntryAt: "15:48" },
+  { id: "M-1039", name: "박서준", phone: "010-54**-28**", plan: "1개월 베이직", expiresAt: "2026.06.02", status: "해지예약", lastEntryAt: "14:10" },
+  { id: "M-1028", name: "최나은", phone: "010-19**-63**", plan: "첫 달 체험권", expiresAt: "2026.05.01", status: "만료", lastEntryAt: "12:35" }
 ];
 
 export const qrVerificationResults: QrVerificationResult[] = [
@@ -172,11 +173,11 @@ export const qrVerificationResults: QrVerificationResult[] = [
   }
 ];
 
-export const entryLogs = [
-  "김예림님 16:22 입장",
-  "정민지님 15:48 입장",
-  "이지원님 14:10 입장",
-  "박서준님 12:35 입장"
+export const entryLogs: AdminEntryLog[] = [
+  { id: "entry-001", memberName: "김예림", time: "16:22", status: "입장 승인", plan: "1개월 베이직" },
+  { id: "entry-002", memberName: "이지원", time: "15:48", status: "입장 승인", plan: "프리미엄 패스" },
+  { id: "entry-003", memberName: "박서준", time: "14:10", status: "해지예약 상태 입장", plan: "1개월 베이직" },
+  { id: "entry-004", memberName: "최나은", time: "12:35", status: "입장 거절", plan: "회원권 만료" }
 ];
 
 export const ptTrainers: PtTrainer[] = [

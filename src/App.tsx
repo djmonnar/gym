@@ -200,11 +200,11 @@ export default function App() {
       case "shopComplete":
         return <ShopCompleteScreen product={selectedProduct} quantity={cartQuantity} navigate={navigate} />;
       case "adminHome":
-        return <AdminHome navigate={navigate} />;
+        return <AdminHome navigate={navigate} notify={notify} />;
       case "adminMembers":
-        return <AdminMembers status={adminStatus} setStatus={setAdminStatus} />;
+        return <AdminMembers status={adminStatus} setStatus={setAdminStatus} navigate={navigate} notify={notify} />;
       case "adminQr":
-        return <AdminQr result={qrResult} setResult={setQrResult} notify={notify} />;
+        return <AdminQr result={qrResult} setResult={setQrResult} navigate={navigate} notify={notify} />;
       default:
         return null;
     }
@@ -1598,92 +1598,186 @@ function QuantityStepper({ quantity, setQuantity }: { quantity: number; setQuant
   );
 }
 
-function AdminHome({ navigate }: { navigate: (screen: ScreenId) => void }) {
+function AdminHome({ navigate, notify }: { navigate: (screen: ScreenId) => void; notify: (message: string) => void }) {
+  const operationAlerts = [
+    { label: "QR 확인 필요", value: "2건", icon: <ScanLine size={18} />, action: () => navigate("adminQr") },
+    { label: "환불 문의", value: "1건", icon: <Headphones size={18} />, action: () => notify("환불 문의 목록을 확인했습니다.") },
+    { label: "결제 실패 회원", value: "4명", icon: <AlertCircle size={18} />, action: () => notify("결제 실패 회원 필터가 열렸습니다.") },
+    { label: "PT 상담 대기", value: "3건", icon: <Dumbbell size={18} />, action: () => notify("PT 신청 관리 화면 placeholder입니다.") },
+    { label: "상품 주문 접수", value: "6건", icon: <ShoppingBag size={18} />, action: () => notify("상품 주문 관리 화면 placeholder입니다.") }
+  ];
+  const quickMenus = [
+    { label: "QR 확인", body: "스캔", icon: <ScanLine size={20} />, action: () => navigate("adminQr") },
+    { label: "회원 목록", body: "구독자", icon: <UsersRound size={20} />, action: () => navigate("adminMembers") },
+    { label: "PT 신청 관리", body: "3건", icon: <Dumbbell size={20} />, action: () => notify("PT 신청 관리 화면 placeholder입니다.") },
+    { label: "상품 주문 관리", body: "6건", icon: <ShoppingBag size={20} />, action: () => notify("상품 주문 관리 화면 placeholder입니다.") },
+    { label: "환불 문의", body: "1건", icon: <Headphones size={20} />, action: () => notify("환불 문의 목록을 확인했습니다.") },
+    { label: "정산 요약", body: "예정", icon: <ReceiptText size={20} />, action: () => notify("정산 요약 카드로 이동했습니다.") }
+  ];
+
   return (
     <div className="space-y-5">
       <ScreenHeader title="머슬팩토리 경상대점 관리자" eyebrow="오늘 매장 현황" />
-      <div className="grid grid-cols-2 gap-3">
-        <Stat label="오늘 입장 회원 수" value="38명" tone="lime" />
-        <Stat label="현재 구독자 수" value="214명" />
-        <Stat label="이번 달 결제액" value="812만원" tone="blue" />
-        <Stat label="만료 예정 회원" value="17명" />
-      </div>
-      <Button className="w-full" onClick={() => navigate("adminQr")}>
-        <ScanLine size={18} />
-        QR 확인
-      </Button>
-      <Button variant="line" className="w-full" onClick={() => navigate("adminMembers")}>
-        <UsersRound size={18} />
-        회원 목록 보기
-      </Button>
+      <Card className="bg-brand text-white">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <Badge tone="lime">2026.06.02 화요일</Badge>
+            <h2 className="mt-4 text-3xl font-black leading-tight">오늘 운영 현황</h2>
+            <p className="mt-2 text-sm font-semibold text-white/65">입장, 구독, 결제, 문의를 한 화면에서 확인합니다.</p>
+          </div>
+          <Settings className="shrink-0 text-lime" size={30} />
+        </div>
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <AdminMetric label="오늘 입장 회원 수" value="38명" tone="lime" />
+          <AdminMetric label="현재 구독자 수" value="214명" />
+          <AdminMetric label="이번 달 결제액" value="8,120,000원" tone="blue" />
+          <AdminMetric label="만료 예정 회원" value="17명" />
+        </div>
+      </Card>
+
       <Card>
-        <h2 className="mb-4 text-lg font-black">최근 입장 기록</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-black">운영 알림</h2>
+          <Badge tone="blue">오늘 처리</Badge>
+        </div>
         <div className="space-y-3">
-          {entryLogs.map((log) => (
-            <div key={log} className="flex items-center gap-3 rounded-[18px] bg-gray-50 p-3">
-              <CheckCircle2 size={19} className="text-emerald-600" />
-              <p className="text-sm font-bold text-gray-700">{log}</p>
-            </div>
+          {operationAlerts.map((item) => (
+            <button key={item.label} type="button" onClick={item.action} className="flex w-full items-center justify-between rounded-[18px] bg-gray-50 p-3 text-left transition hover:bg-[#EEF4FF]">
+              <span className="flex items-center gap-3">
+                <span className="grid size-10 place-items-center rounded-2xl bg-white text-blue shadow-soft">{item.icon}</span>
+                <span className="text-sm font-black text-gray-700">{item.label}</span>
+              </span>
+              <span className="rounded-full bg-brand px-3 py-1 text-xs font-black text-lime">{item.value}</span>
+            </button>
           ))}
         </div>
       </Card>
-      <Card>
-        <h2 className="mb-4 text-lg font-black">오늘 처리할 일</h2>
-        <div className="space-y-3">
-          <InfoRow label="QR 확인 필요" value="2건" icon={<ScanLine size={17} />} />
-          <InfoRow label="환불 문의" value="1건" icon={<Headphones size={17} />} />
-          <InfoRow label="결제 실패 회원" value="4명" icon={<AlertCircle size={17} />} />
+
+      <div>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-xl font-black">관리자 빠른 메뉴</h2>
+          <span className="text-xs font-black text-gray-400">운영 바로가기</span>
         </div>
+        <div className="grid grid-cols-3 gap-3">
+          {quickMenus.map((menu) => (
+            <QuickFeature key={menu.label} icon={menu.icon} label={menu.label} body={menu.body} onClick={menu.action} />
+          ))}
+        </div>
+      </div>
+
+      <Card>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-black">최근 입장 기록</h2>
+          <button type="button" onClick={() => navigate("adminQr")} className="text-sm font-black text-blue">
+            QR 확인
+          </button>
+        </div>
+        <div className="space-y-3">
+          {entryLogs.map((log) => (
+            <AdminEntryLogItem key={log.id} log={log} />
+          ))}
+        </div>
+      </Card>
+
+      <Card className="space-y-3">
+        <h2 className="text-lg font-black">정산 요약</h2>
+        <InfoRow label="이번 달 결제액" value="8,120,000원" icon={<CircleDollarSign size={17} />} />
+        <InfoRow label="플랫폼 수수료 예상" value="812,000원" icon={<ReceiptText size={17} />} />
+        <InfoRow label="정산 예정액" value="7,308,000원" icon={<CreditCard size={17} />} />
+        <InfoRow label="다음 정산 예정일" value="2026.06.30" icon={<CalendarDays size={17} />} />
       </Card>
     </div>
   );
 }
 
-function AdminMembers({ status, setStatus }: { status: MemberStatus; setStatus: (status: MemberStatus) => void }) {
+function AdminMembers({
+  status,
+  setStatus,
+  navigate,
+  notify
+}: {
+  status: MemberStatus;
+  setStatus: (status: MemberStatus) => void;
+  navigate: (screen: ScreenId) => void;
+  notify: (message: string) => void;
+}) {
   const statuses: MemberStatus[] = ["이용중", "만료예정", "해지예약", "만료"];
   const members = adminMembers.filter((member) => member.status === status);
 
   return (
     <div className="space-y-5">
-      <ScreenHeader title="회원 목록" eyebrow="구독 상태별 관리" />
+      <ScreenHeader title="회원 목록" eyebrow="구독 상태별 관리" onBack={() => navigate("adminHome")} />
       <div className="flex items-center gap-3 rounded-[22px] bg-white px-4 py-3 shadow-soft">
         <Search size={20} className="text-gray-400" />
         <input className="min-w-0 flex-1 bg-transparent text-sm font-bold outline-none placeholder:text-gray-400" placeholder="회원명 또는 회원번호 검색" />
       </div>
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        {statuses.map((item) => (
-          <button
-            key={item}
-            type="button"
-            onClick={() => setStatus(item)}
-            className={cn("shrink-0 rounded-full px-4 py-2 text-sm font-bold", status === item ? "bg-brand text-lime" : "bg-white text-gray-600")}
-          >
-            {item}
-          </button>
-        ))}
+      <div className="grid grid-cols-4 gap-2">
+        {statuses.map((item) => {
+          const count = adminMembers.filter((member) => member.status === item).length;
+          return (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setStatus(item)}
+              className={cn("rounded-[18px] px-2 py-3 text-center text-xs font-black", status === item ? "bg-brand text-lime" : "bg-white text-gray-600 shadow-soft")}
+            >
+              <span className="block">{item}</span>
+              <span className="mt-1 block opacity-70">{count}명</span>
+            </button>
+          );
+        })}
       </div>
+      <Card className="bg-brand text-white">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs font-black text-lime">{status}</p>
+            <h2 className="mt-2 text-2xl font-black">{members.length}명</h2>
+          </div>
+          <UsersRound className="text-lime" size={30} />
+        </div>
+      </Card>
       <div className="space-y-3">
         {members.map((member) => (
-          <MemberItem key={member.id} member={member} />
+          <MemberItem
+            key={member.id}
+            member={member}
+            onQr={() => navigate("adminQr")}
+            onDetail={() => notify(`${member.name} 상세 정보 placeholder입니다.`)}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-function AdminQr({ result, setResult, notify }: { result: QrVerificationStatus; setResult: (status: QrVerificationStatus) => void; notify: (message: string) => void }) {
+function AdminQr({
+  result,
+  setResult,
+  navigate,
+  notify
+}: {
+  result: QrVerificationStatus;
+  setResult: (status: QrVerificationStatus) => void;
+  navigate: (screen: ScreenId) => void;
+  notify: (message: string) => void;
+}) {
   const statuses: QrVerificationStatus[] = ["입장 가능", "만료된 QR", "이미 사용된 QR", "다른 지점 이용권", "회원권 만료"];
   const selectedResult = qrVerificationResults.find((item) => item.status === result) ?? qrVerificationResults[0];
 
   return (
     <div className="space-y-5">
-      <ScreenHeader title="QR 확인" eyebrow="서버 토큰 검증" />
-      <Card className="text-center">
-        <div className="grid h-64 place-items-center rounded-[28px] border-2 border-dashed border-blue/25 bg-[#EEF4FF]">
-          <div>
-            <ScanLine className="mx-auto text-blue" size={58} />
-            <p className="mt-4 font-black">QR 스캔 영역</p>
-            <p className="mt-1 text-sm font-semibold text-gray-500">카메라 연동 전 placeholder · 더미 검증 상태 선택</p>
+      <ScreenHeader title="QR 확인" eyebrow="서버 토큰 검증" onBack={() => navigate("adminHome")} />
+      <Card className="overflow-hidden bg-brand p-0 text-white">
+        <div className="p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <Badge tone="lime">QR 스캔 모드</Badge>
+              <h2 className="mt-4 text-3xl font-black leading-tight">카메라 연결 전 더미 스캔</h2>
+              <p className="mt-3 text-sm font-semibold leading-6 text-white/70">실제 카메라 연동 전, 토큰 상태별 검증 결과를 미리 확인합니다.</p>
+            </div>
+            <div className="grid size-16 place-items-center rounded-[24px] bg-white/12 text-lime ring-1 ring-white/15">
+              <ScanLine size={34} />
+            </div>
           </div>
         </div>
       </Card>
@@ -1706,7 +1800,7 @@ function AdminQr({ result, setResult, notify }: { result: QrVerificationStatus; 
           </button>
         ))}
       </div>
-      <QrResultCard result={selectedResult} />
+      <QrResultCard result={selectedResult} notify={notify} />
     </div>
   );
 }
@@ -1790,7 +1884,40 @@ function MenuButton({ icon, label, onClick }: { icon: ReactNode; label: string; 
   );
 }
 
-function MemberItem({ member }: { member: AdminMember }) {
+function AdminMetric({ label, value, tone = "dark" }: { label: string; value: string; tone?: "dark" | "blue" | "lime" }) {
+  const className = tone === "lime" ? "bg-lime text-brand" : tone === "blue" ? "bg-blue text-white" : "bg-white/12 text-white";
+
+  return (
+    <div className={cn("rounded-[20px] p-4 ring-1 ring-white/10", className)}>
+      <p className="text-[11px] font-black opacity-75">{label}</p>
+      <p className="mt-2 text-2xl font-black leading-tight">{value}</p>
+    </div>
+  );
+}
+
+function AdminEntryLogItem({ log }: { log: (typeof entryLogs)[number] }) {
+  const tone: "green" | "lime" | "red" = log.status === "입장 승인" ? "green" : log.status === "해지예약 상태 입장" ? "lime" : "red";
+  const icon = log.status === "입장 거절" ? <AlertCircle size={19} /> : <CheckCircle2 size={19} />;
+
+  return (
+    <div className="rounded-[18px] bg-gray-50 p-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className={cn("grid size-10 shrink-0 place-items-center rounded-2xl", log.status === "입장 거절" ? "bg-rose-100 text-rose-600" : "bg-emerald-100 text-emerald-700")}>
+            {icon}
+          </div>
+          <div>
+            <p className="font-black leading-5">{log.memberName}</p>
+            <p className="mt-1 text-xs font-bold text-gray-500">{log.time} · {log.plan}</p>
+          </div>
+        </div>
+        <Badge tone={tone}>{log.status}</Badge>
+      </div>
+    </div>
+  );
+}
+
+function MemberItem({ member, onQr, onDetail }: { member: AdminMember; onQr: () => void; onDetail: () => void }) {
   const tone: "green" | "blue" | "lime" | "red" =
     member.status === "이용중" ? "green" : member.status === "만료예정" ? "blue" : member.status === "해지예약" ? "lime" : "red";
 
@@ -1808,12 +1935,22 @@ function MemberItem({ member }: { member: AdminMember }) {
       <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
         <InfoMini label="구독권" value={member.plan} />
         <InfoMini label="만료일" value={member.expiresAt} />
+        <InfoMini label="최근 입장" value={member.lastEntryAt} />
+        <InfoMini label="회원번호" value={member.id} />
+      </div>
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <Button variant="line" className="min-h-10 rounded-[14px] px-3 py-2 text-xs" onClick={onDetail}>
+          상세 보기
+        </Button>
+        <Button variant="dark" className="min-h-10 rounded-[14px] px-3 py-2 text-xs" onClick={onQr}>
+          QR 확인
+        </Button>
       </div>
     </Card>
   );
 }
 
-function QrResultCard({ result }: { result: (typeof qrVerificationResults)[number] }) {
+function QrResultCard({ result, notify }: { result: (typeof qrVerificationResults)[number]; notify: (message: string) => void }) {
   const config = {
     "입장 가능": { className: "bg-emerald-500 text-white", icon: <UserCheck size={34} />, label: "입장 가능" },
     "만료된 QR": { className: "bg-amber-500 text-white", icon: <Clock size={34} />, label: "만료된 QR" },
@@ -1823,21 +1960,32 @@ function QrResultCard({ result }: { result: (typeof qrVerificationResults)[numbe
   } satisfies Record<QrVerificationStatus, { className: string; icon: ReactNode; label: string }>;
 
   const item = config[result.status];
+  const canEnter = result.status === "입장 가능";
 
   return (
     <Card className={cn("p-5", item.className)}>
-      <div className="flex items-start gap-4">
-        <div className="grid size-14 shrink-0 place-items-center rounded-[20px] bg-white/20">{item.icon}</div>
-        <div className="min-w-0 flex-1">
-          <Badge tone={result.status === "입장 가능" ? "lime" : "gray"}>{item.label}</Badge>
-          <h2 className="mt-3 text-2xl font-black">{result.memberName}</h2>
-          <p className="mt-2 text-sm font-bold leading-6 opacity-85">{result.message}</p>
-          <div className="mt-5 grid grid-cols-2 gap-2 text-left text-sm">
-            <StatusInfo label="회원번호" value={result.memberId} />
-            <StatusInfo label="이용권" value={result.plan} />
-            <StatusInfo label="남은 기간" value={result.remainingDays} />
-            <StatusInfo label="지점" value={result.branch} />
+      <div className="space-y-5">
+        <div className="flex items-start gap-4">
+          <div className="grid size-14 shrink-0 place-items-center rounded-[20px] bg-white/20">{item.icon}</div>
+          <div className="min-w-0 flex-1">
+            <Badge tone={result.status === "입장 가능" ? "lime" : "gray"}>{item.label}</Badge>
+            <h2 className="mt-3 text-2xl font-black">{result.memberName}</h2>
+            <p className="mt-2 text-sm font-bold leading-6 opacity-85">{result.message}</p>
+            <div className="mt-5 grid grid-cols-2 gap-2 text-left text-sm">
+              <StatusInfo label="회원번호" value={result.memberId} />
+              <StatusInfo label="이용권" value={result.plan} />
+              <StatusInfo label="남은 기간" value={result.remainingDays} />
+              <StatusInfo label="지점" value={result.branch} />
+            </div>
           </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <Button className="min-h-11 rounded-[14px] px-3 py-2 text-xs" variant={canEnter ? "primary" : "line"} onClick={() => notify(canEnter ? "입장 승인 처리되었습니다." : "재스캔을 요청했습니다.")}>
+            {canEnter ? "입장 승인" : "재스캔"}
+          </Button>
+          <Button className="min-h-11 rounded-[14px] px-3 py-2 text-xs" variant={canEnter ? "line" : "dark"} onClick={() => notify(canEnter ? "다음 회원을 스캔하세요." : "고객센터 연결 안내를 표시했습니다.")}>
+            {canEnter ? "재스캔" : "고객센터 연결"}
+          </Button>
         </div>
       </div>
     </Card>
