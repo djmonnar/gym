@@ -3,6 +3,7 @@ import {
   adminMembers,
   aiDietPlan,
   aiRoutine,
+  aiVisualAssets,
   challenges,
   communityPosts,
   contents,
@@ -42,6 +43,7 @@ const snapshot: ReturnPassSnapshot = {
   contents,
   aiDietPlan,
   aiRoutine,
+  aiVisualAssets,
   communityPosts,
   challenges
 };

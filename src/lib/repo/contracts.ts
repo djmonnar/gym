@@ -3,6 +3,7 @@ import type {
   AdminMember,
   AiDietPlan,
   AiRoutine,
+  AiVisualAssets,
   Challenge,
   Content,
   DietRecommendation,
@@ -43,6 +44,7 @@ export type ReturnPassSnapshot = {
   contents: Content[];
   aiDietPlan: AiDietPlan;
   aiRoutine: AiRoutine;
+  aiVisualAssets: AiVisualAssets;
   communityPosts: Post[];
   challenges: Challenge[];
 };

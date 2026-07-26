@@ -48,7 +48,13 @@ export function Button({ children, onClick, variant = "primary", className, disa
 }
 
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <section className={cn("rounded-[24px] bg-card p-5 shadow-soft ring-1 ring-black/5", className)}>{children}</section>;
+  const hasCustomBackground = className?.split(/\s+/).some((token) => token.startsWith("bg-"));
+
+  return (
+    <section className={cn("rounded-[24px] p-5 shadow-soft ring-1 ring-black/5", !hasCustomBackground && "bg-card", className)}>
+      {children}
+    </section>
+  );
 }
 
 export function Badge({ children, tone = "gray" }: { children: ReactNode; tone?: "lime" | "blue" | "gray" | "red" | "green" }) {

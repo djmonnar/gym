@@ -64,6 +64,8 @@ Vercel 프로젝트에는 `.env.example`의 `VITE_FIREBASE_*` 환경변수를 Pr
 - 공유 이미지 원본: `public/og/returnpass-og-master.png`
 - 향후 시설, 트레이너, 콘텐츠, 상품, 챌린지 이미지도 동일하게 ChatGPT Image 2로 제작
 - 요가·필라테스 시설 카드 3종도 ChatGPT Image 2로 제작
+- 콘텐츠 12종, 챌린지 3종, AI 식단·루틴 비주얼도 ChatGPT Image 2 스프라이트로 제작
+- 자산 위치와 후속 제작 규칙: [`ASSET_GUIDE.md`](ASSET_GUIDE.md)
 
 ## Firebase 설정
 
@@ -99,6 +101,7 @@ firebase deploy --only firestore:rules,firestore:indexes,storage
 - 회원권 상태와 분리된 관리자 QR 검증 상태 및 예외 케이스
 - 입장 현황, 운영 알림, 회원 관리, QR 확인, 정산 요약 중심의 사장님 대시보드
 - 딥그린·라임·웜화이트 기반 리턴패스 브랜드와 리턴샵 명칭 적용
+- ChatGPT Image 2 콘텐츠·챌린지·AI 코치 비주얼을 실제 화면 데이터에 연결
 
 ## 동적 QR 보안 구조
 

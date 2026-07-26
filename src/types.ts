@@ -305,6 +305,7 @@ export type Content = {
   title: string;
   summary: string;
   thumbnail: string;
+  thumbnailPosition: string;
   level: "입문" | "초급" | "중급" | "고급";
   bodyParts: string[];
   durationMin: number;
@@ -384,6 +385,12 @@ export type AiRoutine = {
   regenerateLimit: number;
 };
 
+export type AiVisualAssets = {
+  image: string;
+  dietPosition: string;
+  routinePosition: string;
+};
+
 export type PostType = "proof" | "qna" | "notice" | "free";
 
 export type Post = {
@@ -418,4 +425,5 @@ export type Challenge = {
   participantCount: number;
   badgeName: string;
   image: string;
+  imagePosition: string;
 };

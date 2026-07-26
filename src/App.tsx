@@ -54,6 +54,7 @@ import { getMatchType, rankTrainers, type TrainerMatch } from "./lib/matching";
 import { prototypeData, returnPassRepository } from "./lib/repo";
 import type {
   AdminMember,
+  Content,
   Facility,
   FacilityCategory,
   MatchAnswers,
@@ -71,6 +72,7 @@ import type {
 const {
   activePass,
   adminMembers,
+  aiVisualAssets,
   challenges,
   communityPosts,
   contents,
@@ -90,6 +92,46 @@ const {
 import { AppShell, Badge, Button, Card, Checklist, InfoRow, MapPlaceholder, ScreenHeader, Stat, cn } from "./components/ui";
 
 const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
+
+function SpriteVisual({
+  image,
+  position,
+  backgroundSize,
+  label,
+  className
+}: {
+  image: string;
+  position: string;
+  backgroundSize: string;
+  label: string;
+  className?: string;
+}) {
+  return (
+    <div
+      role="img"
+      aria-label={label}
+      className={cn("bg-no-repeat", className)}
+      style={{
+        backgroundImage: `url("${image}")`,
+        backgroundPosition: position,
+        backgroundSize
+      }}
+    />
+  );
+}
+
+function ContentThumbnail({ content, className }: { content: Content; className?: string }) {
+  return (
+    <SpriteVisual
+      image={content.thumbnail}
+      position={content.thumbnailPosition}
+      backgroundSize="400% auto"
+      label={`${content.title} 썸네일`}
+      className={className}
+    />
+  );
+}
+
 const defaultMatchAnswers: MatchAnswers = {
   goal: "체중감량",
   level: "입문",
@@ -602,7 +644,7 @@ function ContentHomeScreen({ navigate }: { navigate: (screen: ScreenId) => void 
     <div>
       <ScreenHeader title="오늘의 콘텐츠" eyebrow="RETURNLIFE CONTENT" />
       <button type="button" onClick={() => navigate("contentDetail")} className="group relative mb-6 block w-full overflow-hidden rounded-[24px] text-left shadow-soft">
-        <img src={featured.thumbnail} alt={featured.title} className="h-52 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
+        <ContentThumbnail content={featured} className="h-52 w-full transition duration-300 group-hover:scale-[1.02]" />
         <div className="absolute inset-0 bg-gradient-to-t from-brand via-brand/30 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 p-5 text-white">
           <Badge tone="lime">오늘 8분</Badge>
@@ -631,7 +673,7 @@ function ContentHomeScreen({ navigate }: { navigate: (screen: ScreenId) => void 
       <div className="space-y-3">
         {contents.slice(1, 4).map((content) => (
           <button key={content.id} type="button" onClick={() => navigate("contentDetail")} className="flex w-full items-center gap-3 rounded-[20px] bg-white p-3 text-left shadow-soft ring-1 ring-black/5">
-            <img src={content.thumbnail} alt="" className="size-20 shrink-0 rounded-[16px] object-cover" />
+            <ContentThumbnail content={content} className="size-20 shrink-0 rounded-[16px]" />
             <div className="min-w-0">
               <p className="truncate text-sm font-black">{content.title}</p>
               <p className="mt-2 text-xs font-bold text-zinc-500">{content.level} · {content.durationMin}분</p>
@@ -650,7 +692,7 @@ function ContentDetailScreen({ navigate }: { navigate: (screen: ScreenId) => voi
   return (
     <div>
       <ScreenHeader title={content.title} eyebrow="오늘의 추천" onBack={() => navigate("contentHome")} />
-      <img src={content.thumbnail} alt={content.title} className="h-56 w-full rounded-[24px] object-cover shadow-soft" />
+      <ContentThumbnail content={content} className="h-56 w-full rounded-[24px] shadow-soft" />
       <Card className="mt-5">
         <div className="flex flex-wrap gap-2">
           <Badge tone="lime">{content.level}</Badge>
@@ -681,8 +723,16 @@ function CommunityFeedScreen({ navigate }: { navigate: (screen: ScreenId) => voi
         }
       />
 
-      <button type="button" onClick={() => navigate("challengeDetail")} className="mb-6 w-full rounded-[24px] bg-brand p-5 text-left text-white shadow-glow">
-        <div className="flex items-start justify-between gap-4">
+      <button type="button" onClick={() => navigate("challengeDetail")} className="relative mb-6 min-h-[190px] w-full overflow-hidden rounded-[24px] text-left text-white shadow-glow">
+        <SpriteVisual
+          image={challenge.image}
+          position={challenge.imagePosition}
+          backgroundSize="auto 300%"
+          label={`${challenge.title} 챌린지 배너`}
+          className="absolute inset-0 h-full w-full"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand via-brand/80 to-brand/10" />
+        <div className="relative flex items-start justify-between gap-4 p-5">
           <div>
             <Badge tone="lime">진행 중</Badge>
             <h2 className="mt-3 text-xl font-black">{challenge.title}</h2>
@@ -2491,8 +2541,15 @@ function RoutineScreen({ notify }: { notify: (message: string) => void }) {
   return (
     <div className="space-y-5">
       <ScreenHeader title="운동 루틴" eyebrow="AI 루틴 플래너" />
-      <Card className="bg-brand text-white">
-        <div className="flex items-start justify-between gap-4">
+      <Card className="overflow-hidden bg-brand p-0 text-white">
+        <SpriteVisual
+          image={aiVisualAssets.image}
+          position={aiVisualAssets.routinePosition}
+          backgroundSize="200% auto"
+          label="AI 운동 루틴 추천"
+          className="h-52 w-full"
+        />
+        <div className="flex items-start justify-between gap-4 p-5">
           <div>
             <Badge tone="lime">{weeklyRoutine.memberName}님의 주간 루틴</Badge>
             <h2 className="mt-4 text-3xl font-black leading-tight">목표는 {weeklyRoutine.goal}, 빈도는 {weeklyRoutine.frequency}</h2>
@@ -2542,6 +2599,13 @@ function DietScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
         </div>
       </Card>
       <Card className="overflow-hidden p-0">
+        <SpriteVisual
+          image={aiVisualAssets.image}
+          position={aiVisualAssets.dietPosition}
+          backgroundSize="200% auto"
+          label="AI 맞춤 식단 추천"
+          className="h-52 w-full"
+        />
         <div className="bg-[#EEF4FF] p-5">
           <Badge tone="blue">오늘 추천</Badge>
           <h2 className="mt-4 text-2xl font-black leading-tight">{dietRecommendation.todayMenu}</h2>

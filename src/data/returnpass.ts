@@ -3,6 +3,7 @@
   AdminMember,
   AiDietPlan,
   AiRoutine,
+  AiVisualAssets,
   Challenge,
   Content,
   DietRecommendation,
@@ -639,11 +640,11 @@ export const facilityCategories = [
   { id: "boxing", label: "복싱" }
 ] as const;
 
-const contentThumbnails = {
-  strength: "images/facility-breath-pilates.png",
-  yoga: "images/facility-return-yoga.png",
-  pilates: "images/facility-balance-pilates.png"
-};
+const contentThumbnailSprite = "images/returnpass-content-thumbnails-v1.webp";
+const contentThumbnail = (thumbnailPosition: string) => ({
+  thumbnail: contentThumbnailSprite,
+  thumbnailPosition
+});
 
 export const contents: Content[] = [
   {
@@ -651,7 +652,7 @@ export const contents: Content[] = [
     type: "video",
     title: "운동 전 8분 전신 워밍업",
     summary: "관절을 부드럽게 열고 체온을 올리는 입문 워밍업입니다.",
-    thumbnail: contentThumbnails.strength,
+    ...contentThumbnail("0% 0%"),
     level: "입문",
     bodyParts: ["전신"],
     durationMin: 8,
@@ -666,7 +667,7 @@ export const contents: Content[] = [
     type: "video",
     title: "퇴근 후 어깨 긴장 풀기",
     summary: "굳은 목과 어깨를 편안하게 만드는 12분 회복 루틴입니다.",
-    thumbnail: contentThumbnails.yoga,
+    ...contentThumbnail("33.333% 0%"),
     level: "초급",
     bodyParts: ["목", "어깨"],
     durationMin: 12,
@@ -681,7 +682,7 @@ export const contents: Content[] = [
     type: "video",
     title: "스쿼트 기본 자세 체크",
     summary: "발 위치부터 무릎 방향까지 스쿼트의 핵심을 확인합니다.",
-    thumbnail: contentThumbnails.strength,
+    ...contentThumbnail("66.666% 0%"),
     level: "입문",
     bodyParts: ["하체"],
     durationMin: 10,
@@ -696,7 +697,7 @@ export const contents: Content[] = [
     type: "video",
     title: "코어를 깨우는 필라테스",
     summary: "호흡과 골반 중립을 연결하는 기초 코어 수업입니다.",
-    thumbnail: contentThumbnails.pilates,
+    ...contentThumbnail("100% 0%"),
     level: "초급",
     bodyParts: ["코어"],
     durationMin: 18,
@@ -711,7 +712,7 @@ export const contents: Content[] = [
     type: "article",
     title: "한 달 운동을 오래 이어가는 법",
     summary: "의지보다 일정과 환경을 설계하는 현실적인 습관 가이드입니다.",
-    thumbnail: contentThumbnails.yoga,
+    ...contentThumbnail("0% 50%"),
     level: "입문",
     bodyParts: ["전신"],
     durationMin: 5,
@@ -726,7 +727,7 @@ export const contents: Content[] = [
     type: "article",
     title: "운동 다음 날 근육통 구분하기",
     summary: "일반적인 근육통과 휴식이 필요한 신호를 구분해 봅니다.",
-    thumbnail: contentThumbnails.strength,
+    ...contentThumbnail("33.333% 50%"),
     level: "초급",
     bodyParts: ["전신"],
     durationMin: 6,
@@ -741,7 +742,7 @@ export const contents: Content[] = [
     type: "article",
     title: "내 목표에 맞는 PT 횟수",
     summary: "주 1회부터 주 3회까지 목표와 예산에 따른 선택 기준입니다.",
-    thumbnail: contentThumbnails.pilates,
+    ...contentThumbnail("66.666% 50%"),
     level: "입문",
     bodyParts: ["전신"],
     durationMin: 7,
@@ -756,7 +757,7 @@ export const contents: Content[] = [
     type: "mealPlan",
     title: "감량을 위한 1주 한식 식단표",
     summary: "외식과 집밥을 함께 고려한 단백질 중심 주간 식단입니다.",
-    thumbnail: contentThumbnails.yoga,
+    ...contentThumbnail("100% 50%"),
     level: "초급",
     bodyParts: ["영양"],
     durationMin: 4,
@@ -770,7 +771,7 @@ export const contents: Content[] = [
     type: "mealPlan",
     title: "운동일 단백질 식단표",
     summary: "운동 전후 식사 시간을 고려한 하루 단백질 배분 예시입니다.",
-    thumbnail: contentThumbnails.strength,
+    ...contentThumbnail("0% 100%"),
     level: "초급",
     bodyParts: ["영양"],
     durationMin: 4,
@@ -784,7 +785,7 @@ export const contents: Content[] = [
     type: "program",
     title: "다시 시작하는 4주 운동",
     summary: "주 3회 전신 운동으로 기초 체력을 회복하는 입문 프로그램입니다.",
-    thumbnail: contentThumbnails.strength,
+    ...contentThumbnail("33.333% 100%"),
     level: "입문",
     bodyParts: ["전신"],
     durationMin: 45,
@@ -798,7 +799,7 @@ export const contents: Content[] = [
     type: "program",
     title: "4주 유연성 리턴 프로그램",
     summary: "짧은 요가와 스트레칭으로 움직임 범위를 회복합니다.",
-    thumbnail: contentThumbnails.yoga,
+    ...contentThumbnail("66.666% 100%"),
     level: "초급",
     bodyParts: ["전신", "고관절"],
     durationMin: 25,
@@ -812,7 +813,7 @@ export const contents: Content[] = [
     type: "program",
     title: "PT 회원용 코어 재교육",
     summary: "담당 트레이너 피드백과 함께 진행하는 4주 코어 프로그램입니다.",
-    thumbnail: contentThumbnails.pilates,
+    ...contentThumbnail("100% 100%"),
     level: "중급",
     bodyParts: ["코어", "허리"],
     durationMin: 30,
@@ -916,6 +917,12 @@ export const aiRoutine: AiRoutine = {
   regenerateLimit: 3
 };
 
+export const aiVisualAssets: AiVisualAssets = {
+  image: "images/returnpass-ai-coach-visuals-v1.webp",
+  dietPosition: "0% 50%",
+  routinePosition: "100% 50%"
+};
+
 export const communityPosts: Post[] = [
   { id: "post-001", uid: "member-1042", authorName: "김예림", type: "proof", facilityId: "muscle-factory", challengeId: "challenge-001", text: "오늘도 등 운동 완료했어요.", images: [], likes: 24, commentCount: 5, status: "open", reportCount: 0, createdAt: "2026.07.26 21:10", tags: ["운동인증", "등운동"] },
   { id: "post-002", uid: "member-1041", authorName: "이지원", type: "proof", facilityId: "return-yoga", challengeId: "challenge-001", text: "아침 요가로 하루를 시작했습니다.", images: ["images/facility-return-yoga.png"], likes: 31, commentCount: 4, status: "open", reportCount: 0, createdAt: "2026.07.26 08:20", tags: ["요가", "아침운동"] },
@@ -946,7 +953,8 @@ export const challenges: Challenge[] = [
     reward: "리턴샵 5,000원 쿠폰",
     participantCount: 184,
     badgeName: "꾸준한 리턴",
-    image: "og/kakao-thumbnail.png"
+    image: "images/returnpass-challenge-banners-v1.webp",
+    imagePosition: "50% 0%"
   },
   {
     id: "challenge-002",
@@ -959,7 +967,8 @@ export const challenges: Challenge[] = [
     reward: "구독 기간 3일 연장",
     participantCount: 96,
     badgeName: "부드러운 리턴",
-    image: "images/facility-return-yoga.png"
+    image: "images/returnpass-challenge-banners-v1.webp",
+    imagePosition: "50% 50%"
   },
   {
     id: "challenge-003",
@@ -972,7 +981,8 @@ export const challenges: Challenge[] = [
     reward: "단백질 음료 1병",
     participantCount: 42,
     badgeName: "런치 워커",
-    image: "images/facility-balance-pilates.png"
+    image: "images/returnpass-challenge-banners-v1.webp",
+    imagePosition: "50% 100%"
   }
 ];
 
