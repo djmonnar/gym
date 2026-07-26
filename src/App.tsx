@@ -226,7 +226,7 @@ function SplashScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,55,42,0.28)_0%,rgba(18,55,42,0.56)_42%,rgba(11,42,32,0.98)_100%)]" />
       <div className="relative p-5">
         <div className="flex items-center justify-between">
-          <img src="brand/returnpass-icon.svg" alt="리턴패스 로고" className="size-12 rounded-[18px] shadow-lift ring-1 ring-white/15" />
+          <img src="brand/returnpass-icon-192.png" alt="리턴패스 로고" className="size-12 rounded-[18px] shadow-lift ring-1 ring-white/15" />
           <Badge tone="lime">통합 피트니스 구독</Badge>
         </div>
       </div>

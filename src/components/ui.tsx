@@ -114,7 +114,7 @@ export function AppShell({
       <div className="relative mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-[430px] flex-col overflow-hidden rounded-[38px] border border-white/10 bg-surface shadow-glow ring-8 ring-black/25">
         <div className="flex items-center justify-between border-b border-white/10 bg-brand/90 px-5 py-3 text-white backdrop-blur-xl">
           <div className="flex items-center gap-2">
-            <img src="brand/returnpass-icon.svg" alt="리턴패스 로고" className="size-9 rounded-2xl shadow-glow" />
+            <img src="brand/returnpass-icon-192.png" alt="리턴패스 로고" className="size-9 rounded-2xl shadow-glow" />
             <div>
               <p className="text-sm font-black">리턴패스</p>
               <p className="text-[11px] font-bold text-white/55">운동으로 돌아오는 패스</p>

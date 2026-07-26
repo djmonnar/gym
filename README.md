@@ -51,7 +51,12 @@ npm run build
 - 웜샌드: `#E8DCC4`
 - 세컨더리 그린: `#2F6F5E`
 
-앱 아이콘과 워드마크는 `public/brand/`의 SVG를 원본으로 사용합니다. `npm run build`에서 192px·512px PWA 아이콘과 1200×630 카카오톡 공유 이미지를 자동 생성합니다.
+앱 아이콘, 워드마크, 공유 썸네일은 ChatGPT Image 2로 생성한 PNG 원본을 사용합니다. `npm run build`에서 마스터 원본으로부터 192px·512px PWA 아이콘과 1200×630 카카오톡 공유 이미지를 자동 생성합니다.
+
+- 앱 아이콘 원본: `public/brand/returnpass-icon-master.png`
+- 가로형 로고: `public/brand/returnpass-logo.png`
+- 공유 이미지 원본: `public/og/returnpass-og-master.png`
+- 향후 시설, 트레이너, 콘텐츠, 상품, 챌린지 이미지도 동일하게 ChatGPT Image 2로 제작
 
 ## 구현된 보강
 

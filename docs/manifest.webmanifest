@@ -2,7 +2,7 @@
   "name": "리턴패스",
   "short_name": "리턴패스",
   "description": "운동으로 돌아오는 가장 쉬운 패스",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#F7F6F2",
   "theme_color": "#12372A",
