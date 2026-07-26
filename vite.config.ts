@@ -2,8 +2,10 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "node:path";
 
+const isVercelBuild = process.env.VERCEL === "1";
+
 export default defineConfig({
-  base: "/gym/",
+  base: isVercelBuild ? "/" : "/gym/",
   plugins: [react()],
   build: {
     outDir: "docs",

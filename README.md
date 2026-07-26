@@ -21,6 +21,10 @@ npm run build
 
 빌드 결과는 `docs/`에 생성됩니다. GitHub Pages 루트 배포를 위해 `index.html`, `assets/`, `images/`, `brand/`, `og/`도 함께 갱신됩니다.
 
+Vercel 배포에서는 `vercel.json`이 `docs/`를 출력 디렉터리로 사용하고, Vite 기본 경로를 `/`로 자동 전환합니다. GitHub Pages 빌드는 기존 `/gym/` 경로를 유지합니다.
+
+Vercel 프로젝트에는 `.env.example`의 `VITE_FIREBASE_*` 환경변수를 Production, Preview, Development 환경에 등록해야 합니다. 배포 도메인은 Firebase Authentication 승인된 도메인에도 추가합니다.
+
 ## 기술 스택
 
 - Vite
