@@ -48,7 +48,8 @@ import {
   X,
   Zap
 } from "lucide-react";
-import { prototypeData } from "./lib/repo";
+import { signInDemoMember } from "./lib/auth";
+import { prototypeData, returnPassRepository } from "./lib/repo";
 import type {
   AdminMember,
   Facility,
@@ -71,7 +72,7 @@ const {
   dietRecommendation,
   entryLogs,
   facilityCategories,
-  facilities,
+  facilities: prototypeFacilities,
   filters,
   paymentRecords,
   plans,
@@ -166,7 +167,8 @@ const getInitialScreen = (): ScreenId => {
 
 export default function App() {
   const [screen, setScreen] = useState<ScreenId>(getInitialScreen);
-  const [selectedGym, setSelectedGym] = useState<Facility>(facilities[0]);
+  const [facilities, setFacilities] = useState<Facility[]>(prototypeFacilities);
+  const [selectedGym, setSelectedGym] = useState<Facility>(prototypeFacilities[0]);
   const [selectedPlan, setSelectedPlan] = useState<Plan>(plans[0]);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -178,6 +180,7 @@ export default function App() {
   const [qrResult, setQrResult] = useState<QrVerificationStatus>("입장 가능");
   const [selectedProduct, setSelectedProduct] = useState<ShopProduct>(shopProducts[0]);
   const [cartQuantity, setCartQuantity] = useState(1);
+  const [authPending, setAuthPending] = useState(false);
 
   const appMode =
     screen.startsWith("admin") || screen.startsWith("owner")
@@ -194,6 +197,20 @@ export default function App() {
     const handlePopState = () => setScreen(getInitialScreen());
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    returnPassRepository.listFacilities().then((nextFacilities) => {
+      if (!mounted || !nextFacilities.length) return;
+      setFacilities(nextFacilities);
+      setSelectedGym((current) => nextFacilities.find((facility) => facility.id === current.id) ?? nextFacilities[0]);
+    });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const navigate = (next: ScreenId) => {
@@ -215,6 +232,20 @@ export default function App() {
     setToast(message);
     window.setTimeout(() => setToast(""), 2200);
   };
+  const handleDemoLogin = async () => {
+    setAuthPending(true);
+
+    try {
+      const session = await signInDemoMember();
+      notify(session.isFirebaseSession ? "Firebase 체험 계정으로 연결되었습니다" : "로컬 체험 모드로 시작합니다");
+    } catch (error) {
+      console.warn("Firebase 체험 로그인에 실패했습니다.", error);
+      notify("Firebase 인증을 확인해주세요. 체험 모드로 시작합니다");
+    } finally {
+      setAuthPending(false);
+      navigate("location");
+    }
+  };
 
   const filteredGyms = useMemo(() => {
     return facilities.filter((gym) => {
@@ -232,12 +263,12 @@ export default function App() {
       case "onboarding":
         return <OnboardingScreen navigate={navigate} />;
       case "login":
-        return <LoginScreen navigate={navigate} />;
+        return <LoginScreen navigate={navigate} onDemoLogin={handleDemoLogin} authPending={authPending} />;
       case "location":
       case "locationPermission":
-        return <LocationScreen navigate={navigate} />;
+        return <LocationScreen navigate={navigate} facilities={facilities} />;
       case "home":
-        return <HomeScreen navigate={navigate} selectGym={selectGym} setCategory={setSelectedCategory} />;
+        return <HomeScreen navigate={navigate} selectGym={selectGym} setCategory={setSelectedCategory} facilities={facilities} />;
       case "search":
         return (
           <SearchScreen
@@ -773,7 +804,15 @@ function OnboardingScreen({ navigate }: { navigate: (screen: ScreenId) => void }
   );
 }
 
-function LoginScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
+function LoginScreen({
+  navigate,
+  onDemoLogin,
+  authPending
+}: {
+  navigate: (screen: ScreenId) => void;
+  onDemoLogin: () => Promise<void>;
+  authPending: boolean;
+}) {
   return (
     <div className="flex min-h-[640px] flex-col justify-between">
       <div className="space-y-5">
@@ -807,8 +846,8 @@ function LoginScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
         </Card>
       </div>
       <div className="space-y-3">
-        <Button className="w-full" onClick={() => navigate("location")}>
-          김예림님으로 체험하기
+        <Button className="w-full" onClick={onDemoLogin} disabled={authPending}>
+          {authPending ? "Firebase 계정 연결 중..." : "김예림님으로 체험하기"}
         </Button>
         <button type="button" onClick={() => navigate("location")} className="flex min-h-12 w-full items-center justify-center rounded-[18px] bg-[#FEE500] px-5 py-3 text-sm font-black text-[#191919] shadow-soft transition active:scale-[0.98]">
           카카오로 계속하기
@@ -824,7 +863,13 @@ function LoginScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
   );
 }
 
-function LocationScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
+function LocationScreen({
+  navigate,
+  facilities
+}: {
+  navigate: (screen: ScreenId) => void;
+  facilities: Facility[];
+}) {
   return (
     <div className="flex min-h-[640px] flex-col justify-between">
       <div className="space-y-6">
@@ -881,11 +926,13 @@ function LocationScreen({ navigate }: { navigate: (screen: ScreenId) => void }) 
 function HomeScreen({
   navigate,
   selectGym,
-  setCategory
+  setCategory,
+  facilities
 }: {
   navigate: (screen: ScreenId) => void;
   selectGym: (gym: Facility) => void;
   setCategory: (category: FacilityCategory | "all") => void;
+  facilities: Facility[];
 }) {
   const todayRoutine = weeklyRoutine.days[1] ?? weeklyRoutine.days[0];
   const categoryIcons: Record<FacilityCategory, ReactNode> = {

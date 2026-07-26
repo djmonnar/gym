@@ -1,0 +1,89 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function hasRole(role) {
+      return signedIn() && request.auth.token.role == role;
+    }
+
+    function facilityIds() {
+      return signedIn() && request.auth.token.facilityIds is list
+        ? request.auth.token.facilityIds
+        : [];
+    }
+
+    function managesFacility(facilityId) {
+      return hasRole('hq') || (hasRole('owner') && facilityId in facilityIds());
+    }
+
+    function ownsDocument(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    match /users/{uid} {
+      allow create: if ownsDocument(uid) && request.resource.data.role == 'member';
+      allow read: if ownsDocument(uid) || hasRole('hq');
+      allow update: if ownsDocument(uid)
+        && request.resource.data.role == resource.data.role;
+      allow delete: if hasRole('hq');
+    }
+
+    match /facilities/{facilityId} {
+      allow read: if resource.data.status == 'active' || managesFacility(facilityId);
+      allow create, update: if managesFacility(facilityId);
+      allow delete: if hasRole('hq');
+    }
+
+    match /plans/{planId} {
+      allow read: if resource.data.active == true;
+      allow create: if hasRole('hq')
+        || (request.resource.data.facilityId != null && managesFacility(request.resource.data.facilityId));
+      allow update, delete: if hasRole('hq')
+        || (resource.data.facilityId != null && managesFacility(resource.data.facilityId));
+    }
+
+    match /subscriptions/{subscriptionId} {
+      allow read: if ownsDocument(resource.data.uid)
+        || managesFacility(resource.data.facilityId)
+        || hasRole('hq');
+      allow write: if false;
+    }
+
+    match /checkins/{checkinId} {
+      allow read: if ownsDocument(resource.data.uid)
+        || managesFacility(resource.data.facilityId)
+        || hasRole('hq');
+      allow write: if false;
+    }
+
+    match /trainers/{trainerId} {
+      allow read: if resource.data.status == 'active';
+      allow write: if hasRole('hq');
+    }
+
+    match /contents/{contentId} {
+      allow read: if resource.data.access == 'public' || signedIn();
+      allow write: if hasRole('hq');
+    }
+
+    match /products/{productId} {
+      allow read: if resource.data.status == 'active';
+      allow write: if hasRole('hq') || hasRole('vendor');
+    }
+
+    match /posts/{postId} {
+      allow read: if resource.data.status == 'open' || hasRole('hq');
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if signedIn()
+        && (resource.data.uid == request.auth.uid || hasRole('hq'));
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

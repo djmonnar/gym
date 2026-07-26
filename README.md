@@ -76,8 +76,20 @@ Copy-Item .env.example .env.local
 
 Firebase 웹 API 키는 클라이언트에 포함되는 식별값입니다. Google Cloud Console에서 HTTP 리퍼러와 사용 API를 리턴패스 배포 도메인으로 제한하는 것을 권장합니다.
 
+체험 로그인은 Firebase 익명 인증을 사용하므로 Firebase Console의 Authentication에서 익명 제공자를 활성화해야 합니다. 로그인 후 `users/{uid}`에 김예림 체험 회원 프로필을 생성하며, 시설 목록은 Firestore `facilities` 컬렉션을 먼저 조회하고 데이터가 없거나 연결에 실패하면 로컬 더미 데이터로 폴백합니다.
+
+초기 시설 6곳과 구독권 3개를 Firestore에 넣을 때는 Firebase Admin 자격증명을 설정한 뒤 아래 명령을 사용합니다.
+
+```bash
+npm run seed:firestore
+firebase deploy --only firestore:rules,firestore:indexes,storage
+```
+
+시드 명령은 `GOOGLE_APPLICATION_CREDENTIALS` 또는 Google Application Default Credentials를 사용합니다. 서비스 계정 키는 저장소에 커밋하지 않습니다.
+
 ## 구현된 보강
 
+- Firebase 익명 체험 로그인, 회원 프로필 생성, Firestore 시설 조회와 더미 데이터 폴백 구조
 - 휴대폰 프레임형 프로토타입을 제거하고 위치·검색·종목·월 가격 중심의 실제 서비스형 시설 탐색 홈과 검색 화면으로 전환
 - 현재 구독, 다음 결제일, QR 입장, 오늘 루틴, 식단, PT, 상품을 홈에서 확인
 - 시설 상세 → 구독권 선택 → 결제 확인 → 완료 → QR 발급 흐름
@@ -102,8 +114,9 @@ src/
   App.tsx                 화면 라우팅과 로컬 상태
   components/ui.tsx       버튼, 카드, 배지, 앱 프레임, 하단 탭바
   data/returnpass.ts      시설, 구독권, QR, 트레이너, 콘텐츠, AI, 커뮤니티, 상품 더미 데이터
+  lib/auth.ts             Firebase 체험 인증과 회원 프로필 생성
   lib/firebase.ts         Firebase 앱 초기화와 지연 로드 서비스
-  lib/repo/               화면과 데이터 소스를 분리하는 리포지토리 계층
+  lib/repo/               Firestore 우선 조회와 더미 폴백 리포지토리 계층
   types.ts                화면과 도메인 데이터 타입
   styles.css              Tailwind 기본 스타일과 QR 패턴
 public/

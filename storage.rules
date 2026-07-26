@@ -1,0 +1,46 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function hasRole(role) {
+      return signedIn() && request.auth.token.role == role;
+    }
+
+    function facilityIds() {
+      return signedIn() && request.auth.token.facilityIds is list
+        ? request.auth.token.facilityIds
+        : [];
+    }
+
+    function managesFacility(facilityId) {
+      return hasRole('hq') || (hasRole('owner') && facilityId in facilityIds());
+    }
+
+    match /users/{uid}/{allPaths=**} {
+      allow read, write: if signedIn() && request.auth.uid == uid;
+    }
+
+    match /facilities/{facilityId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if managesFacility(facilityId);
+    }
+
+    match /contents/{allPaths=**} {
+      allow read: if true;
+      allow write: if hasRole('hq');
+    }
+
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write: if hasRole('hq') || hasRole('vendor');
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
