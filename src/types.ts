@@ -204,6 +204,8 @@ export type PtTrainer = {
   price: number;
   rating: number;
   description: string;
+  image: string;
+  imagePosition: string;
 };
 
 export type TrainerGender = "여성" | "남성";
@@ -254,6 +256,17 @@ export type MatchAnswers = {
   care: "무릎" | "허리" | "어깨" | "목" | "없음";
   freq: "주 1회" | "주 2회" | "주 3회";
   budget: "월 20만원 이하" | "월 40만원 이하" | "월 60만원 이하" | "예산 무관";
+};
+
+export type PtSubscriptionPlan = {
+  id: "pt-4" | "pt-8" | "pt-12";
+  name: string;
+  sessions: number;
+  frequency: "주 1회" | "주 2회" | "주 3회";
+  discountRate: number;
+  description: string;
+  benefits: string[];
+  recommended?: boolean;
 };
 
 export type RoutineDay = {

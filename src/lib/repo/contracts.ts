@@ -13,6 +13,7 @@ import type {
   Plan,
   Post,
   Product,
+  PtSubscriptionPlan,
   QrVerificationResult,
   RoutinePlan,
   Trainer
@@ -35,6 +36,7 @@ export type ReturnPassSnapshot = {
   qrVerificationResults: QrVerificationResult[];
   entryLogs: AdminEntryLog[];
   ptTrainers: Trainer[];
+  ptSubscriptionPlans: PtSubscriptionPlan[];
   weeklyRoutine: RoutinePlan;
   dietRecommendation: DietRecommendation;
   shopProducts: Product[];

@@ -12,6 +12,7 @@
   Plan,
   Post,
   Product,
+  PtSubscriptionPlan,
   QrVerificationResult,
   RoutinePlan,
   Trainer
@@ -296,6 +297,8 @@ export const ptTrainers: Trainer[] = [
     price: 55000,
     rating: 4.9,
     description: "처음 운동하는 회원을 위한 기초 자세와 감량 루틴을 설계합니다.",
+    image: "images/returnpass-trainer-portraits-v1.png",
+    imagePosition: "0% 0%",
     intro: "운동이 낯선 회원도 부담 없이 시작하도록 작은 성공부터 쌓습니다.",
     videoUrl: "",
     tags: {
@@ -327,6 +330,8 @@ export const ptTrainers: Trainer[] = [
     price: 60000,
     rating: 4.8,
     description: "골반, 어깨 라인, 코어 안정성을 중심으로 체형 교정을 돕습니다.",
+    image: "images/returnpass-trainer-portraits-v1.png",
+    imagePosition: "33.333% 0%",
     intro: "일상 자세를 세밀하게 보고 몸이 편해지는 움직임을 알려드립니다.",
     videoUrl: "",
     tags: {
@@ -358,6 +363,8 @@ export const ptTrainers: Trainer[] = [
     price: 65000,
     rating: 4.9,
     description: "근력 향상과 바디프로필 준비를 위한 주기화 프로그램을 제공합니다.",
+    image: "images/returnpass-trainer-portraits-v1.png",
+    imagePosition: "66.666% 0%",
     intro: "기록으로 확인되는 훈련과 명확한 피드백을 중요하게 생각합니다.",
     videoUrl: "",
     tags: {
@@ -389,6 +396,8 @@ export const ptTrainers: Trainer[] = [
     price: 70000,
     rating: 4.9,
     description: "허리와 어깨 불편을 고려한 저강도 재활 운동을 설계합니다.",
+    image: "images/returnpass-trainer-portraits-v1.png",
+    imagePosition: "100% 0%",
     intro: "통증을 참는 운동보다 안전하게 다시 움직이는 과정을 안내합니다.",
     videoUrl: "",
     tags: {
@@ -417,6 +426,8 @@ export const ptTrainers: Trainer[] = [
     price: 50000,
     rating: 4.8,
     description: "호흡과 유연성을 통해 일상 피로와 긴장을 낮추는 수업을 진행합니다.",
+    image: "images/returnpass-trainer-portraits-v1.png",
+    imagePosition: "0% 100%",
     intro: "잘하는 동작보다 오늘 몸에 맞는 움직임을 찾는 시간을 만듭니다.",
     videoUrl: "",
     tags: {
@@ -445,6 +456,8 @@ export const ptTrainers: Trainer[] = [
     price: 48000,
     rating: 4.7,
     description: "기구 사용법부터 차근차근 배우는 입문 프로그램을 제공합니다.",
+    image: "images/returnpass-trainer-portraits-v1.png",
+    imagePosition: "33.333% 100%",
     intro: "헬스장에 들어오는 순간부터 혼자 운동할 수 있을 때까지 함께합니다.",
     videoUrl: "",
     tags: {
@@ -473,6 +486,8 @@ export const ptTrainers: Trainer[] = [
     price: 68000,
     rating: 4.9,
     description: "생애주기에 맞춘 코어 회복과 안전한 움직임을 지도합니다.",
+    image: "images/returnpass-trainer-portraits-v1.png",
+    imagePosition: "66.666% 100%",
     intro: "몸의 변화를 존중하면서 일상으로 편안하게 돌아오도록 돕습니다.",
     videoUrl: "",
     tags: {
@@ -501,6 +516,8 @@ export const ptTrainers: Trainer[] = [
     price: 58000,
     rating: 4.8,
     description: "지속 가능한 감량을 위해 운동과 식단 피드백을 함께 제공합니다.",
+    image: "images/returnpass-trainer-portraits-v1.png",
+    imagePosition: "100% 100%",
     intro: "완벽한 식단보다 오래 유지할 수 있는 선택을 같이 찾습니다.",
     videoUrl: "",
     tags: {
@@ -516,6 +533,37 @@ export const ptTrainers: Trainer[] = [
     cases: [{ title: "직장인 감량", summary: "주 2회 운동과 외식 대응 식단 피드백" }],
     payoutRate: 0.72,
     status: "active"
+  }
+];
+
+export const ptSubscriptionPlans: PtSubscriptionPlan[] = [
+  {
+    id: "pt-4",
+    name: "PT 라이트 4",
+    sessions: 4,
+    frequency: "주 1회",
+    discountRate: 0,
+    description: "운동 습관을 가볍게 시작하는 월 4회 구독",
+    benefits: ["월 4회 1:1 세션", "미사용 2회까지 이월", "주간 피드백", "24시간 전 취소 무료"]
+  },
+  {
+    id: "pt-8",
+    name: "PT 밸런스 8",
+    sessions: 8,
+    frequency: "주 2회",
+    discountRate: 0.05,
+    description: "변화를 꾸준히 만드는 가장 균형 잡힌 구독",
+    benefits: ["월 8회 1:1 세션", "미사용 2회까지 이월", "운동·식단 피드백", "우선 일정 예약"],
+    recommended: true
+  },
+  {
+    id: "pt-12",
+    name: "PT 인텐시브 12",
+    sessions: 12,
+    frequency: "주 3회",
+    discountRate: 0.1,
+    description: "단기간 목표에 집중하는 월 12회 구독",
+    benefits: ["월 12회 1:1 세션", "미사용 2회까지 이월", "매일 습관 체크", "AI 루틴 연동"]
   }
 ];
 

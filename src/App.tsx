@@ -39,6 +39,7 @@ import {
   SlidersHorizontal,
   Sparkles,
   Star,
+  Target,
   Trophy,
   Truck,
   UserCheck,
@@ -49,18 +50,22 @@ import {
   Zap
 } from "lucide-react";
 import { signInDemoMember } from "./lib/auth";
+import { getMatchType, rankTrainers, type TrainerMatch } from "./lib/matching";
 import { prototypeData, returnPassRepository } from "./lib/repo";
 import type {
   AdminMember,
   Facility,
   FacilityCategory,
+  MatchAnswers,
   MemberStatus,
   PaymentRecord,
   Plan,
+  PtSubscriptionPlan,
   QrVerificationStatus,
   Role,
   ScreenId,
-  ShopProduct
+  ShopProduct,
+  Trainer
 } from "./types";
 
 const {
@@ -76,6 +81,7 @@ const {
   filters,
   paymentRecords,
   plans,
+  ptSubscriptionPlans,
   ptTrainers,
   qrVerificationResults,
   shopProducts,
@@ -84,6 +90,23 @@ const {
 import { AppShell, Badge, Button, Card, Checklist, InfoRow, MapPlaceholder, ScreenHeader, Stat, cn } from "./components/ui";
 
 const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
+const defaultMatchAnswers: MatchAnswers = {
+  goal: "체중감량",
+  level: "입문",
+  intensity: "천천히 점진적",
+  tone: "다정·응원형",
+  teach: "핵심만",
+  diet: "주 1회 피드백",
+  time: "오전",
+  genderPref: "무관",
+  care: "무릎",
+  freq: "주 1회",
+  budget: "월 40만원 이하"
+};
+
+const getPtPlanPrice = (trainer: Trainer, plan: PtSubscriptionPlan) =>
+  Math.round(trainer.price * plan.sessions * (1 - plan.discountRate));
+
 const screenIds: ScreenId[] = [
   "splash",
   "onboarding",
@@ -181,6 +204,10 @@ export default function App() {
   const [selectedProduct, setSelectedProduct] = useState<ShopProduct>(shopProducts[0]);
   const [cartQuantity, setCartQuantity] = useState(1);
   const [authPending, setAuthPending] = useState(false);
+  const [matchAnswers, setMatchAnswers] = useState<MatchAnswers>(defaultMatchAnswers);
+  const [selectedTrainer, setSelectedTrainer] = useState<Trainer>(ptTrainers[0]);
+  const [selectedPtPlan, setSelectedPtPlan] = useState<PtSubscriptionPlan>(ptSubscriptionPlans[1]);
+  const [ptTermsAccepted, setPtTermsAccepted] = useState(false);
 
   const appMode =
     screen.startsWith("admin") || screen.startsWith("owner")
@@ -255,6 +282,11 @@ export default function App() {
       return matchesCategory && matchesFilters;
     });
   }, [selectedCategory, selectedFilters]);
+  const trainerMatches = useMemo(
+    () => rankTrainers(matchAnswers, ptTrainers, selectedGym.id),
+    [matchAnswers, selectedGym.id]
+  );
+  const selectedTrainerMatch = trainerMatches.find((match) => match.trainer.id === selectedTrainer.id) ?? trainerMatches[0];
 
   const screenNode = (() => {
     switch (screen) {
@@ -317,7 +349,47 @@ export default function App() {
       case "mypage":
         return <MyPage navigate={navigate} selectedGym={selectedGym} selectedPlan={selectedPlan} notify={notify} />;
       case "pt":
-        return <PtScreen navigate={navigate} notify={notify} />;
+      case "ptMatchIntro":
+        return <PtMatchIntroScreen navigate={navigate} />;
+      case "ptMatchQuiz":
+        return <PtMatchQuizScreen answers={matchAnswers} setAnswers={setMatchAnswers} navigate={navigate} />;
+      case "ptMatchResult":
+        return (
+          <PtMatchResultScreen
+            answers={matchAnswers}
+            matches={trainerMatches.slice(0, 3)}
+            selectTrainer={(trainer) => {
+              setSelectedTrainer(trainer);
+              navigate("trainerProfile");
+            }}
+            navigate={navigate}
+          />
+        );
+      case "trainerProfile":
+        return <TrainerProfileScreen match={selectedTrainerMatch} navigate={navigate} />;
+      case "ptPlanSelect":
+        return (
+          <PtPlanSelectScreen
+            trainer={selectedTrainer}
+            selectedPlan={selectedPtPlan}
+            setSelectedPlan={setSelectedPtPlan}
+            navigate={navigate}
+          />
+        );
+      case "ptCheckout":
+        return (
+          <PtCheckoutScreen
+            trainer={selectedTrainer}
+            plan={selectedPtPlan}
+            facility={selectedGym}
+            accepted={ptTermsAccepted}
+            setAccepted={setPtTermsAccepted}
+            navigate={navigate}
+            notify={notify}
+          />
+        );
+      case "myPt":
+        return <MyPtScreen trainer={selectedTrainer} plan={selectedPtPlan} navigate={navigate} notify={notify} />;
       case "routine":
       case "aiRoutine":
         return <RoutineScreen notify={notify} />;
@@ -1690,7 +1762,7 @@ function MyPage({
           <QrCode size={32} className="text-blue" />
         </div>
       </Card>
-      <MenuButton icon={<Dumbbell size={20} />} label="PT 상담 신청" onClick={() => navigate("pt")} />
+      <MenuButton icon={<Dumbbell size={20} />} label="PT 매칭 시작" onClick={() => navigate("ptMatchIntro")} />
       <MenuButton icon={<Activity size={20} />} label="운동 루틴 보기" onClick={() => navigate("routine")} />
       <MenuButton icon={<Utensils size={20} />} label="AI 식단 맞춤" onClick={() => navigate("diet")} />
       <MenuButton icon={<ShoppingBag size={20} />} label="리턴샵 상품 구매" onClick={() => navigate("shop")} />
@@ -1712,6 +1784,670 @@ function QuickFeature({ icon, label, body, onClick }: { icon: ReactNode; label: 
       <p className="mt-3 text-base font-black">{label}</p>
       <p className="mt-1 text-xs font-bold text-gray-500">{body}</p>
     </button>
+  );
+}
+
+const ptQuizQuestions: Array<{
+  key: keyof MatchAnswers;
+  eyebrow: string;
+  title: string;
+  description: string;
+  options: string[];
+}> = [
+  {
+    key: "goal",
+    eyebrow: "운동 목표",
+    title: "지금 가장 원하는 변화는?",
+    description: "가장 우선하고 싶은 목표 하나를 골라주세요.",
+    options: ["체중감량", "근력·벌크업", "체형교정·자세", "통증·재활", "체력·컨디션"]
+  },
+  {
+    key: "level",
+    eyebrow: "운동 경험",
+    title: "운동을 얼마나 해보셨나요?",
+    description: "처음 배우는 단계부터 숙련자까지 수업 난이도에 반영해요.",
+    options: ["입문", "6개월↓", "1년↑", "3년↑"]
+  },
+  {
+    key: "intensity",
+    eyebrow: "운동 강도",
+    title: "어떤 강도가 가장 잘 맞나요?",
+    description: "지치지 않고 이어갈 수 있는 리듬을 선택하세요.",
+    options: ["몰아치는 고강도", "꾸준한 중강도", "천천히 점진적"]
+  },
+  {
+    key: "tone",
+    eyebrow: "코칭 말투",
+    title: "선생님이 어떻게 말해주면 좋나요?",
+    description: "수업에서 동기부여를 받는 방식을 알려주세요.",
+    options: ["직설·푸시형", "담백·프로형", "다정·응원형"]
+  },
+  {
+    key: "teach",
+    eyebrow: "설명 방식",
+    title: "운동 설명은 어느 정도가 좋나요?",
+    description: "배우는 방식이 맞아야 혼자 운동할 때도 오래 남아요.",
+    options: ["원리까지 설명", "핵심만", "따라하기"]
+  },
+  {
+    key: "diet",
+    eyebrow: "식단 관리",
+    title: "식단 피드백도 필요하신가요?",
+    description: "원하는 관리 범위에 맞춰 트레이너를 추천해요.",
+    options: ["매일 체크해주길", "주 1회 피드백", "운동만"]
+  },
+  {
+    key: "time",
+    eyebrow: "가능 시간",
+    title: "주로 언제 운동할 수 있나요?",
+    description: "실제로 예약 가능한 시간대가 겹치는지 확인해요.",
+    options: ["새벽", "오전", "오후", "야간", "주말"]
+  },
+  {
+    key: "genderPref",
+    eyebrow: "선생님 성별",
+    title: "선호하는 선생님 성별이 있나요?",
+    description: "선택하지 않아도 추천 품질에는 문제가 없어요.",
+    options: ["여성", "남성", "무관"]
+  },
+  {
+    key: "care",
+    eyebrow: "케어 부위",
+    title: "운동할 때 불편한 부위가 있나요?",
+    description: "관련 지도 경험이 있는 트레이너를 우선 반영해요.",
+    options: ["무릎", "허리", "어깨", "목", "없음"]
+  }
+];
+
+function TrainerPortrait({
+  trainer,
+  className
+}: {
+  trainer: Trainer;
+  className?: string;
+}) {
+  return (
+    <div
+      role="img"
+      aria-label={`${trainer.name} 일러스트`}
+      className={cn("bg-cover bg-no-repeat", className)}
+      style={{
+        backgroundImage: `url("${trainer.image}")`,
+        backgroundPosition: trainer.imagePosition,
+        backgroundSize: "400% 200%"
+      }}
+    />
+  );
+}
+
+function PtMatchIntroScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
+  return (
+    <div>
+      <ScreenHeader title="나와 맞는 선생님 찾기" eyebrow="RETURN PT MATCH" />
+
+      <section className="relative overflow-hidden rounded-[24px] bg-brand p-5 text-white shadow-glow">
+        <div className="relative z-10 max-w-[62%]">
+          <Badge tone="lime">30초 진단</Badge>
+          <h1 className="mt-4 text-[27px] font-black leading-[1.18]">시설보다 먼저,<br />나와 맞는 사람부터</h1>
+          <p className="mt-3 text-sm font-bold leading-6 text-white/68">목표와 성향, 가능한 시간을 분석해 추천 이유가 분명한 트레이너를 찾아드려요.</p>
+        </div>
+        <TrainerPortrait trainer={ptTrainers[0]} className="absolute -bottom-5 -right-9 h-[250px] w-[190px]" />
+      </section>
+
+      <section className="mt-6">
+        <p className="text-xs font-black text-blue">매칭에 반영되는 것</p>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {[
+            { icon: <Target size={20} />, label: "운동 목표" },
+            { icon: <MessageCircle size={20} />, label: "코칭 성향" },
+            { icon: <Clock size={20} />, label: "가능 시간" }
+          ].map((item) => (
+            <div key={item.label} className="flex min-h-[96px] flex-col items-center justify-center gap-3 rounded-[18px] bg-white text-xs font-black shadow-soft ring-1 ring-black/5">
+              <span className="text-brand">{item.icon}</span>
+              {item.label}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-7 space-y-3">
+        {[
+          ["01", "10문항 진단", "한 화면에서 하나씩 가볍게 선택"],
+          ["02", "매칭률과 추천 근거", "Top 3와 잘 맞는 이유를 함께 확인"],
+          ["03", "월 단위 PT 구독", "주 1회부터 부담 없이 시작"]
+        ].map(([number, title, body]) => (
+          <div key={number} className="flex items-center gap-4 rounded-[18px] bg-white p-4 shadow-soft ring-1 ring-black/5">
+            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-lime text-xs font-black text-brand">{number}</span>
+            <div>
+              <p className="text-sm font-black">{title}</p>
+              <p className="mt-1 text-xs font-bold text-zinc-500">{body}</p>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <Button className="mt-7 w-full" onClick={() => navigate("ptMatchQuiz")}>
+        30초 진단 시작
+        <ChevronRight size={18} />
+      </Button>
+      <p className="mt-3 text-center text-xs font-bold text-zinc-400">답변은 추천 계산에만 사용되며 언제든 다시 진단할 수 있어요.</p>
+    </div>
+  );
+}
+
+function PtMatchQuizScreen({
+  answers,
+  setAnswers,
+  navigate
+}: {
+  answers: MatchAnswers;
+  setAnswers: (answers: MatchAnswers) => void;
+  navigate: (screen: ScreenId) => void;
+}) {
+  const [step, setStep] = useState(0);
+  const isScheduleStep = step === 9;
+  const question = ptQuizQuestions[Math.min(step, 8)];
+  const progress = ((step + 1) / 10) * 100;
+
+  const goBack = () => {
+    if (step === 0) {
+      navigate("ptMatchIntro");
+      return;
+    }
+    setStep((current) => current - 1);
+  };
+
+  const goNext = () => {
+    if (step === 9) {
+      navigate("ptMatchResult");
+      return;
+    }
+    setStep((current) => current + 1);
+  };
+
+  return (
+    <div className="flex min-h-[650px] flex-col">
+      <div className="flex items-center justify-between">
+        <button type="button" onClick={goBack} className="grid size-11 place-items-center rounded-full bg-white shadow-soft ring-1 ring-black/5" aria-label="이전 문항">
+          <ChevronRight size={21} className="rotate-180" />
+        </button>
+        <p className="text-xs font-black text-zinc-500">{step + 1} / 10</p>
+        <button type="button" onClick={() => navigate("ptMatchIntro")} className="min-h-11 px-2 text-xs font-black text-zinc-400">나가기</button>
+      </div>
+
+      <div className="mt-5 h-2 overflow-hidden rounded-full bg-black/5">
+        <div className="h-full rounded-full bg-lime transition-all duration-300" style={{ width: `${progress}%` }} />
+      </div>
+
+      <div className="mt-8 flex-1">
+        <p className="text-xs font-black text-blue">{isScheduleStep ? "횟수와 예산" : question.eyebrow}</p>
+        <h1 className="mt-2 text-[27px] font-black leading-[1.2]">
+          {isScheduleStep ? "주 몇 회, 어느 정도 예산이 좋나요?" : question.title}
+        </h1>
+        <p className="mt-3 text-sm font-bold leading-6 text-zinc-500">
+          {isScheduleStep ? "월 예상 금액이 맞는 트레이너를 우선 추천해요." : question.description}
+        </p>
+
+        {isScheduleStep ? (
+          <div className="mt-7 space-y-7">
+            <div>
+              <p className="mb-3 text-sm font-black">운동 빈도</p>
+              <div className="grid grid-cols-3 gap-2">
+                {(["주 1회", "주 2회", "주 3회"] as MatchAnswers["freq"][]).map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => setAnswers({ ...answers, freq: option })}
+                    className={cn(
+                      "min-h-14 rounded-[16px] text-sm font-black ring-1 transition",
+                      answers.freq === option ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-600 ring-black/5"
+                    )}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="mb-3 text-sm font-black">월 예산</p>
+              <div className="grid grid-cols-2 gap-2">
+                {(["월 20만원 이하", "월 40만원 이하", "월 60만원 이하", "예산 무관"] as MatchAnswers["budget"][]).map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => setAnswers({ ...answers, budget: option })}
+                    className={cn(
+                      "min-h-14 rounded-[16px] px-2 text-sm font-black ring-1 transition",
+                      answers.budget === option ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-600 ring-black/5"
+                    )}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-7 space-y-2.5">
+            {question.options.map((option) => {
+              const selected = answers[question.key] === option;
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setAnswers({ ...answers, [question.key]: option } as MatchAnswers)}
+                  className={cn(
+                    "flex min-h-16 w-full items-center justify-between rounded-[18px] px-4 text-left text-sm font-black ring-1 transition",
+                    selected ? "bg-brand text-white ring-brand" : "bg-white text-zinc-700 ring-black/5"
+                  )}
+                >
+                  {option}
+                  <span className={cn("grid size-7 place-items-center rounded-full", selected ? "bg-lime text-brand" : "bg-zinc-100 text-transparent")}>
+                    <Check size={16} strokeWidth={3} />
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <Button className="mt-7 w-full" onClick={goNext}>
+        {step === 9 ? "내 매칭 결과 보기" : "다음"}
+        <ChevronRight size={18} />
+      </Button>
+    </div>
+  );
+}
+
+function PtMatchResultScreen({
+  answers,
+  matches,
+  selectTrainer,
+  navigate
+}: {
+  answers: MatchAnswers;
+  matches: TrainerMatch[];
+  selectTrainer: (trainer: Trainer) => void;
+  navigate: (screen: ScreenId) => void;
+}) {
+  const matchType = getMatchType(answers);
+
+  return (
+    <div>
+      <ScreenHeader title="김예림님의 PT 매칭" eyebrow="MATCH COMPLETE" onBack={() => navigate("ptMatchIntro")} />
+
+      <section className="rounded-[24px] bg-brand p-5 text-white shadow-glow">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-black text-lime">MY EXERCISE TYPE</p>
+            <p className="mt-2 text-[34px] font-black tracking-normal">{matchType.code}</p>
+          </div>
+          <div className="grid size-14 place-items-center rounded-[18px] bg-lime text-brand">
+            <Brain size={28} />
+          </div>
+        </div>
+        <h1 className="mt-5 text-xl font-black">{matchType.label}</h1>
+        <p className="mt-2 text-sm font-bold leading-6 text-white/65">{answers.goal}을 목표로 {answers.intensity} 강도와 {answers.tone} 코칭을 선호해요.</p>
+      </section>
+
+      <div className="mt-8 flex items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-black text-blue">추천 Top 3</p>
+          <h2 className="mt-1 text-[24px] font-black">잘 맞는 선생님을 찾았어요</h2>
+        </div>
+        <button type="button" onClick={() => navigate("ptMatchQuiz")} className="shrink-0 text-xs font-black text-zinc-500">다시 진단</button>
+      </div>
+
+      <div className="mt-4 space-y-4">
+        {matches.map((match, index) => (
+          <article key={match.trainer.id} className="overflow-hidden rounded-[20px] bg-white shadow-soft ring-1 ring-black/5">
+            <div className="grid grid-cols-[116px_1fr]">
+              <TrainerPortrait trainer={match.trainer} className="min-h-[150px] w-full" />
+              <div className="min-w-0 p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <Badge tone={index === 0 ? "lime" : "gray"}>{index + 1}순위</Badge>
+                  <span className="text-lg font-black text-blue">{match.matchRate}%</span>
+                </div>
+                <h3 className="mt-3 truncate text-lg font-black">{match.trainer.name}</h3>
+                <p className="mt-1 text-xs font-bold text-zinc-500">{match.trainer.specialty}</p>
+                <p className="mt-3 text-sm font-black">{formatWon(match.trainer.price)} <span className="text-xs text-zinc-400">/ 1회</span></p>
+              </div>
+            </div>
+            <div className="space-y-2 border-t border-black/5 px-4 py-4">
+              {match.reasons.map((reason) => (
+                <p key={reason} className="flex items-start gap-2 text-xs font-bold leading-5 text-zinc-600">
+                  <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-blue" />
+                  {reason}
+                </p>
+              ))}
+              <Button className="mt-3 w-full" onClick={() => selectTrainer(match.trainer)}>
+                프로필 보기
+                <ChevronRight size={17} />
+              </Button>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TrainerProfileScreen({
+  match,
+  navigate
+}: {
+  match: TrainerMatch;
+  navigate: (screen: ScreenId) => void;
+}) {
+  const trainer = match.trainer;
+
+  return (
+    <div>
+      <ScreenHeader title="트레이너 프로필" eyebrow={`${match.matchRate}% MATCH`} onBack={() => navigate("ptMatchResult")} />
+      <section className="overflow-hidden rounded-[24px] bg-brand text-white shadow-glow">
+        <TrainerPortrait trainer={trainer} className="h-[290px] w-full" />
+        <div className="p-5">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h1 className="text-[25px] font-black">{trainer.name}</h1>
+              <p className="mt-1 text-sm font-bold text-white/65">{trainer.specialty} · 경력 {trainer.career}</p>
+            </div>
+            <Badge tone="lime">{match.matchRate}% 일치</Badge>
+          </div>
+          <p className="mt-4 text-sm font-bold leading-6 text-white/78">{trainer.intro}</p>
+          <div className="mt-4 flex items-center gap-2 text-sm font-black text-lime">
+            <Star size={17} fill="currentColor" />
+            {trainer.rating.toFixed(1)}
+            <span className="text-xs text-white/50">후기 {trainer.reviewCount}개</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-6">
+        <h2 className="text-lg font-black">김예림님께 추천한 이유</h2>
+        <div className="mt-3 space-y-2">
+          {match.reasons.map((reason) => (
+            <div key={reason} className="flex items-center gap-3 rounded-[16px] bg-[#EEF4FF] p-4 text-sm font-bold text-brand">
+              <CheckCircle2 size={18} className="shrink-0 text-blue" />
+              {reason}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-7">
+        <h2 className="text-lg font-black">강점 태그</h2>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {[...trainer.tags.specialties, trainer.tags.intensity, trainer.tags.tone].map((tag) => (
+            <Badge key={tag} tone="gray">{tag}</Badge>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-7 grid grid-cols-2 gap-3">
+        <Card>
+          <p className="text-xs font-bold text-zinc-400">소속 시설</p>
+          <p className="mt-2 text-sm font-black">{trainer.facilityIds.includes("muscle-factory") ? "머슬팩토리 경상대점" : "리턴패스 제휴 시설"}</p>
+        </Card>
+        <Card>
+          <p className="text-xs font-bold text-zinc-400">가능 시간</p>
+          <p className="mt-2 text-sm font-black">{trainer.timeSlots.join(" · ")}</p>
+        </Card>
+      </section>
+
+      <section className="mt-7">
+        <h2 className="text-lg font-black">회원 변화 사례</h2>
+        <div className="mt-3 space-y-3">
+          {trainer.cases.map((item) => (
+            <div key={item.title} className="rounded-[18px] bg-white p-4 shadow-soft ring-1 ring-black/5">
+              <p className="text-sm font-black">{item.title}</p>
+              <p className="mt-2 text-xs font-bold leading-5 text-zinc-500">{item.summary}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <Card className="mt-7 bg-zinc-950 text-white">
+        <p className="text-xs font-bold text-white/50">보유 자격</p>
+        <p className="mt-2 text-sm font-black leading-6">{trainer.certs.join(" · ")}</p>
+      </Card>
+
+      <Button className="mt-7 w-full" onClick={() => navigate("ptPlanSelect")}>
+        PT 구독권 보기
+        <ChevronRight size={18} />
+      </Button>
+    </div>
+  );
+}
+
+function PtPlanSelectScreen({
+  trainer,
+  selectedPlan,
+  setSelectedPlan,
+  navigate
+}: {
+  trainer: Trainer;
+  selectedPlan: PtSubscriptionPlan;
+  setSelectedPlan: (plan: PtSubscriptionPlan) => void;
+  navigate: (screen: ScreenId) => void;
+}) {
+  return (
+    <div>
+      <ScreenHeader title="PT 구독권 선택" eyebrow={trainer.name} onBack={() => navigate("trainerProfile")} />
+
+      <div className="flex items-center gap-4 rounded-[18px] bg-brand p-4 text-white shadow-soft">
+        <TrainerPortrait trainer={trainer} className="size-20 shrink-0 rounded-[16px]" />
+        <div className="min-w-0">
+          <p className="truncate text-lg font-black">{trainer.name}</p>
+          <p className="mt-1 text-xs font-bold text-white/60">{trainer.specialty}</p>
+          <p className="mt-2 text-sm font-black text-lime">1회 {formatWon(trainer.price)}</p>
+        </div>
+      </div>
+
+      <div className="mt-6 space-y-3">
+        {ptSubscriptionPlans.map((plan) => {
+          const selected = selectedPlan.id === plan.id;
+          const price = getPtPlanPrice(trainer, plan);
+          return (
+            <button
+              key={plan.id}
+              type="button"
+              onClick={() => setSelectedPlan(plan)}
+              className={cn(
+                "w-full rounded-[20px] p-5 text-left ring-1 transition",
+                selected ? "bg-brand text-white ring-brand shadow-glow" : "bg-white text-brand ring-black/5 shadow-soft"
+              )}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p className="text-lg font-black">{plan.name}</p>
+                    {plan.recommended ? <Badge tone="lime">가장 인기</Badge> : null}
+                  </div>
+                  <p className={cn("mt-1 text-xs font-bold", selected ? "text-white/60" : "text-zinc-500")}>{plan.frequency} · 월 {plan.sessions}회</p>
+                </div>
+                <span className={cn("grid size-7 place-items-center rounded-full", selected ? "bg-lime text-brand" : "bg-zinc-100 text-transparent")}>
+                  <Check size={16} strokeWidth={3} />
+                </span>
+              </div>
+              <p className="mt-4 text-[24px] font-black">{formatWon(price)} <span className={cn("text-xs", selected ? "text-white/50" : "text-zinc-400")}>/ 월</span></p>
+              {plan.discountRate > 0 ? <p className="mt-1 text-xs font-black text-lime">회당 {formatWon(Math.round(price / plan.sessions))} · {Math.round(plan.discountRate * 100)}% 구독 할인</p> : null}
+              <p className={cn("mt-3 text-xs font-bold leading-5", selected ? "text-white/65" : "text-zinc-500")}>{plan.description}</p>
+              <div className="mt-4 space-y-2">
+                {plan.benefits.map((benefit) => (
+                  <p key={benefit} className="flex items-center gap-2 text-xs font-bold">
+                    <Check size={14} className={selected ? "text-lime" : "text-blue"} />
+                    {benefit}
+                  </p>
+                ))}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      <Card className="mt-5 bg-[#FFF8E8]">
+        <p className="text-sm font-black">세션 이용 정책</p>
+        <p className="mt-2 text-xs font-bold leading-5 text-zinc-600">미사용 세션은 최대 2회까지 다음 달로 이월됩니다. 수업 24시간 전까지 취소하면 차감되지 않아요.</p>
+      </Card>
+
+      <Button className="mt-6 w-full" onClick={() => navigate("ptCheckout")}>
+        {selectedPlan.name} 선택
+        <ChevronRight size={18} />
+      </Button>
+    </div>
+  );
+}
+
+function PtCheckoutScreen({
+  trainer,
+  plan,
+  facility,
+  accepted,
+  setAccepted,
+  navigate,
+  notify
+}: {
+  trainer: Trainer;
+  plan: PtSubscriptionPlan;
+  facility: Facility;
+  accepted: boolean;
+  setAccepted: (accepted: boolean) => void;
+  navigate: (screen: ScreenId) => void;
+  notify: (message: string) => void;
+}) {
+  const price = getPtPlanPrice(trainer, plan);
+
+  const completeCheckout = () => {
+    notify("PT 구독이 체험 상태로 시작되었습니다");
+    navigate("myPt");
+  };
+
+  return (
+    <div>
+      <ScreenHeader title="PT 구독 확인" eyebrow="DUMMY CHECKOUT" onBack={() => navigate("ptPlanSelect")} />
+
+      <Card>
+        <div className="flex items-center gap-4">
+          <TrainerPortrait trainer={trainer} className="size-20 shrink-0 rounded-[16px]" />
+          <div className="min-w-0">
+            <p className="truncate text-lg font-black">{trainer.name}</p>
+            <p className="mt-1 text-xs font-bold text-zinc-500">{facility.name}</p>
+            <div className="mt-2">
+              <Badge tone="blue">{plan.frequency} · 월 {plan.sessions}회</Badge>
+            </div>
+          </div>
+        </div>
+        <div className="mt-5 border-t border-black/5 pt-4">
+          <InfoRow label="구독권" value={plan.name} />
+          <InfoRow label="첫 결제 금액" value={formatWon(price)} />
+          <InfoRow label="다음 결제 예정일" value="2026.08.27" />
+          <InfoRow label="세션 유효 기간" value="결제일로부터 1개월" />
+        </div>
+      </Card>
+
+      <Card className="mt-4 bg-[#EEF4FF]">
+        <div className="flex items-start gap-3">
+          <CalendarDays size={21} className="mt-0.5 shrink-0 text-blue" />
+          <div>
+            <p className="text-sm font-black">예약과 취소</p>
+            <p className="mt-2 text-xs font-bold leading-5 text-zinc-600">첫 결제 후 트레이너와 가능한 시간을 조율합니다. 24시간 이내 취소 또는 노쇼는 세션 1회가 차감됩니다.</p>
+          </div>
+        </div>
+      </Card>
+
+      <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-[18px] bg-white p-4 shadow-soft ring-1 ring-black/5">
+        <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} className="mt-1 size-5 accent-[#12372A]" />
+        <span>
+          <span className="text-sm font-black">PT 구독 및 취소 정책에 동의합니다</span>
+          <span className="mt-1 block text-xs font-bold leading-5 text-zinc-500">월 자동결제, 세션 이월, 노쇼 및 중도해지 안내를 확인했습니다.</span>
+        </span>
+      </label>
+
+      <Card className="mt-4 bg-zinc-950 text-white">
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-sm font-bold text-white/60">이번 달 결제</span>
+          <strong className="text-[24px] font-black text-lime">{formatWon(price)}</strong>
+        </div>
+        <p className="mt-3 text-xs font-bold text-white/45">실제 결제는 진행되지 않는 더미 PT 구독입니다.</p>
+      </Card>
+
+      <Button className="mt-6 w-full" disabled={!accepted} onClick={completeCheckout}>
+        {formatWon(price)} 결제하고 시작하기
+      </Button>
+    </div>
+  );
+}
+
+function MyPtScreen({
+  trainer,
+  plan,
+  navigate,
+  notify
+}: {
+  trainer: Trainer;
+  plan: PtSubscriptionPlan;
+  navigate: (screen: ScreenId) => void;
+  notify: (message: string) => void;
+}) {
+  return (
+    <div>
+      <ScreenHeader title="내 PT" eyebrow="ACTIVE SUBSCRIPTION" />
+
+      <section className="rounded-[24px] bg-brand p-5 text-white shadow-glow">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <Badge tone="lime">이용중</Badge>
+            <h1 className="mt-4 text-[24px] font-black">{plan.name}</h1>
+            <p className="mt-1 text-sm font-bold text-white/60">{trainer.name} · {plan.frequency}</p>
+          </div>
+          <TrainerPortrait trainer={trainer} className="size-24 shrink-0 rounded-[18px] ring-1 ring-white/15" />
+        </div>
+        <div className="mt-6 grid grid-cols-2 gap-3">
+          <div className="rounded-[16px] bg-white/10 p-4">
+            <p className="text-xs font-bold text-white/50">남은 세션</p>
+            <p className="mt-2 text-2xl font-black text-lime">{plan.sessions}회</p>
+          </div>
+          <div className="rounded-[16px] bg-white/10 p-4">
+            <p className="text-xs font-bold text-white/50">다음 결제일</p>
+            <p className="mt-2 text-lg font-black">08.27</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-6">
+        <h2 className="text-lg font-black">다음 수업</h2>
+        <Card className="mt-3">
+          <div className="flex items-center gap-4">
+            <div className="grid size-14 shrink-0 place-items-center rounded-[16px] bg-lime text-brand">
+              <CalendarDays size={24} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-black">7월 29일 수요일 · 오후 7:30</p>
+              <p className="mt-1 text-xs font-bold text-zinc-500">머슬팩토리 경상대점 · 하체 기초</p>
+            </div>
+          </div>
+          <Button variant="line" className="mt-4 w-full" onClick={() => notify("일정 변경 요청이 전달되었습니다")}>일정 변경 요청</Button>
+        </Card>
+      </section>
+
+      <section className="mt-6">
+        <h2 className="text-lg font-black">트레이너 피드백</h2>
+        <Card className="mt-3 bg-[#EEF4FF]">
+          <p className="text-xs font-black text-blue">{trainer.name}</p>
+          <p className="mt-2 text-sm font-bold leading-6 text-brand">첫 수업에서는 스쿼트 자세와 무릎 정렬을 확인할게요. 편한 운동화와 물만 준비해 주세요.</p>
+        </Card>
+      </section>
+
+      <div className="mt-6 grid grid-cols-2 gap-3">
+        <Button variant="line" onClick={() => notify("트레이너 채팅은 다음 연동 단계에서 열립니다")}>
+          <MessageCircle size={17} />
+          채팅
+        </Button>
+        <Button onClick={() => navigate("home")}>홈으로</Button>
+      </div>
+    </div>
   );
 }
 
