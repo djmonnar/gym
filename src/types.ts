@@ -299,6 +299,23 @@ export type ContentType = "video" | "article" | "mealPlan" | "program";
 
 export type ContentAccess = "public" | "subscriber" | "pt";
 
+export type ContentVideoChapter = {
+  time: string;
+  label: string;
+};
+
+export type ContentMealDay = {
+  day: string;
+  menu: string;
+  kcal: string;
+};
+
+export type ContentProgramWeek = {
+  week: number;
+  title: string;
+  detail: string;
+};
+
 export type Content = {
   id: string;
   type: ContentType;
@@ -315,6 +332,9 @@ export type Content = {
   publishedAt: string;
   videoUrl?: string;
   body?: string;
+  videoChapters?: ContentVideoChapter[];
+  weeklyMeals?: ContentMealDay[];
+  programWeeks?: ContentProgramWeek[];
 };
 
 export type AiDietMealItem = {

@@ -660,7 +660,13 @@ export const contents: Content[] = [
     tags: ["워밍업", "입문"],
     author: "리턴라이프 코칭팀",
     publishedAt: "2026.07.20",
-    videoUrl: "https://example.com/content-001"
+    videoUrl: "https://example.com/content-001",
+    videoChapters: [
+      { time: "00:00", label: "오늘의 워밍업 목표" },
+      { time: "01:10", label: "목·어깨 관절 풀기" },
+      { time: "03:40", label: "고관절·하체 가동성" },
+      { time: "06:20", label: "가볍게 심박 올리기" }
+    ]
   },
   {
     id: "content-002",
@@ -675,7 +681,13 @@ export const contents: Content[] = [
     tags: ["스트레칭", "회복"],
     author: "서지안 트레이너",
     publishedAt: "2026.07.18",
-    videoUrl: "https://example.com/content-002"
+    videoUrl: "https://example.com/content-002",
+    videoChapters: [
+      { time: "00:00", label: "굳은 목 인지하기" },
+      { time: "02:30", label: "승모근 이완 스트레칭" },
+      { time: "06:00", label: "가슴 열기 & 자세 정렬" },
+      { time: "09:30", label: "마무리 호흡 정리" }
+    ]
   },
   {
     id: "content-003",
@@ -690,7 +702,13 @@ export const contents: Content[] = [
     tags: ["스쿼트", "웨이트 입문"],
     author: "김도윤 트레이너",
     publishedAt: "2026.07.16",
-    videoUrl: "https://example.com/content-003"
+    videoUrl: "https://example.com/content-003",
+    videoChapters: [
+      { time: "00:00", label: "발 너비와 발끝 방향" },
+      { time: "02:20", label: "무릎-발끝 정렬" },
+      { time: "05:10", label: "골반 접기와 상체 각도" },
+      { time: "08:00", label: "흔한 실수 교정" }
+    ]
   },
   {
     id: "content-004",
@@ -705,7 +723,13 @@ export const contents: Content[] = [
     tags: ["필라테스", "코어"],
     author: "이서현 트레이너",
     publishedAt: "2026.07.14",
-    videoUrl: "https://example.com/content-004"
+    videoUrl: "https://example.com/content-004",
+    videoChapters: [
+      { time: "00:00", label: "호흡과 골반 중립 찾기" },
+      { time: "03:30", label: "코어 활성화 기본 동작" },
+      { time: "09:00", label: "골반 안정성 강화" },
+      { time: "14:20", label: "이완과 정리 운동" }
+    ]
   },
   {
     id: "content-005",
@@ -720,7 +744,7 @@ export const contents: Content[] = [
     tags: ["습관", "동기"],
     author: "리턴라이프 편집팀",
     publishedAt: "2026.07.12",
-    body: "완벽한 계획보다 반복 가능한 최소 단위를 먼저 정합니다."
+    body: "운동을 다시 시작할 때 가장 흔한 실패는 의지가 약해서가 아니라 처음부터 목표를 너무 크게 잡기 때문입니다. 주 5회 헬스장 방문 같은 목표는 한 주만 어긋나도 무너지기 쉽습니다.\n\n먼저 반복 가능한 최소 단위를 정하세요. 하루 10분, 주 2회처럼 바쁜 날에도 지킬 수 있는 크기여야 합니다. 작아 보여도 꾸준히 반복되면 자동화되는 습관의 뼈대가 됩니다.\n\n다음은 환경 설계입니다. 운동 가방을 현관에 두고, 캘린더에 시간을 미리 막아두고, 같은 시간대에 운동하도록 신호를 만드세요. 의지력보다 일정과 환경이 행동을 결정합니다.\n\n마지막으로 완벽하지 않아도 기록을 이어가세요. 한 번 빠졌다고 포기하지 말고 다음 날 다시 최소 단위를 실행하면 됩니다. 리턴패스의 완료 체크로 오늘의 실행을 가볍게 남겨보세요."
   },
   {
     id: "content-006",
@@ -735,7 +759,7 @@ export const contents: Content[] = [
     tags: ["회복", "안전"],
     author: "리턴라이프 코칭팀",
     publishedAt: "2026.07.10",
-    body: "날카로운 통증이나 관절 통증이 지속되면 운동을 멈추고 전문가와 상담하세요."
+    body: "운동 다음 날 찾아오는 뻐근함은 대부분 지연성 근육통(DOMS)입니다. 익숙하지 않은 자극을 준 근육이 회복하며 강해지는 자연스러운 과정으로, 보통 24~72시간 안에 서서히 가라앉습니다.\n\n이런 근육통은 근육 부위 전반에 은근하게 퍼지고, 움직이면 오히려 조금 풀리는 특징이 있습니다. 가벼운 스트레칭, 충분한 수분과 단백질, 그리고 하루 이틀의 저강도 활동이 회복을 돕습니다.\n\n반면 주의해야 할 신호도 있습니다. 관절 안쪽의 날카로운 통증, 한쪽만 심하게 붓거나 멍이 드는 경우, 며칠이 지나도 심해지는 통증은 단순 근육통이 아닐 수 있습니다.\n\n이럴 때는 운동을 멈추고 휴식하며, 증상이 지속되면 전문가와 상담하세요. 통증을 참고 밀어붙이는 것보다 회복 신호를 존중하는 편이 결국 더 빠른 성장을 만듭니다."
   },
   {
     id: "content-007",
@@ -750,7 +774,7 @@ export const contents: Content[] = [
     tags: ["PT", "목표 설정"],
     author: "리턴라이프 PT팀",
     publishedAt: "2026.07.08",
-    body: "수업 횟수보다 수업 사이 개인 운동을 실행할 수 있는지가 더 중요합니다."
+    body: "PT 횟수를 정할 때 흔히 '많을수록 좋다'고 생각하지만, 실제로는 목표와 생활 패턴에 맞추는 편이 훨씬 효율적입니다.\n\n주 1회는 자세 점검과 방향 설정에 적합합니다. 스스로 운동하는 습관이 어느 정도 잡힌 사람이 폼을 교정받고 다음 2주 계획을 받아 가는 데 좋습니다.\n\n주 2회는 가장 균형 잡힌 선택입니다. 트레이너와 함께하는 날과 혼자 운동하는 날이 번갈아 배치되어 학습과 실행이 함께 굴러갑니다. 감량이나 체형 교정 목표에 특히 잘 맞습니다.\n\n주 3회는 재활, 대회 준비처럼 집중 관리가 필요한 시기에 적합합니다. 다만 회복과 예산 부담이 커지므로 기간을 정해 운영하는 편이 좋습니다.\n\n핵심은 수업 횟수 자체가 아니라 수업 사이에 개인 운동을 실행할 수 있는지입니다. 내 일정을 먼저 보고 PT 매칭에서 빈도를 조정해 보세요."
   },
   {
     id: "content-008",
@@ -764,7 +788,15 @@ export const contents: Content[] = [
     access: "subscriber",
     tags: ["감량", "한식", "식단표"],
     author: "리턴라이프 영양팀",
-    publishedAt: "2026.07.06"
+    publishedAt: "2026.07.06",
+    weeklyMeals: [
+      { day: "월", menu: "현미밥·두부된장국·나물 / 닭가슴살 비빔밥", kcal: "약 1,500kcal" },
+      { day: "화", menu: "귀리죽·달걀 / 고등어구이 정식", kcal: "약 1,550kcal" },
+      { day: "수", menu: "그릭요거트·오트밀 / 소고기 미역국 백반", kcal: "약 1,480kcal" },
+      { day: "목", menu: "통밀토스트·달걀 / 닭가슴살 샐러드", kcal: "약 1,450kcal" },
+      { day: "금", menu: "현미밥·순두부찌개 / 제육 채소볶음", kcal: "약 1,600kcal" },
+      { day: "주말", menu: "자유식 1끼 + 단백질 위주 2끼", kcal: "약 1,700kcal" }
+    ]
   },
   {
     id: "content-009",
@@ -778,7 +810,14 @@ export const contents: Content[] = [
     access: "pt",
     tags: ["단백질", "운동일"],
     author: "리턴라이프 영양팀",
-    publishedAt: "2026.07.04"
+    publishedAt: "2026.07.04",
+    weeklyMeals: [
+      { day: "아침", menu: "달걀 3개·통밀토스트·바나나", kcal: "약 450kcal" },
+      { day: "운동 전", menu: "바나나·아메리카노 (1시간 전)", kcal: "약 120kcal" },
+      { day: "운동 후", menu: "유청 단백질·현미밥 소량", kcal: "약 320kcal" },
+      { day: "점심", menu: "닭가슴살 현미볼·채소", kcal: "약 550kcal" },
+      { day: "저녁", menu: "연어구이·고구마·샐러드", kcal: "약 560kcal" }
+    ]
   },
   {
     id: "content-010",
@@ -792,7 +831,13 @@ export const contents: Content[] = [
     access: "subscriber",
     tags: ["4주", "전신", "입문"],
     author: "리턴라이프 코칭팀",
-    publishedAt: "2026.07.02"
+    publishedAt: "2026.07.02",
+    programWeeks: [
+      { week: 1, title: "적응 주간", detail: "맨몸 스쿼트·힙힌지·플랭크로 기본 동작 익히기 (주 3회)" },
+      { week: 2, title: "볼륨 늘리기", detail: "세트 수를 늘리고 밴드·덤벨 저강도 부하 추가" },
+      { week: 3, title: "강도 올리기", detail: "런지·푸시업·로우로 전신 복합 운동 확장" },
+      { week: 4, title: "정착 주간", detail: "루틴을 몸에 익히고 다음 4주 목표 점검" }
+    ]
   },
   {
     id: "content-011",
@@ -806,7 +851,13 @@ export const contents: Content[] = [
     access: "subscriber",
     tags: ["4주", "요가", "유연성"],
     author: "서지안 트레이너",
-    publishedAt: "2026.06.30"
+    publishedAt: "2026.06.30",
+    programWeeks: [
+      { week: 1, title: "가동성 진단", detail: "고관절·햄스트링 상태 확인과 기본 스트레칭 루틴" },
+      { week: 2, title: "하체 유연성", detail: "런지·비둘기 자세로 고관절 가동 범위 넓히기" },
+      { week: 3, title: "척추·어깨", detail: "고양이-소 자세와 흉추 회전으로 상체 이완" },
+      { week: 4, title: "전신 흐름", detail: "짧은 요가 플로우로 움직임을 부드럽게 연결" }
+    ]
   },
   {
     id: "content-012",
@@ -820,7 +871,13 @@ export const contents: Content[] = [
     access: "pt",
     tags: ["PT 전용", "코어", "자세"],
     author: "정소민 트레이너",
-    publishedAt: "2026.06.28"
+    publishedAt: "2026.06.28",
+    programWeeks: [
+      { week: 1, title: "코어 재인지", detail: "담당 트레이너와 복압·호흡을 다시 익히는 평가 주간" },
+      { week: 2, title: "안정성 강화", detail: "데드버그·버드독으로 허리 부담 없는 코어 강화" },
+      { week: 3, title: "기능 연결", detail: "코어와 하체를 연결하는 복합 동작으로 확장" },
+      { week: 4, title: "실전 적용", detail: "일상 동작과 운동에 코어 사용을 적용하고 피드백" }
+    ]
   }
 ];
 

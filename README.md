@@ -43,6 +43,7 @@ Vercel 프로젝트에는 `.env.example`의 `VITE_FIREBASE_*` 환경변수를 Pr
 - 30초 동적 QR 이용권, 구독 관리, 결제 내역
 - 10문항 PT 성향 진단, 유형 코드, 추천 트레이너 Top 3, 프로필, PT 구독과 내 PT
 - 주간 운동 루틴, AI 식단
+- 본사 콘텐츠 허브: 전체·영상·아티클·식단표·프로그램 탭과 검색으로 콘텐츠 12종 탐색, 유형별 상세(영상 플레이어·아티클 본문·주간 식단·주차별 프로그램), 저장·완료 상태와 PT 전용 잠금
 - 리턴샵 상품, 상세, 장바구니, 주문 완료
 - 사장님 운영 대시보드, 회원 목록, QR 확인
 - 고객센터와 환불 안내, 마이페이지
@@ -102,6 +103,9 @@ firebase deploy --only firestore:rules,firestore:indexes,storage
 - 입장 현황, 운영 알림, 회원 관리, QR 확인, 정산 요약 중심의 사장님 대시보드
 - 딥그린·라임·웜화이트 기반 리턴패스 브랜드와 리턴샵 명칭 적용
 - ChatGPT Image 2 콘텐츠·챌린지·AI 코치 비주얼을 실제 화면 데이터에 연결
+- 배달앱처럼 빠르게 훑는 콘텐츠 허브: 탭·검색 필터, 추천 비주얼, 콘텐츠별 상세를 선택해 열람하고 저장·완료를 프론트 로컬 상태로 즉시 반영
+- 유형별 콘텐츠 상세(영상 챕터·진행률, 아티클 읽기, 주간 식단→AI 식단 CTA, 주차별 프로그램→내 루틴 CTA)와 데모 회원(subscriber) 기준 접근 등급 잠금 및 PT 매칭 연결
+- 홈 `오늘 볼 콘텐츠` 카드에서 추천 콘텐츠 상세로 바로 이동
 
 ## 동적 QR 보안 구조
 
@@ -118,6 +122,7 @@ firebase deploy --only firestore:rules,firestore:indexes,storage
 src/
   App.tsx                 화면 라우팅과 로컬 상태
   components/ui.tsx       버튼, 카드, 배지, 앱 프레임, 하단 탭바
+  components/content/     콘텐츠 허브 전용 컴포넌트(홈, 상세, 썸네일, 메타 헬퍼)
   data/returnpass.ts      시설, 구독권, QR, 트레이너, 콘텐츠, AI, 커뮤니티, 상품 더미 데이터
   lib/auth.ts             Firebase 체험 인증과 회원 프로필 생성
   lib/firebase.ts         Firebase 앱 초기화와 지연 로드 서비스

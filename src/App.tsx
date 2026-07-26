@@ -3,7 +3,6 @@ import {
   Activity,
   AlertCircle,
   Bell,
-  BookOpen,
   Brain,
   CalendarDays,
   Check,
@@ -90,6 +89,10 @@ const {
   weeklyRoutine
 } = prototypeData;
 import { AppShell, Badge, Button, Card, Checklist, InfoRow, MapPlaceholder, ScreenHeader, Stat, cn } from "./components/ui";
+import { ContentHomeScreen } from "./components/content/ContentHome";
+import { ContentDetailScreen } from "./components/content/ContentDetail";
+import { ContentThumbnail } from "./components/content/ContentThumbnail";
+import { contentTypeLabel, isContentLocked } from "./components/content/contentMeta";
 
 const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
 
@@ -116,18 +119,6 @@ function SpriteVisual({
         backgroundPosition: position,
         backgroundSize
       }}
-    />
-  );
-}
-
-function ContentThumbnail({ content, className }: { content: Content; className?: string }) {
-  return (
-    <SpriteVisual
-      image={content.thumbnail}
-      position={content.thumbnailPosition}
-      backgroundSize="400% auto"
-      label={`${content.title} 썸네일`}
-      className={className}
     />
   );
 }
@@ -250,6 +241,9 @@ export default function App() {
   const [selectedTrainer, setSelectedTrainer] = useState<Trainer>(ptTrainers[0]);
   const [selectedPtPlan, setSelectedPtPlan] = useState<PtSubscriptionPlan>(ptSubscriptionPlans[1]);
   const [ptTermsAccepted, setPtTermsAccepted] = useState(false);
+  const [selectedContent, setSelectedContent] = useState<Content>(contents[0]);
+  const [savedContentIds, setSavedContentIds] = useState<string[]>([]);
+  const [completedContentIds, setCompletedContentIds] = useState<string[]>([]);
 
   const appMode =
     screen.startsWith("admin") || screen.startsWith("owner")
@@ -301,6 +295,21 @@ export default function App() {
     setToast(message);
     window.setTimeout(() => setToast(""), 2200);
   };
+  const openContent = (content: Content) => {
+    setSelectedContent(content);
+    navigate("contentDetail");
+  };
+  const toggleSavedContent = (content: Content) => {
+    const exists = savedContentIds.includes(content.id);
+    setSavedContentIds(exists ? savedContentIds.filter((id) => id !== content.id) : [...savedContentIds, content.id]);
+    notify(exists ? "저장을 해제했어요" : "콘텐츠를 저장했어요");
+  };
+  const toggleCompletedContent = (content: Content) => {
+    if (isContentLocked(content)) return;
+    const exists = completedContentIds.includes(content.id);
+    setCompletedContentIds(exists ? completedContentIds.filter((id) => id !== content.id) : [...completedContentIds, content.id]);
+    notify(exists ? "완료를 해제했어요" : "완료로 표시했어요");
+  };
   const handleDemoLogin = async () => {
     setAuthPending(true);
 
@@ -342,7 +351,7 @@ export default function App() {
       case "locationPermission":
         return <LocationScreen navigate={navigate} facilities={facilities} />;
       case "home":
-        return <HomeScreen navigate={navigate} selectGym={selectGym} setCategory={setSelectedCategory} facilities={facilities} />;
+        return <HomeScreen navigate={navigate} selectGym={selectGym} setCategory={setSelectedCategory} facilities={facilities} openContent={openContent} />;
       case "search":
         return (
           <SearchScreen
@@ -439,9 +448,26 @@ export default function App() {
       case "aiDiet":
         return <DietScreen navigate={navigate} />;
       case "contentHome":
-        return <ContentHomeScreen navigate={navigate} />;
+        return (
+          <ContentHomeScreen
+            contents={contents}
+            openContent={openContent}
+            savedIds={savedContentIds}
+            completedIds={completedContentIds}
+          />
+        );
       case "contentDetail":
-        return <ContentDetailScreen navigate={navigate} />;
+        return (
+          <ContentDetailScreen
+            content={selectedContent}
+            saved={savedContentIds.includes(selectedContent.id)}
+            completed={completedContentIds.includes(selectedContent.id)}
+            onToggleSave={() => toggleSavedContent(selectedContent)}
+            onToggleComplete={() => toggleCompletedContent(selectedContent)}
+            navigate={navigate}
+            notify={notify}
+          />
+        );
       case "communityFeed":
         return <CommunityFeedScreen navigate={navigate} />;
       case "shop":
@@ -636,77 +662,6 @@ const routePreviewCopy: Partial<
     actionScreen: "hqAdminHome"
   }
 };
-
-function ContentHomeScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
-  const featured = contents[0];
-
-  return (
-    <div>
-      <ScreenHeader title="오늘의 콘텐츠" eyebrow="RETURNLIFE CONTENT" />
-      <button type="button" onClick={() => navigate("contentDetail")} className="group relative mb-6 block w-full overflow-hidden rounded-[24px] text-left shadow-soft">
-        <ContentThumbnail content={featured} className="h-52 w-full transition duration-300 group-hover:scale-[1.02]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand via-brand/30 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-          <Badge tone="lime">오늘 8분</Badge>
-          <h2 className="mt-3 text-xl font-black">{featured.title}</h2>
-          <p className="mt-1 text-xs font-bold text-white/70">{featured.level} · {featured.durationMin}분 · {featured.author}</p>
-        </div>
-      </button>
-
-      <div className="mb-6 grid grid-cols-3 gap-2">
-        {[
-          { label: "영상", icon: <Activity size={19} /> },
-          { label: "아티클", icon: <BookOpen size={19} /> },
-          { label: "식단표", icon: <Utensils size={19} /> }
-        ].map((item) => (
-          <button key={item.label} type="button" onClick={() => navigate("contentDetail")} className="flex h-20 flex-col items-center justify-center gap-2 rounded-[18px] bg-white text-xs font-black shadow-soft ring-1 ring-black/5">
-            {item.icon}
-            {item.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-lg font-black">김예림님 추천</h2>
-        <Badge tone="gray">{contents.length}개 콘텐츠</Badge>
-      </div>
-      <div className="space-y-3">
-        {contents.slice(1, 4).map((content) => (
-          <button key={content.id} type="button" onClick={() => navigate("contentDetail")} className="flex w-full items-center gap-3 rounded-[20px] bg-white p-3 text-left shadow-soft ring-1 ring-black/5">
-            <ContentThumbnail content={content} className="size-20 shrink-0 rounded-[16px]" />
-            <div className="min-w-0">
-              <p className="truncate text-sm font-black">{content.title}</p>
-              <p className="mt-2 text-xs font-bold text-zinc-500">{content.level} · {content.durationMin}분</p>
-            </div>
-            <ChevronRight size={18} className="ml-auto shrink-0 text-zinc-400" />
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ContentDetailScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
-  const content = contents[0];
-
-  return (
-    <div>
-      <ScreenHeader title={content.title} eyebrow="오늘의 추천" onBack={() => navigate("contentHome")} />
-      <ContentThumbnail content={content} className="h-56 w-full rounded-[24px] shadow-soft" />
-      <Card className="mt-5">
-        <div className="flex flex-wrap gap-2">
-          <Badge tone="lime">{content.level}</Badge>
-          <Badge tone="gray">{content.durationMin}분</Badge>
-          <Badge tone="gray">{content.bodyParts.join(" · ")}</Badge>
-        </div>
-        <p className="mt-4 text-sm font-bold leading-6 text-zinc-600">{content.summary}</p>
-        <Button className="mt-5 w-full" onClick={() => navigate("aiRoutine")}>
-          내 루틴에 추가
-        </Button>
-      </Card>
-    </div>
-  );
-}
 
 function CommunityFeedScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
   const challenge = challenges[0];
@@ -1049,14 +1004,17 @@ function HomeScreen({
   navigate,
   selectGym,
   setCategory,
-  facilities
+  facilities,
+  openContent
 }: {
   navigate: (screen: ScreenId) => void;
   selectGym: (gym: Facility) => void;
   setCategory: (category: FacilityCategory | "all") => void;
   facilities: Facility[];
+  openContent: (content: Content) => void;
 }) {
   const todayRoutine = weeklyRoutine.days[1] ?? weeklyRoutine.days[0];
+  const todayContents = contents.filter((content) => content.access !== "pt").slice(0, 3);
   const categoryIcons: Record<FacilityCategory, ReactNode> = {
     gym: <Dumbbell size={22} />,
     pilates: <Activity size={22} />,
@@ -1180,6 +1138,40 @@ function HomeScreen({
           <p className="mt-4 text-xs font-bold text-zinc-400">오늘의 식단</p>
           <p className="mt-1 text-lg font-black">{dietRecommendation.calories}</p>
         </button>
+      </section>
+
+      <section className="mt-8">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <p className="text-xs font-black text-blue">RETURNLIFE CONTENT</p>
+            <h2 className="mt-1 text-[25px] font-black">오늘 볼 콘텐츠</h2>
+          </div>
+          <button type="button" onClick={() => navigate("contentHome")} className="flex items-center gap-1 text-sm font-black text-brand">
+            전체 보기
+            <ChevronRight size={17} />
+          </button>
+        </div>
+        <div className="scrollbar-none mt-4 flex gap-3 overflow-x-auto pb-1">
+          {todayContents.map((content) => (
+            <button
+              key={content.id}
+              type="button"
+              onClick={() => openContent(content)}
+              className="w-[220px] shrink-0 overflow-hidden rounded-[20px] bg-white text-left shadow-soft ring-1 ring-black/5 transition active:scale-[0.99]"
+            >
+              <div className="relative">
+                <ContentThumbnail content={content} className="h-28 w-full" />
+                <span className="absolute left-3 top-3">
+                  <Badge tone="lime">{contentTypeLabel[content.type]}</Badge>
+                </span>
+              </div>
+              <div className="p-4">
+                <p className="truncate text-sm font-black">{content.title}</p>
+                <p className="mt-2 text-xs font-bold text-zinc-500">{content.level} · {content.durationMin}분</p>
+              </div>
+            </button>
+          ))}
+        </div>
       </section>
     </div>
   );
