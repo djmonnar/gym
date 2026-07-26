@@ -72,7 +72,6 @@ import type {
 const {
   activePass,
   adminMembers,
-  aiVisualAssets,
   challenges,
   communityPosts,
   contents,
@@ -99,39 +98,14 @@ import { CommunityPostScreen } from "./components/community/CommunityPost";
 import { CommunityWriteScreen } from "./components/community/CommunityWrite";
 import { ChallengeListScreen } from "./components/community/ChallengeList";
 import { ChallengeDetailScreen } from "./components/community/ChallengeDetail";
+import { AiDietScreen } from "./components/ai/AiDiet";
+import { AiRoutineScreen } from "./components/ai/AiRoutine";
 
 const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
 
 // 모듈 스코프에 두어 참조가 매 렌더마다 바뀌지 않게 합니다.
 // 참조가 바뀌면 댓글 로딩 effect가 다시 돌면서 방금 작성한 댓글이 사라집니다.
 const loadPostComments = (postId: string) => returnPassRepository.listComments(postId);
-
-function SpriteVisual({
-  image,
-  position,
-  backgroundSize,
-  label,
-  className
-}: {
-  image: string;
-  position: string;
-  backgroundSize: string;
-  label: string;
-  className?: string;
-}) {
-  return (
-    <div
-      role="img"
-      aria-label={label}
-      className={cn("bg-no-repeat", className)}
-      style={{
-        backgroundImage: `url("${image}")`,
-        backgroundPosition: position,
-        backgroundSize
-      }}
-    />
-  );
-}
 
 const defaultMatchAnswers: MatchAnswers = {
   goal: "체중감량",
@@ -343,6 +317,11 @@ export default function App() {
     setJoinedChallengeIds(exists ? joinedChallengeIds.filter((id) => id !== challenge.id) : [...joinedChallengeIds, challenge.id]);
     notify(exists ? "챌린지 참여를 취소했어요" : "챌린지에 참여했어요");
   };
+  // AI 식단의 장보기 목록에서 리턴샵 상품을 장바구니로 연결합니다.
+  const addProductToCart = (product: ShopProduct) => {
+    setSelectedProduct(product);
+    setCartQuantity((quantity) => (selectedProduct.id === product.id ? quantity + 1 : 1));
+  };
   const submitPost = (post: Post) => {
     setPosts((current) => [post, ...current]);
     setSelectedPost(post);
@@ -482,10 +461,24 @@ export default function App() {
         return <MyPtScreen trainer={selectedTrainer} plan={selectedPtPlan} navigate={navigate} notify={notify} />;
       case "routine":
       case "aiRoutine":
-        return <RoutineScreen notify={notify} />;
+        return (
+          <AiRoutineScreen
+            contents={contents}
+            openContent={openContent}
+            navigate={navigate}
+            notify={notify}
+          />
+        );
       case "diet":
       case "aiDiet":
-        return <DietScreen navigate={navigate} />;
+        return (
+          <AiDietScreen
+            products={shopProducts}
+            onAddToCart={addProductToCart}
+            navigate={navigate}
+            notify={notify}
+          />
+        );
       case "contentHome":
         return (
           <ContentHomeScreen
@@ -2536,93 +2529,6 @@ function PtScreen({ navigate, notify }: { navigate: (screen: ScreenId) => void; 
   );
 }
 
-function RoutineScreen({ notify }: { notify: (message: string) => void }) {
-  return (
-    <div className="space-y-5">
-      <ScreenHeader title="운동 루틴" eyebrow="AI 루틴 플래너" />
-      <Card className="overflow-hidden bg-brand p-0 text-white">
-        <SpriteVisual
-          image={aiVisualAssets.image}
-          position={aiVisualAssets.routinePosition}
-          backgroundSize="200% auto"
-          label="AI 운동 루틴 추천"
-          className="h-52 w-full"
-        />
-        <div className="flex items-start justify-between gap-4 p-5">
-          <div>
-            <Badge tone="lime">{weeklyRoutine.memberName}님의 주간 루틴</Badge>
-            <h2 className="mt-4 text-3xl font-black leading-tight">목표는 {weeklyRoutine.goal}, 빈도는 {weeklyRoutine.frequency}</h2>
-          </div>
-          <Activity className="shrink-0 text-lime" size={34} />
-        </div>
-      </Card>
-      <div className="space-y-3">
-        {weeklyRoutine.days.map((day) => (
-          <Card key={day.day} className="flex items-center gap-4 p-4">
-            <div className="grid size-14 shrink-0 place-items-center rounded-[20px] bg-lime text-xl font-black text-brand">{day.day}</div>
-            <div>
-              <h3 className="text-lg font-black">{day.focus}</h3>
-              <p className="mt-1 text-sm font-semibold leading-6 text-gray-600">{day.detail}</p>
-            </div>
-          </Card>
-        ))}
-      </div>
-      <Button className="w-full" onClick={() => notify("AI가 감량 목표에 맞춰 루틴을 다시 계산했습니다.")}>
-        <RefreshCw size={18} />
-        AI로 루틴 다시 짜기
-      </Button>
-    </div>
-  );
-}
-
-function DietScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
-  return (
-    <div className="space-y-5">
-      <ScreenHeader title="AI 식단 맞춤" eyebrow="본사 식단표 기반" />
-      <Card className="bg-brand text-white">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <Badge tone="lime">{dietRecommendation.source}</Badge>
-            <h2 className="mt-4 text-3xl font-black leading-tight">{dietRecommendation.memberName}님 감량 식단</h2>
-            <p className="mt-3 text-sm font-semibold leading-6 text-white/70">{dietRecommendation.note}</p>
-          </div>
-          <Brain className="shrink-0 text-lime" size={34} />
-        </div>
-      </Card>
-      <Card>
-        <h3 className="mb-4 text-lg font-black">맞춤 설정</h3>
-        <div className="grid grid-cols-2 gap-3">
-          {dietRecommendation.settings.map((item) => (
-            <InfoMini key={item.label} label={item.label} value={item.value} />
-          ))}
-        </div>
-      </Card>
-      <Card className="overflow-hidden p-0">
-        <SpriteVisual
-          image={aiVisualAssets.image}
-          position={aiVisualAssets.dietPosition}
-          backgroundSize="200% auto"
-          label="AI 맞춤 식단 추천"
-          className="h-52 w-full"
-        />
-        <div className="bg-[#EEF4FF] p-5">
-          <Badge tone="blue">오늘 추천</Badge>
-          <h2 className="mt-4 text-2xl font-black leading-tight">{dietRecommendation.todayMenu}</h2>
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <InfoMini label="열량" value={dietRecommendation.calories} />
-            <InfoMini label="단백질" value={dietRecommendation.protein} />
-          </div>
-        </div>
-        <div className="p-5">
-          <Button className="w-full" onClick={() => navigate("shop")}>
-            <ShoppingBag size={18} />
-            상품 주문으로 연결
-          </Button>
-        </div>
-      </Card>
-    </div>
-  );
-}
 function ShopScreen({
   product,
   navigate,

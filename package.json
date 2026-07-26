@@ -8,6 +8,8 @@
     "build": "node scripts/render-brand-assets.mjs && tsc -b && vite build && node scripts/publish-pages.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "test:matching": "tsx --test src/lib/matching.test.ts",
+    "test:ai": "tsx --test src/lib/ai.test.ts",
+    "test": "tsx --test src/lib/*.test.ts",
     "seed:firestore": "tsx scripts/seed-firestore.ts"
   },
   "dependencies": {
