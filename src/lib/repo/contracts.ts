@@ -18,7 +18,9 @@ import type {
   PtSubscriptionPlan,
   QrVerificationResult,
   RoutinePlan,
-  Trainer
+  SellerShipping,
+  Trainer,
+  Vendor
 } from "../../types";
 
 export type FacilityCategoryOption = {
@@ -49,6 +51,8 @@ export type ReturnPassSnapshot = {
   communityPosts: Post[];
   challenges: Challenge[];
   postComments: Comment[];
+  vendors: Vendor[];
+  sellerShippingPolicies: SellerShipping[];
 };
 
 export interface ReturnPassRepository {

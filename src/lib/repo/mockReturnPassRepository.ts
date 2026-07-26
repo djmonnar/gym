@@ -19,7 +19,9 @@ import {
   ptSubscriptionPlans,
   ptTrainers,
   qrVerificationResults,
+  sellerShippingPolicies,
   shopProducts,
+  vendors,
   weeklyRoutine
 } from "../../data/returnpass";
 import type { FacilityCategory } from "../../types";
@@ -47,7 +49,9 @@ const snapshot: ReturnPassSnapshot = {
   aiVisualAssets,
   communityPosts,
   challenges,
-  postComments
+  postComments,
+  vendors,
+  sellerShippingPolicies
 };
 
 export class MockReturnPassRepository implements ReturnPassRepository {

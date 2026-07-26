@@ -153,7 +153,7 @@ export type Product = ShopProduct & {
   sellerId: string;
   sellerName: string;
   fulfillment: FulfillmentType;
-  category: "보충제·단백질" | "닭가슴살·도시락" | "소도구" | "의류" | "시설 픽업";
+  category: ProductCategory;
   stock: number;
   status: "active" | "soldOut" | "hidden";
   foodInfo?: {
@@ -161,6 +161,33 @@ export type Product = ShopProduct & {
     expiry: string;
     nutrition: string;
   };
+};
+
+export type ProductCategory = "보충제·단백질" | "닭가슴살·도시락" | "소도구" | "의류" | "시설 픽업";
+
+/** 입점 판매업체. 통신판매중개 고지에 사용합니다. */
+export type Vendor = {
+  id: string;
+  bizName: string;
+  bizNo: string;
+  contact: string;
+  commissionRate: number;
+  status: "pending" | "active" | "paused";
+};
+
+/** 판매자별 배송 정책. 장바구니에서 판매자 단위로 배송비를 계산합니다. */
+export type SellerShipping = {
+  sellerId: string;
+  sellerName: string;
+  sellerType: SellerType;
+  shippingFee: number;
+  freeShippingOver: number | null;
+};
+
+export type CartItem = {
+  productId: string;
+  quantity: number;
+  fulfillment: "delivery" | "pickup";
 };
 
 export type MemberStatus = "이용중" | "만료예정" | "해지예약" | "만료";

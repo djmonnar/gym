@@ -60,6 +60,27 @@
 - 공유 비주얼: `public/images/returnpass-share-art.png`
 - 리턴샵 상품: `public/images/returnshop-chicken-breast.png`
 
+## 필요한 신규 자산 (미제작)
+
+리턴샵 상품 10종 중 8종에 사진이 없습니다. 사진이 없는 상품은 화면에서 카테고리 아이콘 타일로 대체하고 있으며,
+ChatGPT Image 2로 아래 자산을 제작한 뒤 `src/data/returnpass.ts`의 각 상품 `image` 값을 채우면 그대로 반영됩니다.
+
+- 규격: 800×800, 단색 또는 밝은 배경, 제품만 중앙 배치
+- 파일명 예: `public/images/returnshop-<상품id>.png`
+
+| 상품 id | 필요한 이미지 |
+|---|---|
+| `whey-protein-2kg` | 단백질 보충제 파우더 통 |
+| `bcaa-drink` | 아미노산 음료 병 묶음 |
+| `shaker-bottle` | 셰이커 보틀 |
+| `resistance-band` | 저항 밴드 3종 세트 |
+| `lifting-strap` | 리프팅 스트랩 1쌍 |
+| `training-tee` | 기능성 반팔 티셔츠 |
+| `pickup-towel-set` | 운동 타월 2매 |
+| `pickup-protein-shake` | 컵에 담긴 단백질 셰이크 |
+
+`chicken-original`, `chicken-garlic`은 기존 `returnshop-chicken-breast.png`를 함께 사용합니다.
+
 ## 제작 규칙
 
 1. 새 비트맵은 ChatGPT Image 2로만 제작합니다.

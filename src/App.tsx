@@ -20,12 +20,9 @@ import {
   LockKeyhole,
   Map,
   MapPin,
-  Minus,
   MessageCircle,
   MessagesSquare,
-  PackageCheck,
   Phone,
-  Plus,
   QrCode,
   ReceiptText,
   RefreshCw,
@@ -34,12 +31,10 @@ import {
   Settings,
   ShieldCheck,
   ShoppingBag,
-  ShoppingCart,
   SlidersHorizontal,
   Sparkles,
   Star,
   Target,
-  Truck,
   UserCheck,
   UserRound,
   UsersRound,
@@ -52,6 +47,7 @@ import { getMatchType, rankTrainers, type TrainerMatch } from "./lib/matching";
 import { prototypeData, returnPassRepository } from "./lib/repo";
 import type {
   AdminMember,
+  CartItem,
   Challenge,
   Content,
   Facility,
@@ -61,11 +57,11 @@ import type {
   PaymentRecord,
   Plan,
   Post,
+  Product,
   PtSubscriptionPlan,
   QrVerificationStatus,
   Role,
   ScreenId,
-  ShopProduct,
   Trainer
 } from "./types";
 
@@ -85,7 +81,9 @@ const {
   ptSubscriptionPlans,
   ptTrainers,
   qrVerificationResults,
+  sellerShippingPolicies,
   shopProducts,
+  vendors,
   weeklyRoutine
 } = prototypeData;
 import { AppShell, Badge, Button, Card, Checklist, InfoRow, MapPlaceholder, ScreenHeader, Stat, cn } from "./components/ui";
@@ -100,6 +98,11 @@ import { ChallengeListScreen } from "./components/community/ChallengeList";
 import { ChallengeDetailScreen } from "./components/community/ChallengeDetail";
 import { AiDietScreen } from "./components/ai/AiDiet";
 import { AiRoutineScreen } from "./components/ai/AiRoutine";
+import { ShopScreen } from "./components/shop/Shop";
+import { ShopDetailScreen } from "./components/shop/ShopDetail";
+import { CartScreen } from "./components/shop/Cart";
+import { OrderCompleteScreen } from "./components/shop/OrderComplete";
+import { addToCart, countCartItems, removeFromCart, setQuantity } from "./lib/cart";
 
 const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
 
@@ -218,8 +221,8 @@ export default function App() {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [adminStatus, setAdminStatus] = useState<MemberStatus>("이용중");
   const [qrResult, setQrResult] = useState<QrVerificationStatus>("입장 가능");
-  const [selectedProduct, setSelectedProduct] = useState<ShopProduct>(shopProducts[0]);
-  const [cartQuantity, setCartQuantity] = useState(1);
+  const [selectedProduct, setSelectedProduct] = useState<Product>(shopProducts[0]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [authPending, setAuthPending] = useState(false);
   const [matchAnswers, setMatchAnswers] = useState<MatchAnswers>(defaultMatchAnswers);
   const [selectedTrainer, setSelectedTrainer] = useState<Trainer>(ptTrainers[0]);
@@ -276,7 +279,7 @@ export default function App() {
     setSelectedGym(gym);
     navigate("detail");
   };
-  const selectProduct = (product: ShopProduct) => {
+  const selectProduct = (product: Product) => {
     setSelectedProduct(product);
     navigate("shopDetail");
   };
@@ -318,10 +321,19 @@ export default function App() {
     notify(exists ? "챌린지 참여를 취소했어요" : "챌린지에 참여했어요");
   };
   // AI 식단의 장보기 목록에서 리턴샵 상품을 장바구니로 연결합니다.
-  const addProductToCart = (product: ShopProduct) => {
-    setSelectedProduct(product);
-    setCartQuantity((quantity) => (selectedProduct.id === product.id ? quantity + 1 : 1));
+  const addProductToCart = (product: Product, fulfillment?: CartItem["fulfillment"], quantity = 1) => {
+    setCartItems((current) => {
+      let next = current;
+      for (let index = 0; index < quantity; index += 1) {
+        next = addToCart(next, product, fulfillment);
+      }
+      return next;
+    });
   };
+  const changeCartQuantity = (productId: string, fulfillment: CartItem["fulfillment"], quantity: number) =>
+    setCartItems((current) => setQuantity(current, productId, fulfillment, quantity));
+  const removeCartItem = (productId: string, fulfillment: CartItem["fulfillment"]) =>
+    setCartItems((current) => removeFromCart(current, productId, fulfillment));
   const submitPost = (post: Post) => {
     setPosts((current) => [post, ...current]);
     setSelectedPost(post);
@@ -557,13 +569,21 @@ export default function App() {
           />
         );
       case "shop":
-        return <ShopScreen product={shopProducts[0]} navigate={navigate} selectProduct={selectProduct} cartQuantity={cartQuantity} />;
+        return (
+          <ShopScreen
+            products={shopProducts}
+            cartCount={countCartItems(cartItems)}
+            selectProduct={selectProduct}
+            navigate={navigate}
+          />
+        );
       case "shopDetail":
         return (
           <ShopDetailScreen
             product={selectedProduct}
-            quantity={cartQuantity}
-            setQuantity={setCartQuantity}
+            vendors={vendors}
+            facilities={facilities}
+            onAddToCart={addProductToCart}
             navigate={navigate}
             notify={notify}
           />
@@ -571,16 +591,26 @@ export default function App() {
       case "cart":
         return (
           <CartScreen
-            product={selectedProduct}
-            quantity={cartQuantity}
-            setQuantity={setCartQuantity}
+            items={cartItems}
+            products={shopProducts}
+            policies={sellerShippingPolicies}
+            onSetQuantity={changeCartQuantity}
+            onRemove={removeCartItem}
             navigate={navigate}
-            notify={notify}
           />
         );
       case "shopComplete":
       case "orderSuccess":
-        return <ShopCompleteScreen product={selectedProduct} quantity={cartQuantity} navigate={navigate} />;
+        return (
+          <OrderCompleteScreen
+            items={cartItems}
+            products={shopProducts}
+            policies={sellerShippingPolicies}
+            facilities={facilities}
+            onDone={() => setCartItems([])}
+            navigate={navigate}
+          />
+        );
       case "adminHome":
       case "ownerHome":
         return <AdminHome navigate={navigate} notify={notify} />;
@@ -2525,273 +2555,6 @@ function PtScreen({ navigate, notify }: { navigate: (screen: ScreenId) => void; 
           </Card>
         ))}
       </div>
-    </div>
-  );
-}
-
-function ShopScreen({
-  product,
-  navigate,
-  selectProduct,
-  cartQuantity
-}: {
-  product: ShopProduct;
-  navigate: (screen: ScreenId) => void;
-  selectProduct: (product: ShopProduct) => void;
-  cartQuantity: number;
-}) {
-  return (
-    <div className="space-y-5">
-      <ScreenHeader
-        title="리턴샵"
-        eyebrow="리턴패스 회원 전용 상품"
-        action={
-          <button
-            className="relative grid size-11 place-items-center rounded-full bg-white shadow-soft"
-            type="button"
-            onClick={() => navigate("cart")}
-            aria-label="장바구니"
-          >
-            <ShoppingCart size={20} />
-            {cartQuantity > 0 ? (
-              <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-lime text-[10px] font-black text-brand">
-                {cartQuantity}
-              </span>
-            ) : null}
-          </button>
-        }
-      />
-      <Card className="overflow-hidden bg-zinc-950 p-0 text-white">
-        <div className="p-5">
-          <Badge tone="lime">단백질 루틴 패널</Badge>
-          <h2 className="mt-4 text-3xl font-black leading-tight">헬스장 구독 다음은 식단까지 가볍게</h2>
-          <p className="mt-3 text-sm font-semibold leading-6 text-white/70">
-            운동 이용권과 함께 구매하기 좋은 단백질 상품을 실제 커머스처럼 탐색하고 장바구니에 담아보세요.
-          </p>
-        </div>
-        <img src={product.image} alt={product.name} className="h-56 w-full object-cover" />
-      </Card>
-      <div className="grid grid-cols-3 gap-3">
-        <InfoMini label="오늘 혜택" value="18%" />
-        <InfoMini label="배송" value="내일" />
-        <InfoMini label="평점" value="4.9" />
-      </div>
-      <button type="button" onClick={() => selectProduct(product)} className="block w-full text-left">
-        <Card className="overflow-hidden p-0">
-          <div className="grid grid-cols-[120px_1fr] gap-4 p-4">
-            <img src={product.image} alt={product.name} className="h-32 w-full rounded-[22px] object-cover" />
-            <div className="min-w-0">
-              <Badge tone="lime">{product.badge}</Badge>
-              <h3 className="mt-3 text-lg font-black leading-tight">{product.name}</h3>
-              <p className="mt-1 line-clamp-2 text-sm font-semibold text-gray-500">{product.subtitle}</p>
-              <div className="mt-3 flex items-end gap-2">
-                <p className="text-2xl font-black">{formatWon(product.price)}</p>
-                <p className="pb-1 text-sm font-bold text-gray-400 line-through">{formatWon(product.originalPrice)}</p>
-              </div>
-            </div>
-          </div>
-        </Card>
-      </button>
-      <Card className="bg-zinc-950 text-white">
-        <PackageCheck size={28} className="text-white" />
-        <h2 className="mt-3 text-xl font-black">장바구니와 구매 화면까지 포함</h2>
-        <p className="mt-2 text-sm font-semibold leading-6 text-white/75">실제 결제 연동 없이도 상품 상세, 수량 변경, 주문 확인, 구매 완료 UX를 볼 수 있습니다.</p>
-      </Card>
-    </div>
-  );
-}
-
-function ShopDetailScreen({
-  product,
-  quantity,
-  setQuantity,
-  navigate,
-  notify
-}: {
-  product: ShopProduct;
-  quantity: number;
-  setQuantity: (quantity: number) => void;
-  navigate: (screen: ScreenId) => void;
-  notify: (message: string) => void;
-}) {
-  return (
-    <div className="space-y-5">
-      <ScreenHeader title="상품 상세" eyebrow="리턴샵" onBack={() => navigate("shop")} />
-      <Card className="overflow-hidden p-0">
-        <img src={product.image} alt={product.name} className="h-80 w-full object-cover" />
-        <div className="p-5">
-          <Badge tone="lime">{product.badge}</Badge>
-          <h1 className="mt-4 text-3xl font-black leading-tight">{product.name}</h1>
-          <p className="mt-2 text-sm font-semibold leading-6 text-gray-500">{product.subtitle}</p>
-          <div className="mt-4 flex items-end gap-2">
-            <p className="text-4xl font-black">{formatWon(product.price)}</p>
-            <p className="pb-1 text-base font-bold text-gray-400 line-through">{formatWon(product.originalPrice)}</p>
-          </div>
-        </div>
-      </Card>
-      <Card>
-        <h2 className="mb-4 text-lg font-black">영양 정보</h2>
-        <div className="grid grid-cols-4 gap-2">
-          {product.nutrition.map((item) => (
-            <div key={item.label} className="rounded-[18px] bg-gray-50 p-3 text-center">
-              <p className="text-[11px] font-bold text-gray-500">{item.label}</p>
-              <p className="mt-1 text-sm font-black">{item.value}</p>
-            </div>
-          ))}
-        </div>
-      </Card>
-      <Card>
-        <h2 className="mb-4 text-lg font-black">상품 포인트</h2>
-        <Checklist items={product.detailPoints} />
-        <div className="mt-4 flex flex-wrap gap-2">
-          {product.tags.map((tag) => (
-            <Badge key={tag} tone={tag.includes("단백질") ? "blue" : "gray"}>
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </Card>
-      <Card className="space-y-3">
-        <InfoRow label="배송 안내" value={product.shipping} icon={<Truck size={17} />} />
-        <InfoRow label="회원 혜택" value="리턴패스 구독자 무료 픽업" icon={<ShoppingBag size={17} />} />
-      </Card>
-      <div className="sticky bottom-2 z-10 rounded-[24px] bg-white/90 p-2 shadow-lift backdrop-blur">
-        <div className="mb-2 flex items-center justify-between rounded-[18px] bg-gray-50 px-3 py-2">
-          <span className="text-sm font-black">수량</span>
-          <QuantityStepper quantity={quantity} setQuantity={setQuantity} />
-        </div>
-        <div className="grid grid-cols-[1fr_1.25fr] gap-2">
-          <Button
-            variant="line"
-            onClick={() => {
-              notify("장바구니에 담았습니다.");
-              navigate("cart");
-            }}
-          >
-            <ShoppingCart size={18} />
-            담기
-          </Button>
-          <Button onClick={() => navigate("cart")}>{formatWon(product.price * quantity)} 구매하기</Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CartScreen({
-  product,
-  quantity,
-  setQuantity,
-  navigate,
-  notify
-}: {
-  product: ShopProduct;
-  quantity: number;
-  setQuantity: (quantity: number) => void;
-  navigate: (screen: ScreenId) => void;
-  notify: (message: string) => void;
-}) {
-  const subtotal = product.price * quantity;
-  const shippingFee = subtotal >= 10000 ? 0 : 2500;
-  const total = subtotal + shippingFee;
-
-  return (
-    <div className="space-y-5">
-      <ScreenHeader title="장바구니" eyebrow="리턴샵" onBack={() => navigate("shopDetail")} />
-      <Card className="p-4">
-        <div className="grid grid-cols-[96px_1fr] gap-4">
-          <img src={product.image} alt={product.name} className="h-28 w-full rounded-[20px] object-cover" />
-          <div>
-            <Badge tone="lime">냉장 배송</Badge>
-            <h2 className="mt-2 text-lg font-black leading-tight">{product.name}</h2>
-            <p className="mt-1 text-sm font-bold text-gray-500">{product.subtitle}</p>
-            <div className="mt-3 flex items-center justify-between">
-              <p className="text-xl font-black">{formatWon(product.price)}</p>
-              <QuantityStepper quantity={quantity} setQuantity={setQuantity} />
-            </div>
-          </div>
-        </div>
-      </Card>
-      <Card className="space-y-3">
-        <InfoRow label="상품 금액" value={formatWon(subtotal)} icon={<ReceiptText size={17} />} />
-        <InfoRow label="배송비" value={shippingFee === 0 ? "무료" : formatWon(shippingFee)} icon={<Truck size={17} />} />
-        <InfoRow label="결제 수단" value="현대카드 1842" icon={<CreditCard size={17} />} />
-      </Card>
-      <Card className="bg-brand text-white">
-        <p className="text-sm font-bold text-white/65">총 결제 금액</p>
-        <p className="mt-2 text-4xl font-black">{formatWon(total)}</p>
-        <p className="mt-3 text-sm font-semibold leading-6 text-white/70">실제 결제는 진행되지 않으며 구매 완료 화면으로 이동합니다.</p>
-      </Card>
-      <Button
-        className="w-full"
-        onClick={() => {
-          notify("주문이 접수되었습니다.");
-          navigate("shopComplete");
-        }}
-      >
-        <ShoppingBag size={18} />
-        {formatWon(total)} 구매하기
-      </Button>
-    </div>
-  );
-}
-
-function ShopCompleteScreen({
-  product,
-  quantity,
-  navigate
-}: {
-  product: ShopProduct;
-  quantity: number;
-  navigate: (screen: ScreenId) => void;
-}) {
-  return (
-    <div className="flex min-h-[640px] flex-col justify-center space-y-6 text-center">
-      <div className="mx-auto grid size-28 place-items-center rounded-full bg-lime text-brand shadow-lift">
-        <PackageCheck size={58} strokeWidth={2.4} />
-      </div>
-      <div>
-        <Badge tone="blue">리턴샵 주문 완료</Badge>
-        <h1 className="mt-4 text-3xl font-black">구매가 완료되었습니다</h1>
-        <p className="mt-3 text-sm font-semibold leading-6 text-gray-500">운동 루틴에 맞춰 내일 냉장 배송 예정입니다.</p>
-      </div>
-      <Card className="space-y-3 text-left">
-        <InfoRow label="주문 상품" value={product.name} />
-        <InfoRow label="수량" value={`${quantity}개`} />
-        <InfoRow label="배송 상태" value="주문 접수" icon={<Truck size={17} />} />
-      </Card>
-      <div className="grid grid-cols-2 gap-3">
-        <Button variant="line" onClick={() => navigate("shop")}>
-          쇼핑 계속
-        </Button>
-        <Button variant="dark" onClick={() => navigate("home")}>
-          홈으로
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-function QuantityStepper({ quantity, setQuantity }: { quantity: number; setQuantity: (quantity: number) => void }) {
-  return (
-    <div className="flex items-center gap-2">
-      <button
-        type="button"
-        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-        className="grid size-9 place-items-center rounded-full bg-white text-brand shadow-soft"
-        aria-label="수량 줄이기"
-      >
-        <Minus size={16} />
-      </button>
-      <span className="min-w-7 text-center text-sm font-black">{quantity}</span>
-      <button
-        type="button"
-        onClick={() => setQuantity(Math.min(20, quantity + 1))}
-        className="grid size-9 place-items-center rounded-full bg-brand text-lime shadow-soft"
-        aria-label="수량 늘리기"
-      >
-        <Plus size={16} />
-      </button>
     </div>
   );
 }

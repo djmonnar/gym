@@ -17,7 +17,9 @@
   PtSubscriptionPlan,
   QrVerificationResult,
   RoutinePlan,
-  Trainer
+  SellerShipping,
+  Trainer,
+  Vendor
 } from "../types";
 
 export const facilities: Facility[] = [
@@ -630,6 +632,345 @@ export const shopProducts: Product[] = [
       expiry: "제조일로부터 냉장 14일",
       nutrition: "120g 기준 138kcal, 단백질 24g"
     }
+  },
+  {
+    id: "chicken-garlic",
+    sellerType: "hq",
+    sellerId: "returnlife-hq",
+    sellerName: "리턴라이프 본사",
+    fulfillment: "both",
+    category: "닭가슴살·도시락",
+    stock: 180,
+    status: "active",
+    name: "리턴샵 수비드 닭가슴살 갈릭",
+    subtitle: "마늘 향을 살린 담백한 단백질 도시락",
+    price: 3400,
+    originalPrice: 4100,
+    image: "images/returnshop-chicken-breast.png",
+    badge: "회원 전용 17% 할인",
+    tags: ["단백질 23g", "저지방", "전자레인지 1분", "냉장 배송"],
+    nutrition: [
+      { label: "중량", value: "120g" },
+      { label: "단백질", value: "23g" },
+      { label: "열량", value: "142kcal" },
+      { label: "보관", value: "냉장" }
+    ],
+    detailPoints: [
+      "구운 마늘을 더해 밋밋함 없이 먹을 수 있습니다.",
+      "오리지널과 번갈아 먹기 좋은 두 번째 맛입니다.",
+      "냉장 배송과 시설 픽업을 모두 지원합니다."
+    ],
+    shipping: "오늘 18시 전 주문 시 내일 도착 예정",
+    foodInfo: {
+      origin: "닭고기(국내산), 마늘(국내산)",
+      expiry: "제조일로부터 냉장 14일",
+      nutrition: "120g 기준 142kcal, 단백질 23g"
+    }
+  },
+  {
+    id: "whey-protein-2kg",
+    sellerType: "vendor",
+    sellerId: "vendor-proteinlab",
+    sellerName: "프로틴랩",
+    fulfillment: "delivery",
+    category: "보충제·단백질",
+    stock: 64,
+    status: "active",
+    name: "프로틴랩 WPI 아이솔레이트 2kg",
+    subtitle: "유당 부담을 줄인 분리유청 단백질",
+    price: 59000,
+    originalPrice: 72000,
+    image: "",
+    badge: "입점사 단독",
+    tags: ["1회 25g", "유당 저감", "초코맛"],
+    nutrition: [
+      { label: "1회 제공량", value: "30g" },
+      { label: "단백질", value: "25g" },
+      { label: "열량", value: "118kcal" },
+      { label: "보관", value: "실온" }
+    ],
+    detailPoints: [
+      "분리유청(WPI) 공정으로 유당과 지방을 낮췄습니다.",
+      "물이나 우유 200ml에 한 스쿱을 섞어 드세요.",
+      "입점 판매업체가 직접 배송합니다."
+    ],
+    shipping: "평일 15시 전 주문 시 당일 출고",
+    foodInfo: {
+      origin: "유청단백분말(미국산)",
+      expiry: "제조일로부터 24개월",
+      nutrition: "30g 기준 118kcal, 단백질 25g"
+    }
+  },
+  {
+    id: "bcaa-drink",
+    sellerType: "vendor",
+    sellerId: "vendor-proteinlab",
+    sellerName: "프로틴랩",
+    fulfillment: "delivery",
+    category: "보충제·단백질",
+    stock: 120,
+    status: "active",
+    name: "프로틴랩 BCAA 드링크 20병",
+    subtitle: "운동 중 가볍게 마시는 아미노산 음료",
+    price: 24000,
+    originalPrice: 30000,
+    image: "",
+    badge: "20% 할인",
+    tags: ["무설탕", "레몬맛", "500ml"],
+    nutrition: [
+      { label: "용량", value: "500ml" },
+      { label: "BCAA", value: "3,000mg" },
+      { label: "열량", value: "10kcal" },
+      { label: "보관", value: "실온" }
+    ],
+    detailPoints: [
+      "운동 중 나눠 마시기 좋은 무설탕 아미노산 음료입니다.",
+      "레몬 향으로 끝맛이 텁텁하지 않습니다.",
+      "20병 묶음으로 배송됩니다."
+    ],
+    shipping: "평일 15시 전 주문 시 당일 출고",
+    foodInfo: {
+      origin: "정제수, L-류신(중국산)",
+      expiry: "제조일로부터 12개월",
+      nutrition: "500ml 기준 10kcal, BCAA 3,000mg"
+    }
+  },
+  {
+    id: "shaker-bottle",
+    sellerType: "hq",
+    sellerId: "returnlife-hq",
+    sellerName: "리턴라이프 본사",
+    fulfillment: "both",
+    category: "소도구",
+    stock: 310,
+    status: "active",
+    name: "리턴패스 셰이커 보틀 600ml",
+    subtitle: "새지 않는 잠금 뚜껑과 분리 세척 구조",
+    price: 12000,
+    originalPrice: 15000,
+    image: "",
+    badge: "브랜드 굿즈",
+    tags: ["600ml", "식약처 인증 소재", "분리 세척"],
+    nutrition: [
+      { label: "용량", value: "600ml" },
+      { label: "소재", value: "트라이탄" },
+      { label: "무게", value: "150g" },
+      { label: "세척", value: "분리형" }
+    ],
+    detailPoints: [
+      "잠금 뚜껑으로 가방 안에서 새지 않습니다.",
+      "믹싱 볼이 들어 있어 단백질이 잘 풀립니다.",
+      "시설 인포데스크 픽업이 가능합니다."
+    ],
+    shipping: "오늘 18시 전 주문 시 내일 도착 예정"
+  },
+  {
+    id: "resistance-band",
+    sellerType: "hq",
+    sellerId: "returnlife-hq",
+    sellerName: "리턴라이프 본사",
+    fulfillment: "delivery",
+    category: "소도구",
+    stock: 150,
+    status: "active",
+    name: "리턴패스 저항 밴드 3종 세트",
+    subtitle: "홈트 루틴에 바로 쓰는 강도별 밴드",
+    price: 18000,
+    originalPrice: 23000,
+    image: "",
+    badge: "AI 루틴 연계",
+    tags: ["약·중·강", "라텍스 프리", "파우치 포함"],
+    nutrition: [
+      { label: "구성", value: "밴드 3개" },
+      { label: "강도", value: "약·중·강" },
+      { label: "소재", value: "TPE" },
+      { label: "보관", value: "파우치" }
+    ],
+    detailPoints: [
+      "AI 루틴의 홈트 대체 종목에 바로 사용할 수 있습니다.",
+      "라텍스 프리 소재로 냄새가 적습니다.",
+      "휴대용 파우치가 함께 들어 있습니다."
+    ],
+    shipping: "오늘 18시 전 주문 시 내일 도착 예정"
+  },
+  {
+    id: "lifting-strap",
+    sellerType: "vendor",
+    sellerId: "vendor-fitgear",
+    sellerName: "피트기어",
+    fulfillment: "delivery",
+    category: "소도구",
+    stock: 88,
+    status: "active",
+    name: "피트기어 리프팅 스트랩",
+    subtitle: "악력이 먼저 풀릴 때 잡아주는 보조 스트랩",
+    price: 15000,
+    originalPrice: 19000,
+    image: "",
+    badge: "입점사 단독",
+    tags: ["면 소재", "논슬립", "1쌍"],
+    nutrition: [
+      { label: "구성", value: "1쌍" },
+      { label: "길이", value: "50cm" },
+      { label: "소재", value: "면·고무" },
+      { label: "세탁", value: "손세탁" }
+    ],
+    detailPoints: [
+      "데드리프트, 로우에서 악력 부담을 덜어줍니다.",
+      "논슬립 처리로 바에서 밀리지 않습니다.",
+      "입점 판매업체가 직접 배송합니다."
+    ],
+    shipping: "평일 14시 전 주문 시 당일 출고"
+  },
+  {
+    id: "training-tee",
+    sellerType: "vendor",
+    sellerId: "vendor-fitgear",
+    sellerName: "피트기어",
+    fulfillment: "delivery",
+    category: "의류",
+    stock: 45,
+    status: "active",
+    name: "피트기어 드라이 트레이닝 티",
+    subtitle: "땀이 빨리 마르는 기능성 반팔",
+    price: 26000,
+    originalPrice: 32000,
+    image: "",
+    badge: "신상품",
+    tags: ["흡습속건", "무봉제 어깨", "S~XL"],
+    nutrition: [
+      { label: "소재", value: "폴리 92%" },
+      { label: "핏", value: "레귤러" },
+      { label: "사이즈", value: "S~XL" },
+      { label: "세탁", value: "찬물 세탁" }
+    ],
+    detailPoints: [
+      "흡습속건 원단으로 운동 중 달라붙지 않습니다.",
+      "어깨 무봉제 처리로 쓸림이 적습니다.",
+      "입점 판매업체가 직접 배송합니다."
+    ],
+    shipping: "평일 14시 전 주문 시 당일 출고"
+  },
+  {
+    id: "pickup-towel-set",
+    sellerType: "facility",
+    sellerId: "muscle-factory",
+    sellerName: "머슬팩토리 경상대점",
+    fulfillment: "pickup",
+    category: "시설 픽업",
+    stock: 40,
+    status: "active",
+    name: "머슬팩토리 운동 타월 2매",
+    subtitle: "인포데스크에서 바로 받는 지점 판매 상품",
+    price: 9000,
+    originalPrice: 12000,
+    image: "",
+    badge: "지점 픽업 전용",
+    tags: ["40×80cm", "면 100%", "지점 수령"],
+    nutrition: [
+      { label: "구성", value: "2매" },
+      { label: "크기", value: "40×80cm" },
+      { label: "소재", value: "면 100%" },
+      { label: "수령", value: "인포데스크" }
+    ],
+    detailPoints: [
+      "배송비 없이 운동 가는 길에 받아 갈 수 있습니다.",
+      "지점 인포데스크에서 QR 확인 후 수령합니다.",
+      "재고는 지점에서 직접 관리합니다."
+    ],
+    shipping: "주문 후 2시간 뒤부터 인포데스크 수령 가능"
+  },
+  {
+    id: "pickup-protein-shake",
+    sellerType: "facility",
+    sellerId: "fitness-lounge",
+    sellerName: "진주 피트니스 라운지",
+    fulfillment: "pickup",
+    category: "시설 픽업",
+    stock: 60,
+    status: "active",
+    name: "라운지 단백질 셰이크",
+    subtitle: "운동 직후 바로 받아 마시는 지점 셰이크",
+    price: 5500,
+    originalPrice: 7000,
+    image: "",
+    badge: "지점 픽업 전용",
+    tags: ["단백질 20g", "당일 제조", "지점 수령"],
+    nutrition: [
+      { label: "용량", value: "400ml" },
+      { label: "단백질", value: "20g" },
+      { label: "열량", value: "180kcal" },
+      { label: "수령", value: "인포데스크" }
+    ],
+    detailPoints: [
+      "지점에서 당일 제조해 냉장 보관합니다.",
+      "운동 직후 인포데스크에서 바로 받을 수 있습니다.",
+      "배송은 제공하지 않는 픽업 전용 상품입니다."
+    ],
+    shipping: "주문 후 30분 뒤부터 인포데스크 수령 가능",
+    foodInfo: {
+      origin: "우유(국내산), 유청단백분말(미국산)",
+      expiry: "제조 당일 내 섭취",
+      nutrition: "400ml 기준 180kcal, 단백질 20g"
+    }
+  }
+];
+
+export const vendors: Vendor[] = [
+  {
+    id: "vendor-proteinlab",
+    bizName: "주식회사 프로틴랩",
+    bizNo: "214-88-01923",
+    contact: "1600-0000",
+    commissionRate: 0.12,
+    status: "active"
+  },
+  {
+    id: "vendor-fitgear",
+    bizName: "피트기어 컴퍼니",
+    bizNo: "132-81-55417",
+    contact: "1600-1111",
+    commissionRate: 0.15,
+    status: "active"
+  }
+];
+
+/** 판매자별 배송 정책. 픽업 전용 판매자는 배송비가 없습니다. */
+export const sellerShippingPolicies: SellerShipping[] = [
+  {
+    sellerId: "returnlife-hq",
+    sellerName: "리턴라이프 본사",
+    sellerType: "hq",
+    shippingFee: 3000,
+    freeShippingOver: 30000
+  },
+  {
+    sellerId: "vendor-proteinlab",
+    sellerName: "프로틴랩",
+    sellerType: "vendor",
+    shippingFee: 3500,
+    freeShippingOver: 50000
+  },
+  {
+    sellerId: "vendor-fitgear",
+    sellerName: "피트기어",
+    sellerType: "vendor",
+    shippingFee: 3500,
+    freeShippingOver: null
+  },
+  {
+    sellerId: "muscle-factory",
+    sellerName: "머슬팩토리 경상대점",
+    sellerType: "facility",
+    shippingFee: 0,
+    freeShippingOver: null
+  },
+  {
+    sellerId: "fitness-lounge",
+    sellerName: "진주 피트니스 라운지",
+    sellerType: "facility",
+    shippingFee: 0,
+    freeShippingOver: null
   }
 ];
 
