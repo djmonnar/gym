@@ -222,21 +222,21 @@ export default function App() {
 function SplashScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
   return (
     <div className="relative flex min-h-[640px] flex-col justify-between overflow-hidden rounded-[34px] bg-brand text-white shadow-glow">
-      <img src="images/gympass-onboarding-hero.png" alt="짐패스 앱 프리뷰" className="absolute inset-0 h-full w-full object-cover object-[50%_44%] opacity-60" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.32)_0%,rgba(17,24,39,0.54)_42%,rgba(17,24,39,0.98)_100%)]" />
+      <img src="images/returnpass-onboarding-hero.png" alt="리턴패스 앱 프리뷰" className="absolute inset-0 h-full w-full object-cover object-[50%_44%] opacity-60" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,55,42,0.28)_0%,rgba(18,55,42,0.56)_42%,rgba(11,42,32,0.98)_100%)]" />
       <div className="relative p-5">
         <div className="flex items-center justify-between">
-          <img src="brand/gympass-icon.svg" alt="짐패스 로고" className="size-12 rounded-[18px] shadow-lift ring-1 ring-white/15" />
-          <Badge tone="lime">MONTHLY FITNESS</Badge>
+          <img src="brand/returnpass-icon.svg" alt="리턴패스 로고" className="size-12 rounded-[18px] shadow-lift ring-1 ring-white/15" />
+          <Badge tone="lime">통합 피트니스 구독</Badge>
         </div>
       </div>
       <div className="relative space-y-6 p-5">
         <div>
           <Badge tone="blue">진주 가좌동 · QR 입장</Badge>
-          <h1 className="mt-5 text-[56px] font-black leading-none text-white">짐패스</h1>
-          <p className="mt-4 max-w-[310px] text-[27px] font-black leading-[1.12] text-white">헬스장, 이제 한 달씩 가볍게</p>
+          <h1 className="mt-5 text-[52px] font-black leading-none text-white">리턴패스</h1>
+          <p className="mt-4 max-w-[320px] text-[27px] font-black leading-[1.12] text-white">운동으로 돌아오는 가장 쉬운 패스</p>
           <p className="mt-4 max-w-[310px] text-sm font-semibold leading-6 text-white/76">
-            내 주변 헬스장을 한 달씩 구독하고 QR로 바로 입장하세요
+            헬스·요가·필라테스를 한 달씩 구독하고 QR로 바로 입장하세요
           </p>
         </div>
         <div className="grid grid-cols-3 gap-2">
@@ -264,11 +264,11 @@ function OnboardingScreen({ navigate }: { navigate: (screen: ScreenId) => void }
   const steps = [
     {
       eyebrow: "MONTHLY PASS",
-      title: "비싼 1년권 말고, 헬스장도 한 달씩",
-      description: "가격과 거리, 운영시간을 비교하고 원하는 헬스장을 월 단위로 시작하세요.",
-      tags: ["월구독", "가격 비교", "가까운 헬스장"],
+      title: "헬스부터 요가까지, 원하는 운동을 한 달씩",
+      description: "가격과 거리, 운영시간을 비교하고 내 생활에 맞는 운동을 월 단위로 시작하세요.",
+      tags: ["월구독", "종목 선택", "가까운 시설"],
       icon: <Dumbbell size={34} />,
-      image: "images/gympass-onboarding-hero.png"
+      image: "images/returnpass-onboarding-hero.png"
     },
     {
       eyebrow: "SECURE CHECK-IN",
@@ -276,15 +276,15 @@ function OnboardingScreen({ navigate }: { navigate: (screen: ScreenId) => void }
       description: "30초마다 갱신되는 동적 QR로 빠르고 안전하게 입장할 수 있습니다.",
       tags: ["동적 QR", "캡처 방지", "1회용 토큰"],
       icon: <QrCode size={34} />,
-      image: "images/gympass-qr-entry.png"
+      image: "images/returnpass-qr-entry.png"
     },
     {
       eyebrow: "FITNESS CARE",
       title: "PT, 루틴, AI 식단까지 한 번에",
       description: "운동 목표에 맞춰 PT 상담, 주간 루틴, 맞춤 식단, 상품 주문까지 연결합니다.",
-      tags: ["PT 신청", "운동 루틴", "AI 식단", "GYMSHOP"],
+      tags: ["PT 신청", "운동 루틴", "AI 식단", "리턴샵"],
       icon: <Sparkles size={34} />,
-      image: "images/gympass-share-art.png"
+      image: "images/returnpass-share-art.png"
     }
   ];
   const current = steps[step];
@@ -306,7 +306,7 @@ function OnboardingScreen({ navigate }: { navigate: (screen: ScreenId) => void }
         <Card className="overflow-hidden bg-brand p-0 text-white">
           <div className="relative h-72">
             <img src={current.image} alt={current.title} className="absolute inset-0 h-full w-full object-cover object-[54%_40%] opacity-68" />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.06),rgba(17,24,39,0.92))]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,55,42,0.06),rgba(11,42,32,0.94))]" />
             <div className="relative flex h-full flex-col justify-between p-5">
               <div className="flex items-center justify-between">
                 <Badge tone="lime">{current.eyebrow}</Badge>
@@ -342,7 +342,7 @@ function OnboardingScreen({ navigate }: { navigate: (screen: ScreenId) => void }
           이전
         </Button>
         <Button onClick={() => (isLast ? navigate("login") : setStep((currentStep) => currentStep + 1))}>
-          {isLast ? "짐패스 시작하기" : "다음"}
+          {isLast ? "리턴패스 시작하기" : "다음"}
         </Button>
       </div>
     </div>
@@ -354,7 +354,7 @@ function LoginScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
     <div className="flex min-h-[640px] flex-col justify-between">
       <div className="space-y-5">
         <div className="relative overflow-hidden rounded-[32px] bg-black p-5 text-white shadow-glow">
-          <img src="images/gympass-onboarding-hero.png" alt="짐패스 로그인 이미지" className="absolute inset-0 h-full w-full object-cover object-[50%_34%] opacity-34" />
+          <img src="images/returnpass-onboarding-hero.png" alt="리턴패스 로그인 이미지" className="absolute inset-0 h-full w-full object-cover object-[50%_34%] opacity-34" />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.46),rgba(0,0,0,0.95))]" />
           <div className="relative min-h-72">
             <Badge tone="lime">간편 로그인</Badge>
@@ -407,7 +407,7 @@ function LocationScreen({ navigate }: { navigate: (screen: ScreenId) => void }) 
         <ScreenHeader title="가까운 헬스장을 정확히 추천할게요" eyebrow="위치 권한 안내" />
         <Card className="overflow-hidden p-0">
           <div className="relative h-80 bg-zinc-950 text-white">
-            <img src="images/gympass-onboarding-hero.png" alt="위치 기반 헬스장 추천" className="absolute inset-0 h-full w-full object-cover object-[63%_42%] opacity-55" />
+            <img src="images/returnpass-onboarding-hero.png" alt="위치 기반 운동 시설 추천" className="absolute inset-0 h-full w-full object-cover object-[63%_42%] opacity-55" />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.1),rgba(0,0,0,0.92))]" />
             <div className="relative flex h-full flex-col justify-between p-5">
               <div className="flex items-center justify-between">
@@ -463,8 +463,8 @@ function HomeScreen({ navigate, selectGym }: { navigate: (screen: ScreenId) => v
     <div className="space-y-6">
       <section className="overflow-hidden rounded-[34px] bg-brand text-white shadow-glow">
         <div className="relative min-h-[250px] p-5">
-          <img src="images/gympass-qr-entry.png" alt="짐패스 QR 입장 히어로" className="absolute inset-0 h-full w-full object-cover object-[62%_center] opacity-45" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.22)_0%,rgba(17,24,39,0.92)_100%)]" />
+          <img src="images/returnpass-qr-entry.png" alt="리턴패스 QR 입장 히어로" className="absolute inset-0 h-full w-full object-cover object-[62%_center] opacity-45" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,55,42,0.2)_0%,rgba(11,42,32,0.94)_100%)]" />
           <div className="relative flex items-start justify-between gap-3">
             <div>
               <p className="text-xs font-black uppercase text-lime">현재 위치 · 진주 가좌동</p>
@@ -518,7 +518,7 @@ function HomeScreen({ navigate, selectGym }: { navigate: (screen: ScreenId) => v
       <div>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-xl font-black">빠른 메뉴</h2>
-          <span className="text-xs font-black text-gray-400">짐패스 바로가기</span>
+          <span className="text-xs font-black text-gray-400">리턴패스 바로가기</span>
         </div>
         <div className="grid grid-cols-3 gap-3">
           <QuickFeature icon={<QrCode size={20} />} label="QR 입장" body="30초 토큰" onClick={() => navigate("pass")} />
@@ -579,7 +579,7 @@ function HomeScreen({ navigate, selectGym }: { navigate: (screen: ScreenId) => v
       <Card className="overflow-hidden p-0">
         <div className="grid grid-cols-[1fr_132px]">
           <div className="p-5">
-            <Badge tone="blue">GYMSHOP 추천</Badge>
+            <Badge tone="blue">리턴샵 추천</Badge>
             <h2 className="mt-4 text-xl font-black leading-tight">{recommendedProduct.name}</h2>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <p className="text-2xl font-black">{formatWon(recommendedProduct.price)}</p>
@@ -697,7 +697,7 @@ function DetailScreen({ gym, navigate }: { gym: Gym; navigate: (screen: ScreenId
       <section className="overflow-hidden rounded-[30px] bg-white shadow-soft">
         <div className="relative h-72">
           <img src={gym.image} alt={`${gym.name} 이미지`} className="absolute inset-0 h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.05),rgba(17,24,39,0.86))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,55,42,0.05),rgba(11,42,32,0.88))]" />
           <div className="relative flex h-full flex-col justify-between p-5 text-white">
             <div className="flex flex-wrap gap-2">
               <Badge tone="lime">오늘 결제하면 바로 이용 가능</Badge>
@@ -907,7 +907,7 @@ function CheckoutScreen({
           <ChevronRight size={18} className="text-gray-400" />
         </div>
         <label className="flex cursor-pointer items-start gap-3 rounded-[20px] border border-gray-200 p-4">
-          <input checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} type="checkbox" className="mt-1 size-5 accent-[#111827]" />
+          <input checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} type="checkbox" className="mt-1 size-5 accent-[#12372A]" />
           <span className="text-sm font-bold leading-6 text-gray-700">정기결제, 환불 규정, 개인정보 처리 안내를 확인했습니다.</span>
         </label>
       </Card>
@@ -1009,7 +1009,7 @@ function PassScreen({ gym, navigate }: { gym: Gym; plan: Plan; navigate: (screen
           <Badge tone="lime">동적 QR 이용권</Badge>
           <span className="rounded-full bg-[#EEF4FF] px-3 py-1 text-[11px] font-black text-blue">{refreshMessage}</span>
         </div>
-        <div className="mx-auto flex size-56 flex-col items-center justify-center rounded-[32px] border-8 border-white bg-[linear-gradient(145deg,#111827,#0F172A)] shadow-inner ring-1 ring-brand/10">
+        <div className="mx-auto flex size-56 flex-col items-center justify-center rounded-[32px] border-8 border-white bg-[linear-gradient(145deg,#12372A,#0B2A20)] shadow-inner ring-1 ring-brand/10">
           <div className="qr-pattern grid size-40 place-items-center rounded-[22px] bg-white">
             <QrCode size={90} className="text-brand" />
           </div>
@@ -1200,7 +1200,7 @@ function MyPage({
       <MenuButton icon={<Dumbbell size={20} />} label="PT 상담 신청" onClick={() => navigate("pt")} />
       <MenuButton icon={<Activity size={20} />} label="운동 루틴 보기" onClick={() => navigate("routine")} />
       <MenuButton icon={<Utensils size={20} />} label="AI 식단 맞춤" onClick={() => navigate("diet")} />
-      <MenuButton icon={<ShoppingBag size={20} />} label="GYMSHOP 상품 구매" onClick={() => navigate("shop")} />
+      <MenuButton icon={<ShoppingBag size={20} />} label="리턴샵 상품 구매" onClick={() => navigate("shop")} />
       <MenuButton icon={<History size={20} />} label="결제 내역 바로가기" onClick={() => navigate("history")} />
       <MenuButton icon={<Headphones size={20} />} label="환불/문의 바로가기" onClick={() => navigate("support")} />
       <MenuButton icon={<Bell size={20} />} label="알림 설정" onClick={() => notify("알림 설정이 켜졌습니다.")} />
@@ -1345,8 +1345,8 @@ function ShopScreen({
   return (
     <div className="space-y-5">
       <ScreenHeader
-        title="GYMSHOP"
-        eyebrow="짐패스 회원 전용 상품"
+        title="리턴샵"
+        eyebrow="리턴패스 회원 전용 상품"
         action={
           <button
             className="relative grid size-11 place-items-center rounded-full bg-white shadow-soft"
@@ -1418,7 +1418,7 @@ function ShopDetailScreen({
 }) {
   return (
     <div className="space-y-5">
-      <ScreenHeader title="상품 상세" eyebrow="GYMSHOP" onBack={() => navigate("shop")} />
+      <ScreenHeader title="상품 상세" eyebrow="리턴샵" onBack={() => navigate("shop")} />
       <Card className="overflow-hidden p-0">
         <img src={product.image} alt={product.name} className="h-80 w-full object-cover" />
         <div className="p-5">
@@ -1455,7 +1455,7 @@ function ShopDetailScreen({
       </Card>
       <Card className="space-y-3">
         <InfoRow label="배송 안내" value={product.shipping} icon={<Truck size={17} />} />
-        <InfoRow label="회원 혜택" value="짐패스 구독자 무료 픽업" icon={<ShoppingBag size={17} />} />
+        <InfoRow label="회원 혜택" value="리턴패스 구독자 무료 픽업" icon={<ShoppingBag size={17} />} />
       </Card>
       <div className="sticky bottom-2 z-10 rounded-[24px] bg-white/90 p-2 shadow-lift backdrop-blur">
         <div className="mb-2 flex items-center justify-between rounded-[18px] bg-gray-50 px-3 py-2">
@@ -1499,7 +1499,7 @@ function CartScreen({
 
   return (
     <div className="space-y-5">
-      <ScreenHeader title="장바구니" eyebrow="GYMSHOP" onBack={() => navigate("shopDetail")} />
+      <ScreenHeader title="장바구니" eyebrow="리턴샵" onBack={() => navigate("shopDetail")} />
       <Card className="p-4">
         <div className="grid grid-cols-[96px_1fr] gap-4">
           <img src={product.image} alt={product.name} className="h-28 w-full rounded-[20px] object-cover" />
@@ -1553,7 +1553,7 @@ function ShopCompleteScreen({
         <PackageCheck size={58} strokeWidth={2.4} />
       </div>
       <div>
-        <Badge tone="blue">GYMSHOP 주문 완료</Badge>
+        <Badge tone="blue">리턴샵 주문 완료</Badge>
         <h1 className="mt-4 text-3xl font-black">구매가 완료되었습니다</h1>
         <p className="mt-3 text-sm font-semibold leading-6 text-gray-500">운동 루틴에 맞춰 내일 냉장 배송 예정입니다.</p>
       </div>

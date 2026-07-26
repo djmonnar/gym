@@ -110,19 +110,19 @@ export function AppShell({
   appMode?: "customer" | "admin";
 }) {
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_50%_-10%,rgba(215,255,63,0.25),transparent_34%),radial-gradient(circle_at_12%_86%,rgba(37,99,235,0.18),transparent_34%),#111827] px-3 py-5 text-brand">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_50%_-10%,rgba(215,255,63,0.2),transparent_34%),radial-gradient(circle_at_12%_86%,rgba(232,220,196,0.18),transparent_34%),#0B2A20] px-3 py-5 text-brand">
       <div className="relative mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-[430px] flex-col overflow-hidden rounded-[38px] border border-white/10 bg-surface shadow-glow ring-8 ring-black/25">
         <div className="flex items-center justify-between border-b border-white/10 bg-brand/90 px-5 py-3 text-white backdrop-blur-xl">
           <div className="flex items-center gap-2">
-            <img src="brand/gympass-icon.svg" alt="짐패스 로고" className="size-9 rounded-2xl shadow-glow" />
+            <img src="brand/returnpass-icon.svg" alt="리턴패스 로고" className="size-9 rounded-2xl shadow-glow" />
             <div>
-              <p className="text-sm font-black">짐패스</p>
-              <p className="text-[11px] font-bold text-white/55">MONTHLY GYM PASS</p>
+              <p className="text-sm font-black">리턴패스</p>
+              <p className="text-[11px] font-bold text-white/55">운동으로 돌아오는 패스</p>
             </div>
           </div>
           <Badge tone={appMode === "admin" ? "blue" : "lime"}>{appMode === "admin" ? "사장님" : "LIVE"}</Badge>
         </div>
-        <div key={active} className="scrollbar-none flex-1 overflow-y-auto bg-[linear-gradient(180deg,#F8F8F9_0%,#F1F2F4_62%,#E5E7EB_100%)] px-5 py-6 pb-32">
+        <div key={active} className="scrollbar-none flex-1 overflow-y-auto bg-[linear-gradient(180deg,#FDFCF9_0%,#F7F6F2_62%,#E8ECE9_100%)] px-5 py-6 pb-32">
           {children}
         </div>
         {showTabs ? <BottomNav active={active} navigate={navigate} /> : null}
@@ -141,7 +141,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
   ];
 
   return (
-    <nav className="fixed bottom-6 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-[390px] -translate-x-1/2 grid-cols-5 rounded-[28px] border border-black/10 bg-white px-2 py-2 shadow-[0_22px_70px_rgba(17,24,39,0.26),0_0_0_1px_rgba(255,255,255,0.95)]">
+    <nav className="fixed bottom-6 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-[390px] -translate-x-1/2 grid-cols-5 rounded-[28px] border border-black/10 bg-white px-2 py-2 shadow-[0_22px_70px_rgba(18,55,42,0.24),0_0_0_1px_rgba(255,255,255,0.95)]">
       {items.map((item) => {
         const isActive = active === item.screen;
         return (
@@ -151,7 +151,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
             onClick={() => navigate(item.screen)}
             className={cn(
               "flex h-[58px] flex-col items-center justify-center gap-1 rounded-[21px] text-[10px] font-black transition",
-              isActive ? "bg-brand text-lime shadow-[0_14px_36px_rgba(17,24,39,0.22)]" : "text-zinc-500 hover:bg-zinc-100 hover:text-brand"
+              isActive ? "bg-brand text-lime shadow-[0_14px_36px_rgba(18,55,42,0.22)]" : "text-zinc-500 hover:bg-zinc-100 hover:text-brand"
             )}
           >
             {item.icon}
@@ -167,9 +167,9 @@ export function Stat({ label, value, tone = "dark" }: { label: string; value: st
   const toneClass = tone === "lime" ? "bg-lime text-brand" : tone === "blue" ? "bg-blue text-white" : "bg-brand text-white";
 
   return (
-    <div className={cn("rounded-[22px] p-4", toneClass)}>
+    <div className={cn("min-w-0 rounded-[22px] p-3", toneClass)}>
       <p className="text-xs font-bold opacity-80">{label}</p>
-      <p className="mt-2 text-2xl font-black">{value}</p>
+      <p className="mt-2 text-sm font-black leading-tight">{value}</p>
     </div>
   );
 }

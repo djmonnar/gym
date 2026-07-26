@@ -1,21 +1,21 @@
 ﻿{
-  "name": "짐패스",
-  "short_name": "짐패스",
-  "description": "헬스장, 이제 한 달씩 가볍게",
+  "name": "리턴패스",
+  "short_name": "리턴패스",
+  "description": "운동으로 돌아오는 가장 쉬운 패스",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F7F8FA",
-  "theme_color": "#111827",
+  "background_color": "#F7F6F2",
+  "theme_color": "#12372A",
   "lang": "ko-KR",
   "icons": [
     {
-      "src": "brand/gympass-icon-192.png",
+      "src": "brand/returnpass-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "brand/gympass-icon-512.png",
+      "src": "brand/returnpass-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

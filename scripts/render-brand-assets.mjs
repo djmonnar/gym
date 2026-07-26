@@ -5,12 +5,12 @@ await sharp("public/og/kakao-thumbnail.svg")
   .png()
   .toFile("public/og/kakao-thumbnail.png");
 
-await sharp("public/brand/gympass-icon.svg")
+await sharp("public/brand/returnpass-icon.svg")
   .resize(512, 512)
   .png()
-  .toFile("public/brand/gympass-icon-512.png");
+  .toFile("public/brand/returnpass-icon-512.png");
 
-await sharp("public/brand/gympass-icon.svg")
+await sharp("public/brand/returnpass-icon.svg")
   .resize(192, 192)
   .png()
-  .toFile("public/brand/gympass-icon-192.png");
+  .toFile("public/brand/returnpass-icon-192.png");

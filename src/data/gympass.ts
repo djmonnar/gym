@@ -237,11 +237,11 @@ export const dietRecommendation: DietRecommendation = {
 export const shopProducts: ShopProduct[] = [
   {
     id: "chicken-original",
-    name: "GYMSHOP 수비드 닭가슴살 오리지널",
+    name: "리턴샵 수비드 닭가슴살 오리지널",
     subtitle: "운동 끝나고 바로 먹는 촉촉한 단백질 루틴",
     price: 3200,
     originalPrice: 3900,
-    image: "images/gymshop-chicken-breast.png",
+    image: "images/returnshop-chicken-breast.png",
     badge: "회원 전용 18% 할인",
     tags: ["단백질 24g", "저지방", "전자레인지 1분", "냉장 배송"],
     nutrition: [
@@ -253,7 +253,7 @@ export const shopProducts: ShopProduct[] = [
     detailPoints: [
       "수비드 방식으로 퍽퍽함을 줄이고 촉촉한 식감을 살렸습니다.",
       "운동 전후 부담 없이 먹기 좋은 오리지널 시즈닝입니다.",
-      "짐패스 구독 회원은 매장 픽업 또는 냉장 배송을 선택할 수 있습니다."
+      "리턴패스 구독 회원은 매장 픽업 또는 냉장 배송을 선택할 수 있습니다."
     ],
     shipping: "오늘 18시 전 주문 시 내일 도착 예정"
   }
