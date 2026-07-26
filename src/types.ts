@@ -430,6 +430,16 @@ export type Post = {
   tags: string[];
 };
 
+export type Comment = {
+  id: string;
+  postId: string;
+  uid: string;
+  authorName: string;
+  text: string;
+  createdAt: string;
+  isAuthor?: boolean;
+};
+
 export type Challenge = {
   id: string;
   host: "hq" | "facility";
@@ -446,4 +456,7 @@ export type Challenge = {
   badgeName: string;
   image: string;
   imagePosition: string;
+  goalCount: number;
+  myCount: number;
+  steps: string[];
 };

@@ -15,6 +15,7 @@ import {
   gyms,
   paymentRecords,
   plans,
+  postComments,
   ptSubscriptionPlans,
   ptTrainers,
   qrVerificationResults,
@@ -45,7 +46,8 @@ const snapshot: ReturnPassSnapshot = {
   aiRoutine,
   aiVisualAssets,
   communityPosts,
-  challenges
+  challenges,
+  postComments
 };
 
 export class MockReturnPassRepository implements ReturnPassRepository {
@@ -75,5 +77,9 @@ export class MockReturnPassRepository implements ReturnPassRepository {
 
   async listChallenges() {
     return challenges;
+  }
+
+  async listComments(postId: string) {
+    return postComments.filter((comment) => comment.postId === postId);
   }
 }

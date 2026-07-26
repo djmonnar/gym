@@ -39,7 +39,6 @@ import {
   Sparkles,
   Star,
   Target,
-  Trophy,
   Truck,
   UserCheck,
   UserRound,
@@ -53,6 +52,7 @@ import { getMatchType, rankTrainers, type TrainerMatch } from "./lib/matching";
 import { prototypeData, returnPassRepository } from "./lib/repo";
 import type {
   AdminMember,
+  Challenge,
   Content,
   Facility,
   FacilityCategory,
@@ -60,6 +60,7 @@ import type {
   MemberStatus,
   PaymentRecord,
   Plan,
+  Post,
   PtSubscriptionPlan,
   QrVerificationStatus,
   Role,
@@ -93,8 +94,17 @@ import { ContentHomeScreen } from "./components/content/ContentHome";
 import { ContentDetailScreen } from "./components/content/ContentDetail";
 import { ContentThumbnail } from "./components/content/ContentThumbnail";
 import { contentTypeLabel, isContentLocked } from "./components/content/contentMeta";
+import { CommunityFeedScreen } from "./components/community/CommunityFeed";
+import { CommunityPostScreen } from "./components/community/CommunityPost";
+import { CommunityWriteScreen } from "./components/community/CommunityWrite";
+import { ChallengeListScreen } from "./components/community/ChallengeList";
+import { ChallengeDetailScreen } from "./components/community/ChallengeDetail";
 
 const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
+
+// 모듈 스코프에 두어 참조가 매 렌더마다 바뀌지 않게 합니다.
+// 참조가 바뀌면 댓글 로딩 effect가 다시 돌면서 방금 작성한 댓글이 사라집니다.
+const loadPostComments = (postId: string) => returnPassRepository.listComments(postId);
 
 function SpriteVisual({
   image,
@@ -244,6 +254,11 @@ export default function App() {
   const [selectedContent, setSelectedContent] = useState<Content>(contents[0]);
   const [savedContentIds, setSavedContentIds] = useState<string[]>([]);
   const [completedContentIds, setCompletedContentIds] = useState<string[]>([]);
+  const [posts, setPosts] = useState<Post[]>(communityPosts);
+  const [selectedPost, setSelectedPost] = useState<Post>(communityPosts[0]);
+  const [selectedChallenge, setSelectedChallenge] = useState<Challenge>(challenges[0]);
+  const [likedPostIds, setLikedPostIds] = useState<string[]>([]);
+  const [joinedChallengeIds, setJoinedChallengeIds] = useState<string[]>([challenges[0].id]);
 
   const appMode =
     screen.startsWith("admin") || screen.startsWith("owner")
@@ -309,6 +324,30 @@ export default function App() {
     const exists = completedContentIds.includes(content.id);
     setCompletedContentIds(exists ? completedContentIds.filter((id) => id !== content.id) : [...completedContentIds, content.id]);
     notify(exists ? "완료를 해제했어요" : "완료로 표시했어요");
+  };
+  const openPost = (post: Post) => {
+    setSelectedPost(post);
+    navigate("communityPost");
+  };
+  const openChallenge = (challenge: Challenge) => {
+    setSelectedChallenge(challenge);
+    navigate("challengeDetail");
+  };
+  const toggleLikedPost = (post: Post) => {
+    setLikedPostIds((current) =>
+      current.includes(post.id) ? current.filter((id) => id !== post.id) : [...current, post.id]
+    );
+  };
+  const toggleJoinedChallenge = (challenge: Challenge) => {
+    const exists = joinedChallengeIds.includes(challenge.id);
+    setJoinedChallengeIds(exists ? joinedChallengeIds.filter((id) => id !== challenge.id) : [...joinedChallengeIds, challenge.id]);
+    notify(exists ? "챌린지 참여를 취소했어요" : "챌린지에 참여했어요");
+  };
+  const submitPost = (post: Post) => {
+    setPosts((current) => [post, ...current]);
+    setSelectedPost(post);
+    notify("게시물을 등록했어요");
+    navigate("communityFeed");
   };
   const handleDemoLogin = async () => {
     setAuthPending(true);
@@ -469,7 +508,61 @@ export default function App() {
           />
         );
       case "communityFeed":
-        return <CommunityFeedScreen navigate={navigate} />;
+        return (
+          <CommunityFeedScreen
+            posts={posts}
+            challenges={challenges}
+            facilities={facilities}
+            likedIds={likedPostIds}
+            openPost={openPost}
+            openChallenge={openChallenge}
+            toggleLike={toggleLikedPost}
+            navigate={navigate}
+          />
+        );
+      case "communityPost":
+        return (
+          <CommunityPostScreen
+            post={selectedPost}
+            facilities={facilities}
+            challenges={challenges}
+            liked={likedPostIds.includes(selectedPost.id)}
+            loadComments={loadPostComments}
+            onToggleLike={() => toggleLikedPost(selectedPost)}
+            openChallenge={openChallenge}
+            navigate={navigate}
+            notify={notify}
+          />
+        );
+      case "communityWrite":
+        return (
+          <CommunityWriteScreen
+            facilities={facilities}
+            challenges={challenges}
+            onSubmit={submitPost}
+            navigate={navigate}
+          />
+        );
+      case "challengeList":
+        return (
+          <ChallengeListScreen
+            challenges={challenges}
+            joinedIds={joinedChallengeIds}
+            openChallenge={openChallenge}
+            navigate={navigate}
+          />
+        );
+      case "challengeDetail":
+        return (
+          <ChallengeDetailScreen
+            challenge={selectedChallenge}
+            posts={posts}
+            joined={joinedChallengeIds.includes(selectedChallenge.id)}
+            onToggleJoin={() => toggleJoinedChallenge(selectedChallenge)}
+            openPost={openPost}
+            navigate={navigate}
+          />
+        );
       case "shop":
         return <ShopScreen product={shopProducts[0]} navigate={navigate} selectProduct={selectProduct} cartQuantity={cartQuantity} />;
       case "shopDetail":
@@ -570,34 +663,6 @@ const routePreviewCopy: Partial<
     actionLabel: "홈으로",
     actionScreen: "home"
   },
-  communityPost: {
-    eyebrow: "COMMUNITY",
-    title: "오늘의 운동 인증",
-    description: "내 시설 회원들의 운동 기록과 댓글을 한곳에서 확인합니다.",
-    actionLabel: "피드로 돌아가기",
-    actionScreen: "communityFeed"
-  },
-  communityWrite: {
-    eyebrow: "WRITE",
-    title: "운동 인증 남기기",
-    description: "사진과 오늘의 루틴, 이용 시설 태그를 더해 가볍게 기록합니다.",
-    actionLabel: "작성 완료",
-    actionScreen: "communityFeed"
-  },
-  challengeList: {
-    eyebrow: "CHALLENGE",
-    title: "이번 달 챌린지",
-    description: "출석과 루틴 달성으로 배지와 리턴샵 리워드를 모읍니다.",
-    actionLabel: "대표 챌린지 보기",
-    actionScreen: "challengeDetail"
-  },
-  challengeDetail: {
-    eyebrow: "4 WEEKS",
-    title: "4주 12회 출석 챌린지",
-    description: "내 QR 입장 기록이 자동으로 반영되고 달성 현황을 바로 확인할 수 있습니다.",
-    actionLabel: "커뮤니티로",
-    actionScreen: "communityFeed"
-  },
   ownerSales: {
     eyebrow: "OWNER SALES",
     title: "매출·정산",
@@ -662,64 +727,6 @@ const routePreviewCopy: Partial<
     actionScreen: "hqAdminHome"
   }
 };
-
-function CommunityFeedScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
-  const challenge = challenges[0];
-
-  return (
-    <div>
-      <ScreenHeader
-        title="함께 운동해요"
-        eyebrow="RETURN COMMUNITY"
-        action={
-          <button type="button" onClick={() => navigate("communityWrite")} className="grid size-11 place-items-center rounded-full bg-brand text-lime shadow-soft" aria-label="운동 인증 작성">
-            <Plus size={21} />
-          </button>
-        }
-      />
-
-      <button type="button" onClick={() => navigate("challengeDetail")} className="relative mb-6 min-h-[190px] w-full overflow-hidden rounded-[24px] text-left text-white shadow-glow">
-        <SpriteVisual
-          image={challenge.image}
-          position={challenge.imagePosition}
-          backgroundSize="auto 300%"
-          label={`${challenge.title} 챌린지 배너`}
-          className="absolute inset-0 h-full w-full"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-brand via-brand/80 to-brand/10" />
-        <div className="relative flex items-start justify-between gap-4 p-5">
-          <div>
-            <Badge tone="lime">진행 중</Badge>
-            <h2 className="mt-3 text-xl font-black">{challenge.title}</h2>
-            <p className="mt-2 text-xs font-bold text-white/65">{challenge.participantCount}명 참여 · {challenge.reward}</p>
-          </div>
-          <Trophy size={32} className="shrink-0 text-lime" />
-        </div>
-      </button>
-
-      <div className="mb-4 flex gap-2">
-        {["전체", "내 시설", "챌린지"].map((tab, index) => (
-          <button key={tab} type="button" className={cn("min-h-10 rounded-full px-4 text-xs font-black", index === 0 ? "bg-brand text-lime" : "bg-white text-zinc-500 ring-1 ring-black/5")}>
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      <div className="space-y-3">
-        {communityPosts.slice(0, 4).map((post) => (
-          <button key={post.id} type="button" onClick={() => navigate("communityPost")} className="w-full rounded-[20px] bg-white p-4 text-left shadow-soft ring-1 ring-black/5">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm font-black">{post.authorName}</p>
-              <Badge tone="gray">{post.type === "proof" ? "운동 인증" : post.type === "qna" ? "Q&A" : "커뮤니티"}</Badge>
-            </div>
-            <p className="mt-3 line-clamp-2 text-sm font-bold leading-6 text-zinc-600">{post.text}</p>
-            <p className="mt-3 text-xs font-bold text-zinc-400">좋아요 {post.likes} · 댓글 {post.commentCount}</p>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 function RoutePreviewScreen({ screen, navigate }: { screen: ScreenId; navigate: (screen: ScreenId) => void }) {
   const copy = routePreviewCopy[screen] ?? {

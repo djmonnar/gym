@@ -5,6 +5,7 @@ import type {
   AiRoutine,
   AiVisualAssets,
   Challenge,
+  Comment,
   Content,
   DietRecommendation,
   Facility,
@@ -47,6 +48,7 @@ export type ReturnPassSnapshot = {
   aiVisualAssets: AiVisualAssets;
   communityPosts: Post[];
   challenges: Challenge[];
+  postComments: Comment[];
 };
 
 export interface ReturnPassRepository {
@@ -57,4 +59,5 @@ export interface ReturnPassRepository {
   listProducts(): Promise<Product[]>;
   listCommunityPosts(facilityId?: string): Promise<Post[]>;
   listChallenges(): Promise<Challenge[]>;
+  listComments(postId: string): Promise<Comment[]>;
 }

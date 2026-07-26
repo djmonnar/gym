@@ -52,4 +52,8 @@ export class FirebaseReturnPassRepository implements ReturnPassRepository {
   async listChallenges() {
     return this.fallback.listChallenges();
   }
+
+  async listComments(postId: string) {
+    return this.fallback.listComments(postId);
+  }
 }

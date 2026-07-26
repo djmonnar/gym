@@ -5,6 +5,7 @@
   AiRoutine,
   AiVisualAssets,
   Challenge,
+  Comment,
   Content,
   DietRecommendation,
   Facility,
@@ -1011,7 +1012,15 @@ export const challenges: Challenge[] = [
     participantCount: 184,
     badgeName: "꾸준한 리턴",
     image: "images/returnpass-challenge-banners-v1.webp",
-    imagePosition: "50% 0%"
+    imagePosition: "50% 0%",
+    goalCount: 12,
+    myCount: 7,
+    steps: [
+      "시설에 QR로 입장하면 자동으로 1회가 기록됩니다.",
+      "홈 트레이닝은 운동 인증 게시물로 대신 인정됩니다.",
+      "하루 최대 1회까지 집계됩니다.",
+      "기간 내 12회를 채우면 배지와 쿠폰이 지급됩니다."
+    ]
   },
   {
     id: "challenge-002",
@@ -1025,7 +1034,15 @@ export const challenges: Challenge[] = [
     participantCount: 96,
     badgeName: "부드러운 리턴",
     image: "images/returnpass-challenge-banners-v1.webp",
-    imagePosition: "50% 50%"
+    imagePosition: "50% 50%",
+    goalCount: 14,
+    myCount: 9,
+    steps: [
+      "스트레칭·요가 콘텐츠를 완료 체크하면 기록됩니다.",
+      "직접 인증 게시물을 올려도 인정됩니다.",
+      "하루 1회, 10분 이상을 기준으로 합니다.",
+      "14일 중 12일 이상 달성하면 구독 3일이 연장됩니다."
+    ]
   },
   {
     id: "challenge-003",
@@ -1039,7 +1056,30 @@ export const challenges: Challenge[] = [
     participantCount: 42,
     badgeName: "런치 워커",
     image: "images/returnpass-challenge-banners-v1.webp",
-    imagePosition: "50% 100%"
+    imagePosition: "50% 100%",
+    goalCount: 15,
+    myCount: 4,
+    steps: [
+      "평일 점심시간(11~14시) 걷기를 인증합니다.",
+      "게시물에 `걷기` 태그를 함께 남겨주세요.",
+      "20분 이상 걸은 기록만 인정됩니다.",
+      "15회를 채운 회원에게 단백질 음료를 드립니다."
+    ]
   }
+];
+
+export const postComments: Comment[] = [
+  { id: "comment-001", postId: "post-001", uid: "member-1041", authorName: "이지원", text: "등 운동 루틴 공유해주실 수 있나요?", createdAt: "2026.07.26 21:24" },
+  { id: "comment-002", postId: "post-001", uid: "member-1042", authorName: "김예림", text: "랫풀다운이랑 시티드로우 위주로 했어요!", createdAt: "2026.07.26 21:31", isAuthor: true },
+  { id: "comment-003", postId: "post-001", uid: "member-1026", authorName: "오민준", text: "저도 오늘 같은 시간대에 있었네요 ㅎㅎ", createdAt: "2026.07.26 22:02" },
+  { id: "comment-004", postId: "post-001", uid: "member-1039", authorName: "박서준", text: "꾸준히 하시는 거 보기 좋습니다.", createdAt: "2026.07.26 22:40" },
+  { id: "comment-005", postId: "post-001", uid: "member-1027", authorName: "한소희", text: "이번 주 출석 챌린지도 같이 달성하시겠어요!", createdAt: "2026.07.27 07:15" },
+  { id: "comment-006", postId: "post-002", uid: "member-1021", authorName: "문지은", text: "아침 요가 저도 시작해보려고요.", createdAt: "2026.07.26 08:52" },
+  { id: "comment-007", postId: "post-002", uid: "member-1041", authorName: "이지원", text: "릴랙스 플로우 수업 추천드려요.", createdAt: "2026.07.26 09:10", isAuthor: true },
+  { id: "comment-008", postId: "post-004", uid: "member-1042", authorName: "김예림", text: "종아리 스트레칭이랑 발목 도수 운동이 도움이 됐어요.", createdAt: "2026.07.25 15:02" },
+  { id: "comment-009", postId: "post-004", uid: "trainer-kim", authorName: "김도윤 트레이너", text: "발목 가동성이 부족한 경우가 많습니다. 스쿼트 전 종아리 폼롤러를 먼저 해보세요.", createdAt: "2026.07.25 16:20" },
+  { id: "comment-010", postId: "post-005", uid: "member-1023", authorName: "윤하늘", text: "10회 축하드려요!", createdAt: "2026.07.24 20:44" },
+  { id: "comment-011", postId: "post-010", uid: "member-1024", authorName: "서민재", text: "점심 걷기 챌린지 같이 하실 분 환영합니다.", createdAt: "2026.07.21 13:30", isAuthor: true },
+  { id: "comment-012", postId: "post-014", uid: "member-1019", authorName: "신예린", text: "저는 보통 1시간 반 전에 가볍게 먹어요.", createdAt: "2026.07.17 12:05" }
 ];
 
