@@ -9,6 +9,7 @@
   Content,
   DietRecommendation,
   Facility,
+  OrderRecord,
   PassInfo,
   PaymentRecord,
   Plan,
@@ -971,6 +972,40 @@ export const sellerShippingPolicies: SellerShipping[] = [
     sellerType: "facility",
     shippingFee: 0,
     freeShippingOver: null
+  }
+];
+
+// 데모 주문 내역. 실제 서비스라면 주문 API에서 불러옵니다.
+export const orderHistory: OrderRecord[] = [
+  {
+    id: "ORD-20260718-0042",
+    orderedAt: "2026.07.18",
+    status: "배송 완료",
+    total: 62200,
+    fulfillment: "delivery",
+    lines: [
+      { name: "리턴샵 수비드 닭가슴살 오리지널", quantity: 10, sellerName: "리턴라이프 본사" },
+      { name: "프로틴랩 WPI 아이솔레이트 2kg", quantity: 1, sellerName: "프로틴랩" }
+    ]
+  },
+  {
+    id: "ORD-20260709-0031",
+    orderedAt: "2026.07.09",
+    status: "수령 완료",
+    total: 5500,
+    fulfillment: "pickup",
+    lines: [{ name: "라운지 단백질 셰이크", quantity: 1, sellerName: "진주 피트니스 라운지" }]
+  },
+  {
+    id: "ORD-20260701-0018",
+    orderedAt: "2026.07.01",
+    status: "배송 완료",
+    total: 33400,
+    fulfillment: "mixed",
+    lines: [
+      { name: "리턴샵 수비드 닭가슴살 갈릭", quantity: 8, sellerName: "리턴라이프 본사" },
+      { name: "머슬팩토리 운동 타월 2매", quantity: 1, sellerName: "머슬팩토리 경상대점" }
+    ]
   }
 ];
 

@@ -11,6 +11,7 @@ export function OrderCompleteScreen({
   products,
   policies,
   facilities,
+  paidAmount,
   onDone,
   navigate
 }: {
@@ -18,10 +19,12 @@ export function OrderCompleteScreen({
   products: Product[];
   policies: SellerShipping[];
   facilities: Facility[];
+  paidAmount: number | null;
   onDone: () => void;
   navigate: (screen: ScreenId) => void;
 }) {
   const summary = summarizeCart(items, products, policies);
+  const paid = paidAmount ?? summary.grandTotal;
   const pickupGroups = summary.groups.filter((group) => group.pickupLines.length > 0);
   const deliveryGroups = summary.groups.filter((group) => group.deliveryLines.length > 0);
 
@@ -33,7 +36,7 @@ export function OrderCompleteScreen({
         <CheckCircle2 size={40} className="text-limeSoft" />
         <h2 className="mt-4 text-2xl font-black leading-snug">주문이 정상 접수되었습니다</h2>
         <p className="mt-3 text-sm font-bold leading-6 text-white/70">
-          결제 금액 {formatWon(summary.grandTotal)} · 상품 {summary.itemCount}개
+          결제 금액 {formatWon(paid)} · 상품 {summary.itemCount}개
         </p>
         <p className="mt-2 text-xs font-bold leading-6 text-white/60">
           판매자가 여러 곳인 주문은 판매자별로 따로 발송되며 도착 시점이 다를 수 있습니다.
@@ -110,7 +113,17 @@ export function OrderCompleteScreen({
         </Card>
       ) : null}
 
-      <div className="mt-5 grid grid-cols-2 gap-3">
+      <Button
+        variant="line"
+        className="mt-5 w-full"
+        onClick={() => {
+          onDone();
+          navigate("orderHistory");
+        }}
+      >
+        주문 내역 보기
+      </Button>
+      <div className="mt-3 grid grid-cols-2 gap-3">
         <Button
           variant="line"
           onClick={() => {

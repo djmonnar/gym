@@ -13,6 +13,7 @@ import {
   facilityCategories,
   filters,
   gyms,
+  orderHistory,
   paymentRecords,
   plans,
   postComments,
@@ -51,7 +52,8 @@ const snapshot: ReturnPassSnapshot = {
   challenges,
   postComments,
   vendors,
-  sellerShippingPolicies
+  sellerShippingPolicies,
+  orderHistory
 };
 
 export class MockReturnPassRepository implements ReturnPassRepository {

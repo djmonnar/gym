@@ -45,6 +45,7 @@ export type CustomerScreen =
   | "shopDetail"
   | "cart"
   | "shopCheckout"
+  | "orderHistory"
   | "shopComplete"
   | "orderSuccess";
 
@@ -165,6 +166,16 @@ export type Product = ShopProduct & {
 };
 
 export type ProductCategory = "보충제·단백질" | "닭가슴살·도시락" | "소도구" | "의류" | "시설 픽업";
+
+/** 지난 주문 내역(데모). 주문내역 화면에 표시합니다. */
+export type OrderRecord = {
+  id: string;
+  orderedAt: string;
+  status: "결제 완료" | "배송 준비" | "배송 중" | "배송 완료" | "픽업 대기" | "수령 완료";
+  total: number;
+  fulfillment: "delivery" | "pickup" | "mixed";
+  lines: Array<{ name: string; quantity: number; sellerName: string }>;
+};
 
 /** 입점 판매업체. 통신판매중개 고지에 사용합니다. */
 export type Vendor = {

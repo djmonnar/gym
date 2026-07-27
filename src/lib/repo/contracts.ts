@@ -10,6 +10,7 @@ import type {
   DietRecommendation,
   Facility,
   FacilityCategory,
+  OrderRecord,
   PassInfo,
   PaymentRecord,
   Plan,
@@ -53,6 +54,7 @@ export type ReturnPassSnapshot = {
   postComments: Comment[];
   vendors: Vendor[];
   sellerShippingPolicies: SellerShipping[];
+  orderHistory: OrderRecord[];
 };
 
 export interface ReturnPassRepository {

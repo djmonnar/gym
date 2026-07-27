@@ -56,13 +56,17 @@ export function ProductVisual({ product, className }: { product: Product; classN
     );
   }
 
+  // 사진이 없는 상품도 실제 사진 카드와 배경(웜)을 맞추고 코럴 톤 칩으로 담아
+  // 그리드가 뒤섞여도 "준비 중"이 의도적으로 보이도록 합니다.
   return (
     <div
       role="img"
       aria-label={`${product.category} 상품 이미지 준비 중`}
-      className={cn("grid place-items-center bg-zinc-100 text-zinc-400", className)}
+      className={cn("grid place-items-center bg-warm", className)}
     >
-      {categoryIcon[product.category]}
+      <span className="grid place-items-center rounded-2xl bg-white p-3 text-lime shadow-soft ring-1 ring-black/5">
+        {categoryIcon[product.category]}
+      </span>
     </div>
   );
 }

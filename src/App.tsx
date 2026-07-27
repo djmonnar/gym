@@ -77,6 +77,7 @@ const {
   filters,
   paymentRecords,
   plans,
+  orderHistory,
   ptSubscriptionPlans,
   ptTrainers,
   qrVerificationResults,
@@ -102,6 +103,7 @@ import { ProductVisual, sellerTypeLabel, sellerTypeTone } from "./components/sho
 import { ShopDetailScreen } from "./components/shop/ShopDetail";
 import { CartScreen } from "./components/shop/Cart";
 import { ShopCheckoutScreen } from "./components/shop/ShopCheckout";
+import { OrderHistoryScreen } from "./components/shop/OrderHistory";
 import { OrderCompleteScreen } from "./components/shop/OrderComplete";
 import { addToCart, countCartItems, removeFromCart, setQuantity } from "./lib/cart";
 import { SplashScreen } from "./components/entry/SplashScreen";
@@ -228,6 +230,7 @@ export default function App() {
   const [qrResult, setQrResult] = useState<QrVerificationStatus>("입장 가능");
   const [selectedProduct, setSelectedProduct] = useState<Product>(shopProducts[0]);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [orderPaidAmount, setOrderPaidAmount] = useState<number | null>(null);
   const [authPending, setAuthPending] = useState(false);
   const [matchAnswers, setMatchAnswers] = useState<MatchAnswers>(defaultMatchAnswers);
   const [selectedTrainer, setSelectedTrainer] = useState<Trainer>(ptTrainers[0]);
@@ -616,8 +619,11 @@ export default function App() {
             facilities={facilities}
             navigate={navigate}
             notify={notify}
+            onPaid={setOrderPaidAmount}
           />
         );
+      case "orderHistory":
+        return <OrderHistoryScreen orders={orderHistory} navigate={navigate} />;
       case "shopComplete":
       case "orderSuccess":
         return (
@@ -626,7 +632,11 @@ export default function App() {
             products={shopProducts}
             policies={sellerShippingPolicies}
             facilities={facilities}
-            onDone={() => setCartItems([])}
+            paidAmount={orderPaidAmount}
+            onDone={() => {
+              setCartItems([]);
+              setOrderPaidAmount(null);
+            }}
             navigate={navigate}
           />
         );
@@ -1660,6 +1670,7 @@ function MyPage({
       <MenuButton icon={<Activity size={20} />} label="운동 루틴 보기" onClick={() => navigate("routine")} />
       <MenuButton icon={<Utensils size={20} />} label="AI 식단 맞춤" onClick={() => navigate("diet")} />
       <MenuButton icon={<ShoppingBag size={20} />} label="리턴샵 상품 구매" onClick={() => navigate("shop")} />
+      <MenuButton icon={<ReceiptText size={20} />} label="주문 내역" onClick={() => navigate("orderHistory")} />
       <MenuButton icon={<History size={20} />} label="결제 내역 바로가기" onClick={() => navigate("history")} />
       <MenuButton icon={<Headphones size={20} />} label="환불/문의 바로가기" onClick={() => navigate("support")} />
       <MenuButton icon={<Bell size={20} />} label="알림 설정" onClick={() => notify("알림 설정이 켜졌습니다.")} />
@@ -1760,17 +1771,20 @@ function TrainerPortrait({
   trainer: Trainer;
   className?: string;
 }) {
+  // 스프라이트를 개별 이미지로 분리해 사용합니다(scripts/slice-trainer-portraits.mjs).
+  // 예전 background-size: 400% 200% 방식은 정사각이 아닌 컨테이너에서 인물이 늘어났습니다.
+  const [x, y] = trainer.imagePosition.split(" ");
+  const col = Math.round(parseFloat(x) / (100 / 3));
+  const row = Math.round(parseFloat(y) / 100);
   return (
-    <div
-      role="img"
-      aria-label={`${trainer.name} 일러스트`}
-      className={cn("bg-cover bg-no-repeat", className)}
-      style={{
-        backgroundImage: `url("${trainer.image}")`,
-        backgroundPosition: trainer.imagePosition,
-        backgroundSize: "400% 200%"
-      }}
-    />
+    <div className={cn("overflow-hidden bg-zinc-100", className)}>
+      <img
+        src={`images/trainers/trainer-${row}${col}.webp`}
+        alt={`${trainer.name} 일러스트`}
+        loading="lazy"
+        className="h-full w-full object-cover object-[center_20%]"
+      />
+    </div>
   );
 }
 
