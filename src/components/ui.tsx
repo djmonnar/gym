@@ -191,7 +191,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
       icon: <MessagesSquare size={20} />,
       activeScreens: ["communityFeed", "communityPost", "communityWrite", "challengeList", "challengeDetail"]
     },
-    { label: "마이", screen: "mypage", icon: <UserRound size={20} />, activeScreens: ["my", "mypage"] }
+    { label: "마이", screen: "mypage", icon: <UserRound size={20} />, activeScreens: ["my", "mypage", "pointsHistory"] }
   ];
 
   return (

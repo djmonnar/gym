@@ -10,6 +10,7 @@ import {
   ChevronDown,
   ChevronRight,
   CircleDollarSign,
+  Coins,
   Clock,
   CreditCard,
   Dumbbell,
@@ -77,7 +78,9 @@ const {
   filters,
   paymentRecords,
   plans,
+  memberCoupons,
   orderHistory,
+  pointsHistory,
   ptSubscriptionPlans,
   ptTrainers,
   qrVerificationResults,
@@ -104,6 +107,7 @@ import { ShopDetailScreen } from "./components/shop/ShopDetail";
 import { CartScreen } from "./components/shop/Cart";
 import { ShopCheckoutScreen } from "./components/shop/ShopCheckout";
 import { OrderHistoryScreen } from "./components/shop/OrderHistory";
+import { PointsHistoryScreen } from "./components/shop/PointsHistory";
 import { OrderCompleteScreen } from "./components/shop/OrderComplete";
 import { addToCart, countCartItems, removeFromCart, setQuantity } from "./lib/cart";
 import { SplashScreen } from "./components/entry/SplashScreen";
@@ -180,8 +184,11 @@ const screenIds: ScreenId[] = [
   "shop",
   "shopDetail",
   "cart",
+  "shopCheckout",
   "shopComplete",
   "orderSuccess",
+  "orderHistory",
+  "pointsHistory",
   "adminHome",
   "adminMembers",
   "adminQr",
@@ -617,6 +624,8 @@ export default function App() {
             products={shopProducts}
             policies={sellerShippingPolicies}
             facilities={facilities}
+            coupons={memberCoupons}
+            pointsBalance={pointsHistory.reduce((sum, item) => sum + item.amount, 0)}
             navigate={navigate}
             notify={notify}
             onPaid={setOrderPaidAmount}
@@ -624,6 +633,8 @@ export default function App() {
         );
       case "orderHistory":
         return <OrderHistoryScreen orders={orderHistory} navigate={navigate} />;
+      case "pointsHistory":
+        return <PointsHistoryScreen transactions={pointsHistory} navigate={navigate} />;
       case "shopComplete":
       case "orderSuccess":
         return (
@@ -1671,6 +1682,7 @@ function MyPage({
       <MenuButton icon={<Utensils size={20} />} label="AI 식단 맞춤" onClick={() => navigate("diet")} />
       <MenuButton icon={<ShoppingBag size={20} />} label="리턴샵 상품 구매" onClick={() => navigate("shop")} />
       <MenuButton icon={<ReceiptText size={20} />} label="주문 내역" onClick={() => navigate("orderHistory")} />
+      <MenuButton icon={<Coins size={20} />} label="리턴 포인트" onClick={() => navigate("pointsHistory")} />
       <MenuButton icon={<History size={20} />} label="결제 내역 바로가기" onClick={() => navigate("history")} />
       <MenuButton icon={<Headphones size={20} />} label="환불/문의 바로가기" onClick={() => navigate("support")} />
       <MenuButton icon={<Bell size={20} />} label="알림 설정" onClick={() => notify("알림 설정이 켜졌습니다.")} />

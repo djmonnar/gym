@@ -46,6 +46,7 @@ export type CustomerScreen =
   | "cart"
   | "shopCheckout"
   | "orderHistory"
+  | "pointsHistory"
   | "shopComplete"
   | "orderSuccess";
 
@@ -166,6 +167,24 @@ export type Product = ShopProduct & {
 };
 
 export type ProductCategory = "보충제·단백질" | "닭가슴살·도시락" | "소도구" | "의류" | "시설 픽업";
+
+/** 보유 쿠폰(데모). 주문서 쿠폰함에서 선택합니다. */
+export type Coupon = {
+  id: string;
+  name: string;
+  discount: number;
+  /** 이 금액 이상 주문에만 사용 가능. null이면 제한 없음 */
+  minOrder: number | null;
+  expiresAt: string;
+};
+
+/** 포인트 적립·사용 내역(데모). 양수는 적립, 음수는 사용입니다. */
+export type PointTransaction = {
+  id: string;
+  date: string;
+  label: string;
+  amount: number;
+};
 
 /** 지난 주문 내역(데모). 주문내역 화면에 표시합니다. */
 export type OrderRecord = {

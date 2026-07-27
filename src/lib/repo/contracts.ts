@@ -7,11 +7,13 @@ import type {
   Challenge,
   Comment,
   Content,
+  Coupon,
   DietRecommendation,
   Facility,
   FacilityCategory,
   OrderRecord,
   PassInfo,
+  PointTransaction,
   PaymentRecord,
   Plan,
   Post,
@@ -55,6 +57,8 @@ export type ReturnPassSnapshot = {
   vendors: Vendor[];
   sellerShippingPolicies: SellerShipping[];
   orderHistory: OrderRecord[];
+  memberCoupons: Coupon[];
+  pointsHistory: PointTransaction[];
 };
 
 export interface ReturnPassRepository {

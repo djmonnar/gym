@@ -9,10 +9,12 @@
   Content,
   DietRecommendation,
   Facility,
+  Coupon,
   OrderRecord,
   PassInfo,
   PaymentRecord,
   Plan,
+  PointTransaction,
   Post,
   Product,
   PtSubscriptionPlan,
@@ -973,6 +975,22 @@ export const sellerShippingPolicies: SellerShipping[] = [
     shippingFee: 0,
     freeShippingOver: null
   }
+];
+
+// 데모 쿠폰함. 실제 서비스라면 회원 쿠폰 API에서 불러옵니다.
+export const memberCoupons: Coupon[] = [
+  { id: "coupon-return5000", name: "리턴 챌린지 달성 5,000원", discount: 5000, minOrder: 30000, expiresAt: "2026.08.31" },
+  { id: "coupon-welcome3000", name: "첫 주문 환영 3,000원", discount: 3000, minOrder: null, expiresAt: "2026.09.30" },
+  { id: "coupon-pickup1000", name: "시설 픽업 1,000원", discount: 1000, minOrder: null, expiresAt: "2026.08.15" }
+];
+
+// 데모 포인트 내역. 잔액은 amount 합으로 계산합니다.
+export const pointsHistory: PointTransaction[] = [
+  { id: "pt-005", date: "2026.07.18", label: "주문 적립 (ORD-20260718-0042)", amount: 622 },
+  { id: "pt-004", date: "2026.07.12", label: "4주 출석 챌린지 보상", amount: 2000 },
+  { id: "pt-003", date: "2026.07.09", label: "주문 적립 (ORD-20260709-0031)", amount: 55 },
+  { id: "pt-002", date: "2026.07.01", label: "주문 적립 (ORD-20260701-0018)", amount: 334 },
+  { id: "pt-001", date: "2026.06.28", label: "리뷰 작성 적립", amount: 189 }
 ];
 
 // 데모 주문 내역. 실제 서비스라면 주문 API에서 불러옵니다.

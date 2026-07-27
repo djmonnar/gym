@@ -1,26 +1,48 @@
 import { useState } from "react";
-import { CircleDollarSign, Clock, CreditCard, MapPin, Pencil, ShieldAlert, ShoppingCart, Store, Tag, Truck } from "lucide-react";
-import type { CartItem, Facility, Product, ScreenId, SellerShipping } from "../../types";
+import {
+  Check,
+  CircleDollarSign,
+  Clock,
+  CreditCard,
+  MapPin,
+  Pencil,
+  Search,
+  ShieldAlert,
+  ShoppingCart,
+  Store,
+  Tag,
+  Truck
+} from "lucide-react";
+import type { CartItem, Coupon, Facility, Product, ScreenId, SellerShipping } from "../../types";
 import { summarizeCart } from "../../lib/cart";
 import { Badge, Button, Card, ScreenHeader, cn } from "../ui";
 import { sellerTypeLabel, sellerTypeTone } from "./shopMeta";
 
 const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
 
-// 데모 값. 실제 서비스라면 회원 주소록·포인트 잔액·쿠폰함에서 불러옵니다.
+// 데모 값. 실제 서비스라면 회원 주소록·우편번호 API에서 불러옵니다.
 const initialAddress = {
   name: "김예림",
   phone: "010-1234-5678",
+  zip: "52828",
   address: "경상남도 진주시 가좌동 리턴빌 302호"
 };
-const AVAILABLE_POINTS = 3200;
-const COUPONS: Record<string, number> = { RETURN5000: 5000, WELCOME3000: 3000 };
+
+const postalDirectory = [
+  { zip: "52828", address: "경상남도 진주시 가좌길24번길 10 (가좌동)" },
+  { zip: "52725", address: "경상남도 진주시 진주대로 501 (가좌동, 경상국립대)" },
+  { zip: "52789", address: "경상남도 진주시 동진로 155 (칠암동)" },
+  { zip: "52696", address: "경상남도 진주시 평거로 122 (평거동)" },
+  { zip: "52632", address: "경상남도 진주시 초전북로 33 (초전동)" }
+];
 
 export function ShopCheckoutScreen({
   items,
   products,
   policies,
   facilities,
+  coupons,
+  pointsBalance,
   navigate,
   notify,
   onPaid
@@ -29,6 +51,8 @@ export function ShopCheckoutScreen({
   products: Product[];
   policies: SellerShipping[];
   facilities: Facility[];
+  coupons: Coupon[];
+  pointsBalance: number;
   navigate: (screen: ScreenId) => void;
   notify: (message: string) => void;
   onPaid: (amount: number) => void;
@@ -36,8 +60,9 @@ export function ShopCheckoutScreen({
   const [agreed, setAgreed] = useState(false);
   const [address, setAddress] = useState(initialAddress);
   const [editingAddress, setEditingAddress] = useState(false);
-  const [couponInput, setCouponInput] = useState("");
-  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [searchingZip, setSearchingZip] = useState(false);
+  const [zipQuery, setZipQuery] = useState("");
+  const [selectedCouponId, setSelectedCouponId] = useState<string | null>(null);
   const [pointsInput, setPointsInput] = useState("");
 
   const summary = summarizeCart(items, products, policies);
@@ -60,24 +85,35 @@ export function ShopCheckoutScreen({
     );
   }
 
+  const selectedCoupon = coupons.find((coupon) => coupon.id === selectedCouponId) ?? null;
+  const couponDiscount = selectedCoupon ? Math.min(selectedCoupon.discount, summary.grandTotal) : 0;
   // 쿠폰 적용 후 남은 금액 내에서만 포인트를 쓸 수 있습니다.
   const afterCoupon = Math.max(0, summary.grandTotal - couponDiscount);
-  const pointsUsed = Math.min(Number(pointsInput) || 0, AVAILABLE_POINTS, afterCoupon);
+  const pointsUsed = Math.min(Number(pointsInput) || 0, pointsBalance, afterCoupon);
   const finalTotal = Math.max(0, afterCoupon - pointsUsed);
 
-  const applyCoupon = () => {
-    const code = couponInput.trim().toUpperCase();
-    const value = COUPONS[code];
-    if (!value) {
-      setCouponDiscount(0);
-      notify("사용할 수 없는 쿠폰 코드예요.");
+  const couponUsable = (coupon: Coupon) => coupon.minOrder === null || summary.grandTotal >= coupon.minOrder;
+
+  const toggleCoupon = (coupon: Coupon) => {
+    if (!couponUsable(coupon)) {
+      notify(`${formatWon(coupon.minOrder ?? 0)} 이상 주문에 사용할 수 있어요.`);
       return;
     }
-    setCouponDiscount(value);
-    notify(`${formatWon(value)} 쿠폰이 적용됐어요.`);
+    setSelectedCouponId((current) => (current === coupon.id ? null : coupon.id));
   };
 
-  const useAllPoints = () => setPointsInput(String(Math.min(AVAILABLE_POINTS, afterCoupon)));
+  const useAllPoints = () => setPointsInput(String(Math.min(pointsBalance, afterCoupon)));
+
+  const zipResults = zipQuery.trim()
+    ? postalDirectory.filter((entry) => entry.address.includes(zipQuery.trim()) || entry.zip.includes(zipQuery.trim()))
+    : postalDirectory;
+
+  const pickZip = (entry: (typeof postalDirectory)[number]) => {
+    setAddress((prev) => ({ ...prev, zip: entry.zip, address: entry.address }));
+    setSearchingZip(false);
+    setZipQuery("");
+    notify("주소가 입력됐어요. 상세 주소를 확인해 주세요.");
+  };
 
   const pay = () => {
     if (!agreed) {
@@ -101,7 +137,10 @@ export function ShopCheckoutScreen({
             </div>
             <button
               type="button"
-              onClick={() => setEditingAddress((value) => !value)}
+              onClick={() => {
+                setEditingAddress((value) => !value);
+                setSearchingZip(false);
+              }}
               className="flex items-center gap-1 rounded-full bg-zinc-100 px-3 py-1 text-xs font-black text-zinc-600"
             >
               <Pencil size={12} />
@@ -126,6 +165,49 @@ export function ShopCheckoutScreen({
                   className="min-h-11 rounded-[14px] bg-zinc-50 px-3 text-sm font-bold text-brand ring-1 ring-black/5 outline-none focus:ring-blue"
                 />
               </div>
+              <div className="flex gap-2">
+                <input
+                  value={address.zip}
+                  readOnly
+                  placeholder="우편번호"
+                  className="min-h-11 w-28 rounded-[14px] bg-zinc-100 px-3 text-sm font-bold text-zinc-500 ring-1 ring-black/5 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setSearchingZip((value) => !value)}
+                  className="flex min-h-11 items-center gap-1.5 rounded-[14px] bg-brand px-4 text-sm font-black text-white"
+                >
+                  <Search size={14} />
+                  우편번호 찾기
+                </button>
+              </div>
+              {searchingZip ? (
+                <div className="rounded-[16px] bg-zinc-50 p-3 ring-1 ring-black/5">
+                  <input
+                    value={zipQuery}
+                    onChange={(event) => setZipQuery(event.target.value)}
+                    placeholder="동/도로명으로 검색 (예: 가좌동)"
+                    className="min-h-11 w-full rounded-[12px] bg-white px-3 text-sm font-bold text-brand ring-1 ring-black/5 outline-none focus:ring-blue"
+                  />
+                  <div className="mt-2 max-h-44 space-y-1 overflow-y-auto">
+                    {zipResults.length ? (
+                      zipResults.map((entry) => (
+                        <button
+                          key={entry.zip + entry.address}
+                          type="button"
+                          onClick={() => pickZip(entry)}
+                          className="block w-full rounded-[10px] px-3 py-2 text-left text-xs font-bold text-zinc-600 transition hover:bg-mist"
+                        >
+                          <span className="mr-2 font-black text-blue">{entry.zip}</span>
+                          {entry.address}
+                        </button>
+                      ))
+                    ) : (
+                      <p className="px-3 py-2 text-xs font-bold text-zinc-400">검색 결과가 없어요. 데모 주소는 진주시 일부만 제공됩니다.</p>
+                    )}
+                  </div>
+                </div>
+              ) : null}
               <input
                 value={address.address}
                 onChange={(event) => setAddress((prev) => ({ ...prev, address: event.target.value }))}
@@ -138,7 +220,9 @@ export function ShopCheckoutScreen({
               <p className="text-sm font-black text-brand">
                 {address.name} <span className="ml-1 text-xs font-bold text-zinc-500">{address.phone}</span>
               </p>
-              <p className="mt-1.5 text-xs font-bold leading-5 text-zinc-600">{address.address}</p>
+              <p className="mt-1.5 text-xs font-bold leading-5 text-zinc-600">
+                ({address.zip}) {address.address}
+              </p>
             </div>
           )}
         </Card>
@@ -205,34 +289,47 @@ export function ShopCheckoutScreen({
       </Card>
 
       <Card>
-        <div className="flex items-center gap-2">
-          <Tag size={18} className="text-blue" />
-          <p className="text-sm font-black">쿠폰 · 포인트</p>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Tag size={18} className="text-blue" />
+            <p className="text-sm font-black">쿠폰함</p>
+          </div>
+          <span className="text-xs font-bold text-zinc-400">{coupons.length}장 보유</span>
+        </div>
+        <div className="mt-3 space-y-2">
+          {coupons.map((coupon) => {
+            const usable = couponUsable(coupon);
+            const selected = selectedCouponId === coupon.id;
+            return (
+              <button
+                key={coupon.id}
+                type="button"
+                onClick={() => toggleCoupon(coupon)}
+                className={cn(
+                  "flex w-full items-center gap-3 rounded-[16px] px-4 py-3 text-left ring-1 transition",
+                  selected ? "bg-brand text-white ring-brand" : "bg-white text-zinc-700 ring-black/5",
+                  !usable && "opacity-45"
+                )}
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-black">{coupon.name}</span>
+                  <span className={cn("mt-0.5 block text-[11px] font-bold", selected ? "text-white/70" : "text-zinc-400")}>
+                    {coupon.minOrder ? `${formatWon(coupon.minOrder)} 이상 · ` : ""}~{coupon.expiresAt}
+                  </span>
+                </span>
+                <span className={cn("shrink-0 text-sm font-black", selected ? "text-limeSoft" : "text-blue")}>
+                  -{formatWon(coupon.discount)}
+                </span>
+                {selected ? <Check size={17} className="shrink-0 text-limeSoft" /> : null}
+              </button>
+            );
+          })}
         </div>
 
-        <div className="mt-3 flex gap-2">
-          <input
-            value={couponInput}
-            onChange={(event) => setCouponInput(event.target.value)}
-            placeholder="쿠폰 코드 (예: RETURN5000)"
-            className="min-h-11 flex-1 rounded-[14px] bg-zinc-50 px-3 text-sm font-bold text-brand ring-1 ring-black/5 outline-none focus:ring-blue"
-          />
-          <button
-            type="button"
-            onClick={applyCoupon}
-            className="shrink-0 rounded-[14px] bg-brand px-4 text-sm font-black text-white"
-          >
-            적용
-          </button>
-        </div>
-        {couponDiscount > 0 ? (
-          <p className="mt-2 text-xs font-black text-blue">쿠폰 {formatWon(couponDiscount)} 적용됨</p>
-        ) : null}
-
-        <div className="mt-3">
+        <div className="mt-4 border-t border-black/5 pt-4">
           <div className="flex items-center justify-between text-xs font-bold text-zinc-500">
             <span>보유 포인트</span>
-            <span className="font-black text-brand">{AVAILABLE_POINTS.toLocaleString("ko-KR")}P</span>
+            <span className="font-black text-brand">{pointsBalance.toLocaleString("ko-KR")}P</span>
           </div>
           <div className="mt-2 flex gap-2">
             <input
@@ -320,7 +417,7 @@ export function ShopCheckoutScreen({
       </Card>
 
       <div className="sticky bottom-2 z-10 rounded-[24px] bg-white/90 p-2 shadow-lift backdrop-blur">
-        <Button className={cn("w-full")} onClick={pay} disabled={!agreed}>
+        <Button className="w-full" onClick={pay} disabled={!agreed}>
           {formatWon(finalTotal)} 결제하기
         </Button>
       </div>
