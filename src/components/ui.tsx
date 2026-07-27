@@ -108,12 +108,14 @@ export function AppShell({
   active,
   navigate,
   showTabs = true,
+  showHeader = true,
   appMode = "customer"
 }: {
   children: ReactNode;
   active: ScreenId;
   navigate: (screen: ScreenId) => void;
   showTabs?: boolean;
+  showHeader?: boolean;
   appMode?: "customer" | "owner" | "trainer" | "hq";
 }) {
   const modeLabel = {
@@ -122,6 +124,11 @@ export function AppShell({
     trainer: "트레이너",
     hq: "본사"
   }[appMode];
+
+  // 진입 화면(스플래시·온보딩·로그인·위치)은 앱 크롬 없이 전체 화면을 씁니다.
+  if (!showHeader) {
+    return <main className="min-h-screen bg-surface text-brand">{children}</main>;
+  }
 
   return (
     <main className="min-h-screen bg-surface text-brand">

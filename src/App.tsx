@@ -16,7 +16,6 @@ import {
   Headphones,
   History,
   KeyRound,
-  LocateFixed,
   LockKeyhole,
   Map,
   MapPin,
@@ -103,6 +102,10 @@ import { ShopDetailScreen } from "./components/shop/ShopDetail";
 import { CartScreen } from "./components/shop/Cart";
 import { OrderCompleteScreen } from "./components/shop/OrderComplete";
 import { addToCart, countCartItems, removeFromCart, setQuantity } from "./lib/cart";
+import { SplashScreen } from "./components/entry/SplashScreen";
+import { OnboardingScreen } from "./components/entry/OnboardingScreen";
+import { LoginScreen } from "./components/entry/LoginScreen";
+import { LocationScreen } from "./components/entry/LocationScreen";
 
 const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
 
@@ -245,8 +248,11 @@ export default function App() {
         : screen.startsWith("hqAdmin")
           ? "hq"
           : "customer";
+  // 진입 흐름은 앱 헤더·탭 없이 전체 화면 랜딩으로 보여줍니다.
+  const entryScreens: ScreenId[] = ["splash", "onboarding", "login", "location", "locationPermission"];
+  const isEntryScreen = entryScreens.includes(screen);
   const showTabs =
-    appMode === "customer" && !["splash", "onboarding", "login", "location", "locationPermission", "complete", "paySuccess"].includes(screen);
+    appMode === "customer" && !isEntryScreen && !["complete", "paySuccess"].includes(screen);
 
   useEffect(() => {
     const handlePopState = () => setScreen(getInitialScreen());
@@ -626,7 +632,7 @@ export default function App() {
   })();
 
   return (
-    <AppShell active={screen} navigate={navigate} showTabs={showTabs} appMode={appMode}>
+    <AppShell active={screen} navigate={navigate} showTabs={showTabs} showHeader={!isEntryScreen} appMode={appMode}>
       {screenNode}
       {toast ? <Toast message={toast} /> : null}
       {showCancelModal ? <CancelModal onClose={() => setShowCancelModal(false)} notify={notify} /> : null}
@@ -776,255 +782,6 @@ function RoutePreviewScreen({ screen, navigate }: { screen: ScreenId; navigate: 
       <div className="mt-4 grid grid-cols-2 gap-3">
         <Stat label="데이터 소스" value="더미 리포지토리" tone="blue" />
         <Stat label="현재 상태" value="화면 연결 완료" tone="lime" />
-      </div>
-    </div>
-  );
-}
-
-function SplashScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
-  return (
-    <div className="relative flex min-h-[640px] flex-col justify-between overflow-hidden rounded-[34px] bg-brand text-white shadow-glow">
-      <img src="images/returnpass-onboarding-hero.png" alt="리턴패스 앱 프리뷰" className="absolute inset-0 h-full w-full object-cover object-[50%_44%] opacity-60" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,55,42,0.28)_0%,rgba(18,55,42,0.56)_42%,rgba(11,42,32,0.98)_100%)]" />
-      <div className="relative p-5">
-        <div className="flex items-center justify-between">
-          <img src="brand/returnpass-icon-192.png" alt="리턴패스 로고" className="size-12 rounded-[18px] shadow-lift ring-1 ring-white/15" />
-          <Badge tone="lime">통합 피트니스 구독</Badge>
-        </div>
-      </div>
-      <div className="relative space-y-6 p-5">
-        <div>
-          <Badge tone="blue">진주 가좌동 · QR 입장</Badge>
-          <h1 className="mt-5 text-[52px] font-black leading-none text-white">리턴패스</h1>
-          <p className="mt-4 max-w-[320px] text-[27px] font-black leading-[1.12] text-white">운동으로 돌아오는 가장 쉬운 패스</p>
-          <p className="mt-4 max-w-[310px] text-sm font-semibold leading-6 text-white/76">
-            헬스·요가·필라테스를 한 달씩 구독하고 QR로 바로 입장하세요
-          </p>
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          {["월구독", "동적 QR", "AI 루틴"].map((item) => (
-            <div key={item} className="rounded-2xl bg-white/10 px-2 py-3 text-center text-xs font-black text-white ring-1 ring-white/10 backdrop-blur">
-              {item}
-            </div>
-          ))}
-        </div>
-        <div className="space-y-3">
-          <Button className="w-full" onClick={() => navigate("onboarding")}>
-            30초 둘러보기
-          </Button>
-          <button type="button" onClick={() => navigate("login")} className="w-full rounded-[18px] px-5 py-3 text-sm font-black text-white/78 transition hover:bg-white/10">
-            이미 계정이 있어요
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function OnboardingScreen({ navigate }: { navigate: (screen: ScreenId) => void }) {
-  const [step, setStep] = useState(0);
-  const steps = [
-    {
-      eyebrow: "MONTHLY PASS",
-      title: "헬스부터 요가까지, 원하는 운동을 한 달씩",
-      description: "가격과 거리, 운영시간을 비교하고 내 생활에 맞는 운동을 월 단위로 시작하세요.",
-      tags: ["월구독", "종목 선택", "가까운 시설"],
-      icon: <Dumbbell size={34} />,
-      image: "images/returnpass-onboarding-hero.png"
-    },
-    {
-      eyebrow: "SECURE CHECK-IN",
-      title: "결제하면 QR 이용권이 바로 열립니다",
-      description: "30초마다 갱신되는 동적 QR로 빠르고 안전하게 입장할 수 있습니다.",
-      tags: ["동적 QR", "캡처 방지", "1회용 토큰"],
-      icon: <QrCode size={34} />,
-      image: "images/returnpass-qr-entry.png"
-    },
-    {
-      eyebrow: "FITNESS CARE",
-      title: "PT, 루틴, AI 식단까지 한 번에",
-      description: "운동 목표에 맞춰 PT 상담, 주간 루틴, 맞춤 식단, 상품 주문까지 연결합니다.",
-      tags: ["PT 신청", "운동 루틴", "AI 식단", "리턴샵"],
-      icon: <Sparkles size={34} />,
-      image: "images/returnpass-share-art.png"
-    }
-  ];
-  const current = steps[step];
-  const isLast = step === steps.length - 1;
-
-  return (
-    <div className="flex min-h-[640px] flex-col justify-between">
-      <div className="space-y-5">
-        <div className="flex items-center justify-between">
-          <button type="button" onClick={() => navigate("location")} className="text-sm font-black text-gray-500">
-            건너뛰기
-          </button>
-          <div className="flex gap-2" aria-label="온보딩 진행 상태">
-            {steps.map((item, index) => (
-              <span key={item.title} className={cn("h-2 rounded-full transition-all", index === step ? "w-9 bg-lime" : "w-2 bg-zinc-300")} />
-            ))}
-          </div>
-        </div>
-        <Card className="overflow-hidden bg-brand p-0 text-white">
-          <div className="relative h-72">
-            <img src={current.image} alt={current.title} className="absolute inset-0 h-full w-full object-cover object-[54%_40%] opacity-68" />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,55,42,0.06),rgba(11,42,32,0.94))]" />
-            <div className="relative flex h-full flex-col justify-between p-5">
-              <div className="flex items-center justify-between">
-                <Badge tone="lime">{current.eyebrow}</Badge>
-                <div className="grid size-14 place-items-center rounded-[20px] bg-white/12 text-lime ring-1 ring-white/15">
-                  {current.icon}
-                </div>
-              </div>
-              <div>
-                <h1 className="text-[33px] font-black leading-[1.08]">{current.title}</h1>
-                <p className="mt-3 text-sm font-semibold leading-6 text-white/72">{current.description}</p>
-              </div>
-            </div>
-          </div>
-          <div className="p-5">
-            <p className="text-xs font-black text-white/48">STEP {step + 1} / {steps.length}</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {current.tags.map((tag) => (
-                <Badge key={tag} tone={tag.includes("QR") || tag.includes("AI") ? "blue" : "lime"}>{tag}</Badge>
-              ))}
-            </div>
-          </div>
-        </Card>
-        <Card className="bg-white">
-          <div className="grid grid-cols-3 gap-3">
-            <InfoMini label="월구독" value="1개월" />
-            <InfoMini label="입장" value="QR" />
-            <InfoMini label="관리" value="통합" />
-          </div>
-        </Card>
-      </div>
-      <div className="grid grid-cols-[0.85fr_1.15fr] gap-3">
-        <Button variant="line" onClick={() => (step === 0 ? navigate("splash") : setStep((currentStep) => currentStep - 1))}>
-          이전
-        </Button>
-        <Button onClick={() => (isLast ? navigate("login") : setStep((currentStep) => currentStep + 1))}>
-          {isLast ? "리턴패스 시작하기" : "다음"}
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-function LoginScreen({
-  navigate,
-  onDemoLogin,
-  authPending
-}: {
-  navigate: (screen: ScreenId) => void;
-  onDemoLogin: () => Promise<void>;
-  authPending: boolean;
-}) {
-  return (
-    <div className="flex min-h-[640px] flex-col justify-between">
-      <div className="space-y-5">
-        <div className="relative overflow-hidden rounded-[32px] bg-black p-5 text-white shadow-glow">
-          <img src="images/returnpass-onboarding-hero.png" alt="리턴패스 로그인 이미지" className="absolute inset-0 h-full w-full object-cover object-[50%_34%] opacity-34" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.46),rgba(0,0,0,0.95))]" />
-          <div className="relative min-h-72">
-            <Badge tone="lime">간편 로그인</Badge>
-            <h1 className="mt-5 max-w-[292px] text-[29px] font-black leading-[1.18]">김예림님에게 맞는<br />헬스장을 찾을게요</h1>
-            <p className="mt-3 text-sm font-semibold leading-6 text-white/72">휴대폰 인증만 끝내면 구독권과 결제 내역을 한곳에서 관리할 수 있습니다.</p>
-          </div>
-        </div>
-        <Card className="space-y-4">
-          <div className="rounded-[22px] bg-zinc-50 p-4">
-            <div className="flex items-center gap-3">
-              <div className="grid size-12 place-items-center rounded-2xl bg-brand text-white">
-                <UserRound size={22} />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-gray-500">테스트 계정</p>
-                <p className="text-lg font-black">김예림 · 010 2345 9182</p>
-              </div>
-            </div>
-          </div>
-          <InfoRow label="인증 방식" value="휴대폰 간편 인증" icon={<Phone size={17} />} />
-          <InfoRow label="보안 상태" value="결제 정보 분리 저장" icon={<ShieldCheck size={17} />} />
-        </Card>
-        <Card className="bg-zinc-950 text-white">
-          <p className="text-sm font-bold text-white/62">로그인 후 가능한 기능</p>
-          <p className="mt-2 text-xl font-black leading-snug">QR 이용권, 결제 내역, 환불 문의까지 한 번에 관리</p>
-        </Card>
-      </div>
-      <div className="space-y-3">
-        <Button className="w-full" onClick={onDemoLogin} disabled={authPending}>
-          {authPending ? "Firebase 계정 연결 중..." : "김예림님으로 체험하기"}
-        </Button>
-        <button type="button" onClick={() => navigate("location")} className="flex min-h-12 w-full items-center justify-center rounded-[18px] bg-[#FEE500] px-5 py-3 text-sm font-black text-[#191919] shadow-soft transition active:scale-[0.98]">
-          카카오로 계속하기
-        </button>
-        <Button variant="line" className="w-full" onClick={() => navigate("location")}>
-          휴대폰 번호로 시작하기
-        </Button>
-        <Button variant="ghost" className="w-full" onClick={() => navigate("adminHome")}>
-          사장님 계정 보기
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-function LocationScreen({
-  navigate,
-  facilities
-}: {
-  navigate: (screen: ScreenId) => void;
-  facilities: Facility[];
-}) {
-  return (
-    <div className="flex min-h-[640px] flex-col justify-between">
-      <div className="space-y-6">
-        <ScreenHeader title="가까운 헬스장을 정확히 추천할게요" eyebrow="위치 권한 안내" />
-        <Card className="overflow-hidden p-0">
-          <div className="relative h-80 bg-zinc-950 text-white">
-            <img src="images/returnpass-onboarding-hero.png" alt="위치 기반 운동 시설 추천" className="absolute inset-0 h-full w-full object-cover object-[63%_42%] opacity-55" />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.1),rgba(0,0,0,0.92))]" />
-            <div className="relative flex h-full flex-col justify-between p-5">
-              <div className="flex items-center justify-between">
-                <Badge tone="lime">진주 가좌동</Badge>
-                <div className="grid size-12 place-items-center rounded-full bg-white/12 ring-1 ring-white/20 backdrop-blur">
-                  <LocateFixed size={24} />
-                </div>
-              </div>
-              <div className="space-y-3">
-                {facilities.slice(0, 2).map((gym) => (
-                  <div key={gym.id} className="rounded-[22px] bg-white/12 p-3 ring-1 ring-white/15 backdrop-blur">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <p className="font-black">{gym.name}</p>
-                        <p className="mt-1 text-xs font-bold text-white/65">{gym.distance} · 월 {gym.monthlyPrice.toLocaleString("ko-KR")}원</p>
-                      </div>
-                      <Badge tone="blue">{gym.hours}</Badge>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="space-y-4 p-5">
-            <div className="rounded-[22px] bg-[#EEF4FF] p-4 ring-1 ring-blue/10">
-              <Badge tone="blue">거리 계산 전용</Badge>
-              <p className="mt-3 text-lg font-black leading-6 text-brand">거리 계산과 주변 헬스장 추천에만 사용됩니다</p>
-              <p className="mt-2 text-sm font-semibold leading-6 text-gray-600">결제, 구독권, QR 토큰 정보와는 별도로 관리하며 더미 UI에서는 실제 위치를 저장하지 않습니다.</p>
-            </div>
-            <InfoRow label="예상 위치" value="진주 가좌동" icon={<Map size={17} />} />
-            <InfoRow label="사용 목적" value="거리 계산 · 주변 추천" icon={<LocateFixed size={17} />} />
-          </div>
-        </Card>
-      </div>
-      <div className="space-y-3">
-        <Button className="w-full" onClick={() => navigate("home")}>
-          위치 사용하고 시작하기
-        </Button>
-        <Button variant="ghost" className="w-full" onClick={() => navigate("home")}>
-          나중에 설정하기
-        </Button>
       </div>
     </div>
   );
