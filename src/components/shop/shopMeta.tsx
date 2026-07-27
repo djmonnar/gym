@@ -41,12 +41,19 @@ const categoryIcon: Record<ProductCategory, ReactNode> = {
 };
 
 /**
- * 상품 사진이 아직 없는 항목은 카테고리 아이콘 타일로 대신합니다.
- * 사진이 준비되면 `product.image`만 채우면 됩니다.
+ * 상품 비주얼.
+ *
+ * 상품 사진은 정사각(신규)과 세로형(기존)이 섞여 있어 `object-contain`으로 담습니다.
+ * 잘라내면 제품이 알아볼 수 없게 되므로 여백을 두고 전체를 보여줍니다.
+ * 사진이 없는 항목은 카테고리 아이콘 타일로 대신하고, `product.image`만 채우면 교체됩니다.
  */
 export function ProductVisual({ product, className }: { product: Product; className?: string }) {
   if (product.image) {
-    return <img src={product.image} alt={product.name} className={cn("object-cover", className)} />;
+    return (
+      <div className={cn("grid place-items-center overflow-hidden bg-warm", className)}>
+        <img src={product.image} alt={product.name} className="size-full object-contain" />
+      </div>
+    );
   }
 
   return (

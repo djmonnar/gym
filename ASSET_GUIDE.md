@@ -60,26 +60,44 @@
 - 공유 비주얼: `public/images/returnpass-share-art.png`
 - 리턴샵 상품: `public/images/returnshop-chicken-breast.png`
 
-## 필요한 신규 자산 (미제작)
+## 리턴샵 상품 사진
 
-리턴샵 상품 10종 중 8종에 사진이 없습니다. 사진이 없는 상품은 화면에서 카테고리 아이콘 타일로 대체하고 있으며,
-ChatGPT Image 2로 아래 자산을 제작한 뒤 `src/data/returnpass.ts`의 각 상품 `image` 값을 채우면 그대로 반영됩니다.
+GPT Image 2(ChatGPT Image 2)로 제작하며, 아래 프롬프트 공식을 그대로 써야 상품 간 톤이 일관됩니다.
 
-- 규격: 800×800, 단색 또는 밝은 배경, 제품만 중앙 배치
-- 파일명 예: `public/images/returnshop-<상품id>.png`
+```
+Product photograph of a <상품 설명>, centered on a seamless warm off-white background.
+Soft diffused studio lighting from the upper left, gentle natural shadow beneath.
+Clean minimal e-commerce catalog style, <앵글>.
+The surface is completely blank with no text, no letters, no numbers, no Korean characters,
+no logos, no labels, no stickers and no graphics of any kind.
+Photorealistic, sharp focus, neutral color grading, no props, no hands, no people.
+```
+
+- 규격: 800×800 WebP (2k로 생성 후 `sharp`로 변환)
+- 브랜드 액센트가 필요한 상품(뚜껑 등)은 딥그린 계열로 지정
+- 화면은 `object-contain`으로 담으므로 배경 여백이 잘리지 않습니다
+
+### 제작 완료
+
+| 상품 id | 파일 |
+|---|---|
+| `chicken-original`, `chicken-garlic` | `returnshop-chicken-breast-v2.webp` |
+| `whey-protein-2kg` | `returnshop-whey-protein.webp` |
+| `shaker-bottle` | `returnshop-shaker-bottle.webp` |
+| `training-tee` | `returnshop-training-tee.webp` |
+
+> `returnshop-chicken-breast.png`(구버전)에는 리브랜딩 전 `GYMSHOP` 워드마크와 한글이 박혀 있어
+> 규칙 3 위반이었습니다. `-v2.webp`로 교체했으므로 구버전은 사용하지 않습니다.
+
+### 미제작
 
 | 상품 id | 필요한 이미지 |
 |---|---|
-| `whey-protein-2kg` | 단백질 보충제 파우더 통 |
 | `bcaa-drink` | 아미노산 음료 병 묶음 |
-| `shaker-bottle` | 셰이커 보틀 |
 | `resistance-band` | 저항 밴드 3종 세트 |
 | `lifting-strap` | 리프팅 스트랩 1쌍 |
-| `training-tee` | 기능성 반팔 티셔츠 |
 | `pickup-towel-set` | 운동 타월 2매 |
 | `pickup-protein-shake` | 컵에 담긴 단백질 셰이크 |
-
-`chicken-original`, `chicken-garlic`은 기존 `returnshop-chicken-breast.png`를 함께 사용합니다.
 
 ## 제작 규칙
 

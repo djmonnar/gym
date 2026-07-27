@@ -79,7 +79,7 @@ export function ShopScreen({
               className="overflow-hidden rounded-[20px] bg-white text-left shadow-soft ring-1 ring-black/5 transition active:scale-[0.99]"
             >
               <div className="relative">
-                <ProductVisual product={product} className="h-32 w-full" />
+                <ProductVisual product={product} className="aspect-square w-full" />
                 <span className="absolute left-2 top-2">
                   <Badge tone={sellerTypeTone[product.sellerType]}>{sellerTypeLabel[product.sellerType]}</Badge>
                 </span>

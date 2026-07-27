@@ -82,7 +82,7 @@ export function ShopDetailScreen({
     <div>
       <ScreenHeader title={product.name} eyebrow="리턴샵" onBack={() => navigate("shop")} />
 
-      <ProductVisual product={product} className="h-56 w-full rounded-[24px] shadow-soft" />
+      <ProductVisual product={product} className="h-[320px] w-full rounded-[24px] shadow-soft sm:h-[380px]" />
 
       <Card className="mt-4">
         <div className="flex flex-wrap items-center gap-2">

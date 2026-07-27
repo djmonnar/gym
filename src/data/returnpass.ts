@@ -612,7 +612,7 @@ export const shopProducts: Product[] = [
     subtitle: "운동 끝나고 바로 먹는 촉촉한 단백질 루틴",
     price: 3200,
     originalPrice: 3900,
-    image: "images/returnshop-chicken-breast.png",
+    image: "images/returnshop-chicken-breast-v2.webp",
     badge: "회원 전용 18% 할인",
     tags: ["단백질 24g", "저지방", "전자레인지 1분", "냉장 배송"],
     nutrition: [
@@ -646,7 +646,7 @@ export const shopProducts: Product[] = [
     subtitle: "마늘 향을 살린 담백한 단백질 도시락",
     price: 3400,
     originalPrice: 4100,
-    image: "images/returnshop-chicken-breast.png",
+    image: "images/returnshop-chicken-breast-v2.webp",
     badge: "회원 전용 17% 할인",
     tags: ["단백질 23g", "저지방", "전자레인지 1분", "냉장 배송"],
     nutrition: [
@@ -680,7 +680,7 @@ export const shopProducts: Product[] = [
     subtitle: "유당 부담을 줄인 분리유청 단백질",
     price: 59000,
     originalPrice: 72000,
-    image: "",
+    image: "images/returnshop-whey-protein.webp",
     badge: "입점사 단독",
     tags: ["1회 25g", "유당 저감", "초코맛"],
     nutrition: [
@@ -748,7 +748,7 @@ export const shopProducts: Product[] = [
     subtitle: "새지 않는 잠금 뚜껑과 분리 세척 구조",
     price: 12000,
     originalPrice: 15000,
-    image: "",
+    image: "images/returnshop-shaker-bottle.webp",
     badge: "브랜드 굿즈",
     tags: ["600ml", "식약처 인증 소재", "분리 세척"],
     nutrition: [
@@ -835,7 +835,7 @@ export const shopProducts: Product[] = [
     subtitle: "땀이 빨리 마르는 기능성 반팔",
     price: 26000,
     originalPrice: 32000,
-    image: "",
+    image: "images/returnshop-training-tee.webp",
     badge: "신상품",
     tags: ["흡습속건", "무봉제 어깨", "S~XL"],
     nutrition: [
