@@ -51,7 +51,7 @@ function VideoBody({ content }: { content: Content }) {
   return (
     <div className="space-y-4">
       <div className="relative overflow-hidden rounded-[24px] shadow-soft">
-        <ContentThumbnail content={content} className="h-56 w-full" />
+        <ContentThumbnail content={content} className="aspect-video w-full" />
         <div className="absolute inset-0 bg-brand/35" />
         <button
           type="button"
@@ -231,7 +231,7 @@ function LockedView({ content, navigate }: { content: Content; navigate: (screen
   return (
     <div className="space-y-4">
       <div className="relative overflow-hidden rounded-[24px] shadow-soft">
-        <ContentThumbnail content={content} className="h-56 w-full scale-105 blur-[3px]" />
+        <ContentThumbnail content={content} className="aspect-video w-full scale-105 blur-[3px]" />
         <div className="absolute inset-0 grid place-items-center bg-brand/60 text-center text-white">
           <div className="px-6">
             <span className="mx-auto grid size-14 place-items-center rounded-full bg-lime text-white">

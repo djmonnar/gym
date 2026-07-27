@@ -44,6 +44,7 @@ export type CustomerScreen =
   | "shop"
   | "shopDetail"
   | "cart"
+  | "shopCheckout"
   | "shopComplete"
   | "orderSuccess";
 

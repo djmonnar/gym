@@ -67,6 +67,7 @@ export function ShopDetailScreen({
   const vendor = vendors.find((item) => item.id === product.sellerId);
   const pickupFacility = facilities.find((item) => item.id === product.sellerId);
   const discount = Math.round((1 - product.price / product.originalPrice) * 100);
+  const soldOut = product.status === "soldOut";
 
   const options: Array<{ value: CartItem["fulfillment"]; label: string; hint: string; icon: typeof Truck }> = [
     { value: "delivery", label: "택배 배송", hint: product.shipping, icon: Truck },
@@ -213,6 +214,7 @@ export function ShopDetailScreen({
       <div className="mt-5 grid grid-cols-2 gap-3">
         <Button
           variant="line"
+          disabled={soldOut}
           onClick={() => {
             onAddToCart(product, fulfillment, quantity);
             notify("장바구니에 담았어요");
@@ -221,12 +223,13 @@ export function ShopDetailScreen({
           장바구니
         </Button>
         <Button
+          disabled={soldOut}
           onClick={() => {
             onAddToCart(product, fulfillment, quantity);
             navigate("cart");
           }}
         >
-          바로 주문
+          {soldOut ? "품절" : "바로 주문"}
         </Button>
       </div>
     </div>

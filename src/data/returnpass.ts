@@ -982,11 +982,17 @@ export const facilityCategories = [
   { id: "boxing", label: "복싱" }
 ] as const;
 
-const contentThumbnailSprite = "images/returnpass-content-thumbnails-v1.webp";
-const contentThumbnail = (thumbnailPosition: string) => ({
-  thumbnail: contentThumbnailSprite,
-  thumbnailPosition
-});
+// 스프라이트를 개별 이미지로 분리해 사용합니다(scripts/slice-content-thumbnails.mjs).
+// 위치 문자열("33.333% 50%")을 4×3 그리드의 셀 파일로 매핑합니다.
+const contentThumbnail = (thumbnailPosition: string) => {
+  const [x, y] = thumbnailPosition.split(" ");
+  const col = Math.round(parseFloat(x) / (100 / 3));
+  const row = Math.round(parseFloat(y) / 50);
+  return {
+    thumbnail: `images/content/content-cell-${row}${col}.webp`,
+    thumbnailPosition
+  };
+};
 
 export const contents: Content[] = [
   {

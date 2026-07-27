@@ -177,7 +177,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
       label: "샵",
       screen: "shop",
       icon: <ShoppingBag size={20} />,
-      activeScreens: ["shop", "shopDetail", "cart", "shopComplete", "orderSuccess"]
+      activeScreens: ["shop", "shopDetail", "cart", "shopCheckout", "shopComplete", "orderSuccess"]
     },
     {
       label: "콘텐츠",

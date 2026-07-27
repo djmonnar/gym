@@ -6,10 +6,12 @@
 
 ### 콘텐츠 썸네일
 
-- 파일: `public/images/returnpass-content-thumbnails-v1.webp`
-- 구성: 4열 × 3행, 총 12개
-- CSS: `background-size: 400% auto`
-- 위치 순서:
+- 원본 스프라이트: `public/images/returnpass-content-thumbnails-v1.webp` (4열 × 3행, 1448×1086)
+- **개별 이미지로 분리해 사용**: `public/images/content/content-cell-<row><col>.webp` (362×362, 총 12개)
+  - 분리 스크립트: `scripts/slice-content-thumbnails.mjs`
+  - 렌더링: `<img object-cover>` (예전 스프라이트 + background-position 방식은 컨테이너 종횡비가 칸과 다를 때 피사체가 잘려서 교체함)
+  - 데이터 매핑: `src/data/returnpass.ts`의 `contentThumbnail(position)`가 위치 문자열을 셀 파일로 변환
+- 아래 위치 순서는 원본 스프라이트 기준(row=y/50, col=x/33.333로 셀을 계산):
 
 | 위치 | 콘텐츠 |
 |---|---|

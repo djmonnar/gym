@@ -171,8 +171,8 @@ export function CartScreen({
         </Card>
       ) : null}
 
-      <Button className="mt-5 w-full" onClick={() => navigate("shopComplete")}>
-        {formatWon(summary.grandTotal)} 결제하기
+      <Button className="mt-5 w-full" onClick={() => navigate("shopCheckout")}>
+        {formatWon(summary.grandTotal)} 주문하기
       </Button>
     </div>
   );

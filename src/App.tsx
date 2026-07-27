@@ -101,6 +101,7 @@ import { ShopScreen } from "./components/shop/Shop";
 import { ProductVisual, sellerTypeLabel, sellerTypeTone } from "./components/shop/shopMeta";
 import { ShopDetailScreen } from "./components/shop/ShopDetail";
 import { CartScreen } from "./components/shop/Cart";
+import { ShopCheckoutScreen } from "./components/shop/ShopCheckout";
 import { OrderCompleteScreen } from "./components/shop/OrderComplete";
 import { addToCart, countCartItems, removeFromCart, setQuantity } from "./lib/cart";
 import { SplashScreen } from "./components/entry/SplashScreen";
@@ -604,6 +605,17 @@ export default function App() {
             onSetQuantity={changeCartQuantity}
             onRemove={removeCartItem}
             navigate={navigate}
+          />
+        );
+      case "shopCheckout":
+        return (
+          <ShopCheckoutScreen
+            items={cartItems}
+            products={shopProducts}
+            policies={sellerShippingPolicies}
+            facilities={facilities}
+            navigate={navigate}
+            notify={notify}
           />
         );
       case "shopComplete":
