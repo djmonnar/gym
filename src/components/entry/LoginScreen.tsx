@@ -63,7 +63,7 @@ export function LoginScreen({
 
           <div className="rounded-[20px] bg-white/[0.06] p-4 ring-1 ring-white/15 backdrop-blur-sm">
             <div className="flex items-center gap-3">
-              <span className="grid size-11 shrink-0 place-items-center rounded-[14px] bg-lime text-brand">
+              <span className="grid size-11 shrink-0 place-items-center rounded-[14px] bg-lime text-white">
                 <UserRound size={20} />
               </span>
               <div className="min-w-0">

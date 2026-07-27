@@ -59,7 +59,7 @@ function VideoBody({ content }: { content: Content }) {
           className="absolute inset-0 grid place-items-center"
           aria-label={playing ? "일시정지" : "재생"}
         >
-          <span className="grid size-16 place-items-center rounded-full bg-lime text-brand shadow-lift transition active:scale-95">
+          <span className="grid size-16 place-items-center rounded-full bg-lime text-white shadow-lift transition active:scale-95">
             {playing ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
           </span>
         </button>
@@ -134,7 +134,7 @@ function MealPlanBody({ content, navigate }: { content: Content; navigate: (scre
     <div className="space-y-4">
       <Card>
         <div className="flex items-center gap-2">
-          <div className="grid size-10 place-items-center rounded-[14px] bg-lime text-brand">
+          <div className="grid size-10 place-items-center rounded-[14px] bg-lime text-white">
             <Utensils size={20} />
           </div>
           <div>
@@ -185,7 +185,7 @@ function ProgramBody({
     <div className="space-y-4">
       <Card>
         <div className="flex items-center gap-2">
-          <div className="grid size-10 place-items-center rounded-[14px] bg-lime text-brand">
+          <div className="grid size-10 place-items-center rounded-[14px] bg-lime text-white">
             <CalendarDays size={20} />
           </div>
           <div>
@@ -234,7 +234,7 @@ function LockedView({ content, navigate }: { content: Content; navigate: (screen
         <ContentThumbnail content={content} className="h-56 w-full scale-105 blur-[3px]" />
         <div className="absolute inset-0 grid place-items-center bg-brand/60 text-center text-white">
           <div className="px-6">
-            <span className="mx-auto grid size-14 place-items-center rounded-full bg-lime text-brand">
+            <span className="mx-auto grid size-14 place-items-center rounded-full bg-lime text-white">
               <LockKeyhole size={26} />
             </span>
             <p className="mt-3 text-sm font-black">PT 회원 전용 콘텐츠</p>

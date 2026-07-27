@@ -19,7 +19,7 @@ export function EntryLayout({
   topBar?: ReactNode;
 }) {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(120%_90%_at_82%_8%,#1B4A37_0%,#12372A_46%,#0B2A20_100%)] text-white">
+    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(120%_90%_at_82%_8%,#3A231C_0%,#241715_46%,#17110F_100%)] text-white">
       {/* 라임 글로우 두 개로 단조로운 배경에 깊이를 줍니다. */}
       <div className="pointer-events-none absolute -right-24 -top-32 size-[420px] rounded-full bg-limeSoft/15 blur-[110px]" />
       <div className="pointer-events-none absolute -bottom-40 -left-28 size-[380px] rounded-full bg-blue/25 blur-[120px]" />
@@ -101,7 +101,7 @@ export function BrandVisual({
       <div className="relative flex h-full flex-col justify-between p-6 sm:p-7">
         <div className="flex items-start justify-between gap-3">
           {badge ? (
-            <span className="inline-flex items-center rounded-full bg-lime px-3 py-1.5 text-[11px] font-black text-brand">
+            <span className="inline-flex items-center rounded-full bg-lime px-3 py-1.5 text-[11px] font-black text-white">
               {badge}
             </span>
           ) : (
@@ -154,7 +154,7 @@ export function EntryButton({
   className?: string;
 }) {
   const variants = {
-    primary: "bg-lime text-brand shadow-soft hover:brightness-105",
+    primary: "bg-lime text-white shadow-soft hover:brightness-105",
     outline: "bg-white/10 text-white ring-1 ring-white/20 backdrop-blur hover:bg-white/15",
     ghost: "text-white/70 hover:bg-white/10 hover:text-white",
     kakao: "bg-[#FEE500] text-[#191919] hover:brightness-105"

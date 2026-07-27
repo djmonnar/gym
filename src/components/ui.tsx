@@ -24,7 +24,7 @@ type ButtonProps = {
 
 export function Button({ children, onClick, variant = "primary", className, disabled }: ButtonProps) {
   const variants = {
-    primary: "bg-lime text-brand shadow-soft hover:translate-y-[-1px]",
+    primary: "bg-lime text-white shadow-soft hover:translate-y-[-1px]",
     dark: "bg-brand text-white shadow-soft ring-1 ring-white/10 hover:translate-y-[-1px]",
     ghost: "bg-zinc-100 text-brand ring-1 ring-zinc-200 hover:bg-white",
     line: "border border-blue/20 bg-white text-brand hover:border-blue",
@@ -59,7 +59,7 @@ export function Card({ children, className }: { children: ReactNode; className?:
 
 export function Badge({ children, tone = "gray" }: { children: ReactNode; tone?: "lime" | "blue" | "gray" | "red" | "green" }) {
   const tones = {
-    lime: "bg-lime text-brand",
+    lime: "bg-lime text-white",
     blue: "bg-blue text-white ring-1 ring-blue/30",
     gray: "bg-zinc-100 text-zinc-700",
     red: "bg-red-600 text-white",
@@ -132,7 +132,7 @@ export function AppShell({
 
   return (
     <main className="min-h-screen bg-surface text-brand">
-      <div className="min-h-screen w-full bg-[linear-gradient(180deg,#FDFCF9_0%,#F7F6F2_62%,#EEF1EE_100%)]">
+      <div className="min-h-screen w-full bg-[linear-gradient(180deg,#FFFCFA_0%,#FAF6F3_60%,#F4EAE4_100%)]">
         <header className="sticky top-0 z-40 border-b border-white/10 bg-brand text-white shadow-soft">
           <div className="mx-auto flex w-full max-w-[760px] items-center justify-between px-4 py-3">
             <div className="flex min-w-0 items-center gap-3">
@@ -189,7 +189,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
   ];
 
   return (
-    <nav className="fixed bottom-0 left-1/2 z-50 grid w-full max-w-[760px] -translate-x-1/2 grid-cols-5 border-x border-t border-black/10 bg-white px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_34px_rgba(18,55,42,0.1)]">
+    <nav className="fixed bottom-0 left-1/2 z-50 grid w-full max-w-[760px] -translate-x-1/2 grid-cols-5 border-x border-t border-black/10 bg-white px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_34px_rgba(45,25,18,0.1)]">
       {items.map((item) => {
         const isActive = item.activeScreens.includes(active);
         return (
@@ -212,7 +212,7 @@ function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: 
 }
 
 export function Stat({ label, value, tone = "dark" }: { label: string; value: string; tone?: "dark" | "blue" | "lime" }) {
-  const toneClass = tone === "lime" ? "bg-lime text-brand" : tone === "blue" ? "bg-blue text-white" : "bg-brand text-white";
+  const toneClass = tone === "lime" ? "bg-lime text-white" : tone === "blue" ? "bg-blue text-white" : "bg-brand text-white";
 
   return (
     <div className={cn("min-w-0 rounded-[22px] p-3", toneClass)}>

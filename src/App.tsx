@@ -770,7 +770,7 @@ function RoutePreviewScreen({ screen, navigate }: { screen: ScreenId; navigate: 
     <div>
       <ScreenHeader title={copy.title} eyebrow={copy.eyebrow} />
       <Card className="bg-brand text-white">
-        <div className="grid size-14 place-items-center rounded-[18px] bg-lime text-brand">
+        <div className="grid size-14 place-items-center rounded-[18px] bg-lime text-white">
           {screen.startsWith("hqAdmin") || screen.startsWith("owner") ? <ShieldCheck size={27} /> : screen.startsWith("community") || screen.startsWith("challenge") ? <MessagesSquare size={27} /> : <Sparkles size={27} />}
         </div>
         <p className="mt-5 text-sm font-bold leading-6 text-white/70">{copy.description}</p>
@@ -1018,11 +1018,11 @@ function SearchScreen({
       </div>
 
       <div className="scrollbar-none mt-3 flex gap-2 overflow-x-auto pb-1">
-        <button type="button" onClick={() => setSortMode("distance")} className={cn("flex shrink-0 items-center gap-1 rounded-full px-4 py-2.5 text-xs font-black ring-1", sortMode === "distance" ? "bg-lime text-brand ring-lime" : "bg-white text-zinc-600 ring-black/5")}>
+        <button type="button" onClick={() => setSortMode("distance")} className={cn("flex shrink-0 items-center gap-1 rounded-full px-4 py-2.5 text-xs font-black ring-1", sortMode === "distance" ? "bg-lime text-white ring-lime" : "bg-white text-zinc-600 ring-black/5")}>
           가까운 순
           <ChevronDown size={14} />
         </button>
-        <button type="button" onClick={() => setSortMode("price")} className={cn("flex shrink-0 items-center gap-1 rounded-full px-4 py-2.5 text-xs font-black ring-1", sortMode === "price" ? "bg-lime text-brand ring-lime" : "bg-white text-zinc-600 ring-black/5")}>
+        <button type="button" onClick={() => setSortMode("price")} className={cn("flex shrink-0 items-center gap-1 rounded-full px-4 py-2.5 text-xs font-black ring-1", sortMode === "price" ? "bg-lime text-white ring-lime" : "bg-white text-zinc-600 ring-black/5")}>
           월 가격
           <ChevronDown size={14} />
         </button>
@@ -1035,7 +1035,7 @@ function SearchScreen({
               onClick={() => toggleFilter(filter)}
               className={cn(
                 "shrink-0 rounded-full px-4 py-2.5 text-xs font-black ring-1 transition",
-                active ? "bg-lime text-brand ring-lime" : "bg-white text-gray-600 ring-black/5"
+                active ? "bg-lime text-white ring-lime" : "bg-white text-gray-600 ring-black/5"
               )}
             >
               {filter}
@@ -1089,7 +1089,7 @@ function DetailScreen({ gym, navigate }: { gym: Facility; navigate: (screen: Scr
       <section className="overflow-hidden rounded-[30px] bg-white shadow-soft">
         <div className="relative h-72">
           <img src={gym.image} alt={`${gym.name} 이미지`} className="absolute inset-0 h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,55,42,0.05),rgba(11,42,32,0.88))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(45,25,18,0.05),rgba(23,17,15,0.88))]" />
           <div className="relative flex h-full flex-col justify-between p-5 text-white">
             <div className="flex flex-wrap gap-2">
               <Badge tone="lime">오늘 결제하면 바로 이용 가능</Badge>
@@ -1143,7 +1143,7 @@ function DetailScreen({ gym, navigate }: { gym: Facility; navigate: (screen: Scr
           ))}
         </div>
       </Card>
-      <Card className="space-y-3 border border-blue/10 bg-[#EEF4FF]">
+      <Card className="space-y-3 border border-blue/10 bg-mist">
         <div className="flex items-start gap-3">
           <ShieldCheck className="mt-0.5 shrink-0 text-blue" size={22} />
           <div>
@@ -1199,7 +1199,7 @@ function PlanScreen({
                   </div>
                   <p className="mt-1 text-sm font-semibold text-gray-500">{plan.description}</p>
                 </div>
-                <div className={cn("grid size-9 place-items-center rounded-full", selected ? "bg-lime text-brand" : "bg-gray-100 text-gray-400")}>
+                <div className={cn("grid size-9 place-items-center rounded-full", selected ? "bg-lime text-white" : "bg-gray-100 text-gray-400")}>
                   <Check size={19} />
                 </div>
               </div>
@@ -1266,7 +1266,7 @@ function CheckoutScreen({
         <InfoRow label="이용 시작일" value="2026.05.20" />
         <InfoRow label="이용 종료일" value="2026.06.19" />
       </Card>
-      <Card className="space-y-3 border border-blue/10 bg-[#EEF4FF]">
+      <Card className="space-y-3 border border-blue/10 bg-mist">
         <div className="flex items-start gap-3">
           <QrCode className="mt-0.5 shrink-0 text-blue" size={22} />
           <div>
@@ -1299,7 +1299,7 @@ function CheckoutScreen({
           <ChevronRight size={18} className="text-gray-400" />
         </div>
         <label className="flex cursor-pointer items-start gap-3 rounded-[20px] border border-gray-200 p-4">
-          <input checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} type="checkbox" className="mt-1 size-5 accent-[#12372A]" />
+          <input checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} type="checkbox" className="mt-1 size-5 accent-brand" />
           <span className="text-sm font-bold leading-6 text-gray-700">정기결제, 환불 규정, 개인정보 처리 안내를 확인했습니다.</span>
         </label>
       </Card>
@@ -1313,7 +1313,7 @@ function CheckoutScreen({
 function CompleteScreen({ gym, plan, navigate }: { gym: Facility; plan: Plan; navigate: (screen: ScreenId) => void }) {
   return (
     <div className="flex min-h-[640px] flex-col justify-center space-y-6 text-center">
-      <div className="mx-auto grid size-28 place-items-center rounded-full bg-lime text-brand shadow-lift">
+      <div className="mx-auto grid size-28 place-items-center rounded-full bg-lime text-white shadow-lift">
         <CheckCircle2 size={58} strokeWidth={2.4} />
       </div>
       <div>
@@ -1399,13 +1399,13 @@ function PassScreen({ gym, navigate }: { gym: Facility; plan: Plan; navigate: (s
       <Card className="space-y-5 text-center">
         <div className="flex items-center justify-between gap-3 text-left">
           <Badge tone="lime">동적 QR 이용권</Badge>
-          <span className="rounded-full bg-[#EEF4FF] px-3 py-1 text-[11px] font-black text-blue">{refreshMessage}</span>
+          <span className="rounded-full bg-mist px-3 py-1 text-[11px] font-black text-blue">{refreshMessage}</span>
         </div>
-        <div className="mx-auto flex size-56 flex-col items-center justify-center rounded-[32px] border-8 border-white bg-[linear-gradient(145deg,#12372A,#0B2A20)] shadow-inner ring-1 ring-brand/10">
+        <div className="mx-auto flex size-56 flex-col items-center justify-center rounded-[32px] border-8 border-white bg-[linear-gradient(145deg,#2A1F1B,#17110F)] shadow-inner ring-1 ring-brand/10">
           <div className="qr-pattern grid size-40 place-items-center rounded-[22px] bg-white">
             <QrCode size={90} className="text-brand" />
           </div>
-          <p className="mt-3 rounded-full bg-lime px-3 py-1 text-[11px] font-black text-brand">
+          <p className="mt-3 rounded-full bg-lime px-3 py-1 text-[11px] font-black text-white">
             checkin_token: {activePass.maskedToken}
           </p>
           <p className="mt-2 text-[10px] font-black text-white/50">발급 회차 #{issueNumber}</p>
@@ -1427,7 +1427,7 @@ function PassScreen({ gym, navigate }: { gym: Facility; plan: Plan; navigate: (s
         </div>
       </Card>
 
-      <Card className="space-y-3 border border-blue/10 bg-[#EEF4FF]">
+      <Card className="space-y-3 border border-blue/10 bg-mist">
         <div className="flex items-start gap-3">
           <LockKeyhole className="mt-0.5 shrink-0 text-blue" size={22} />
           <div>
@@ -1571,7 +1571,7 @@ function MyPage({
     <div className="space-y-5">
       <ScreenHeader title="마이페이지" eyebrow="계정과 구독 관리" />
       <Card className="flex items-center gap-4">
-        <div className="grid size-16 place-items-center rounded-[22px] bg-lime text-brand">
+        <div className="grid size-16 place-items-center rounded-[22px] bg-lime text-white">
           <UserRound size={30} />
         </div>
         <div>
@@ -1744,7 +1744,7 @@ function PtMatchIntroScreen({ navigate }: { navigate: (screen: ScreenId) => void
           ["03", "월 단위 PT 구독", "주 1회부터 부담 없이 시작"]
         ].map(([number, title, body]) => (
           <div key={number} className="flex items-center gap-4 rounded-[18px] bg-white p-4 shadow-soft ring-1 ring-black/5">
-            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-lime text-xs font-black text-brand">{number}</span>
+            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-lime text-xs font-black text-white">{number}</span>
             <div>
               <p className="text-sm font-black">{title}</p>
               <p className="mt-1 text-xs font-bold text-zinc-500">{body}</p>
@@ -1869,7 +1869,7 @@ function PtMatchQuizScreen({
                   )}
                 >
                   {option}
-                  <span className={cn("grid size-7 place-items-center rounded-full", selected ? "bg-lime text-brand" : "bg-zinc-100 text-transparent")}>
+                  <span className={cn("grid size-7 place-items-center rounded-full", selected ? "bg-lime text-white" : "bg-zinc-100 text-transparent")}>
                     <Check size={16} strokeWidth={3} />
                   </span>
                 </button>
@@ -1910,7 +1910,7 @@ function PtMatchResultScreen({
             <p className="text-xs font-black text-limeSoft">MY EXERCISE TYPE</p>
             <p className="mt-2 text-[34px] font-black tracking-normal">{matchType.code}</p>
           </div>
-          <div className="grid size-14 place-items-center rounded-[18px] bg-lime text-brand">
+          <div className="grid size-14 place-items-center rounded-[18px] bg-lime text-white">
             <Brain size={28} />
           </div>
         </div>
@@ -1995,7 +1995,7 @@ function TrainerProfileScreen({
         <h2 className="text-lg font-black">김예림님께 추천한 이유</h2>
         <div className="mt-3 space-y-2">
           {match.reasons.map((reason) => (
-            <div key={reason} className="flex items-center gap-3 rounded-[16px] bg-[#EEF4FF] p-4 text-sm font-bold text-brand">
+            <div key={reason} className="flex items-center gap-3 rounded-[16px] bg-mist p-4 text-sm font-bold text-brand">
               <CheckCircle2 size={18} className="shrink-0 text-blue" />
               {reason}
             </div>
@@ -2094,7 +2094,7 @@ function PtPlanSelectScreen({
                   </div>
                   <p className={cn("mt-1 text-xs font-bold", selected ? "text-white/60" : "text-zinc-500")}>{plan.frequency} · 월 {plan.sessions}회</p>
                 </div>
-                <span className={cn("grid size-7 place-items-center rounded-full", selected ? "bg-lime text-brand" : "bg-zinc-100 text-transparent")}>
+                <span className={cn("grid size-7 place-items-center rounded-full", selected ? "bg-lime text-white" : "bg-zinc-100 text-transparent")}>
                   <Check size={16} strokeWidth={3} />
                 </span>
               </div>
@@ -2114,7 +2114,7 @@ function PtPlanSelectScreen({
         })}
       </div>
 
-      <Card className="mt-5 bg-[#FFF8E8]">
+      <Card className="mt-5 bg-honey">
         <p className="text-sm font-black">세션 이용 정책</p>
         <p className="mt-2 text-xs font-bold leading-5 text-zinc-600">미사용 세션은 최대 2회까지 다음 달로 이월됩니다. 수업 24시간 전까지 취소하면 차감되지 않아요.</p>
       </Card>
@@ -2174,7 +2174,7 @@ function PtCheckoutScreen({
         </div>
       </Card>
 
-      <Card className="mt-4 bg-[#EEF4FF]">
+      <Card className="mt-4 bg-mist">
         <div className="flex items-start gap-3">
           <CalendarDays size={21} className="mt-0.5 shrink-0 text-blue" />
           <div>
@@ -2185,7 +2185,7 @@ function PtCheckoutScreen({
       </Card>
 
       <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-[18px] bg-white p-4 shadow-soft ring-1 ring-black/5">
-        <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} className="mt-1 size-5 accent-[#12372A]" />
+        <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} className="mt-1 size-5 accent-brand" />
         <span>
           <span className="text-sm font-black">PT 구독 및 취소 정책에 동의합니다</span>
           <span className="mt-1 block text-xs font-bold leading-5 text-zinc-500">월 자동결제, 세션 이월, 노쇼 및 중도해지 안내를 확인했습니다.</span>
@@ -2247,7 +2247,7 @@ function MyPtScreen({
         <h2 className="text-lg font-black">다음 수업</h2>
         <Card className="mt-3">
           <div className="flex items-center gap-4">
-            <div className="grid size-14 shrink-0 place-items-center rounded-[16px] bg-lime text-brand">
+            <div className="grid size-14 shrink-0 place-items-center rounded-[16px] bg-lime text-white">
               <CalendarDays size={24} />
             </div>
             <div className="min-w-0 flex-1">
@@ -2261,7 +2261,7 @@ function MyPtScreen({
 
       <section className="mt-6">
         <h2 className="text-lg font-black">트레이너 피드백</h2>
-        <Card className="mt-3 bg-[#EEF4FF]">
+        <Card className="mt-3 bg-mist">
           <p className="text-xs font-black text-blue">{trainer.name}</p>
           <p className="mt-2 text-sm font-bold leading-6 text-brand">첫 수업에서는 스쿼트 자세와 무릎 정렬을 확인할게요. 편한 운동화와 물만 준비해 주세요.</p>
         </Card>
@@ -2358,7 +2358,7 @@ function AdminHome({ navigate, notify }: { navigate: (screen: ScreenId) => void;
         </div>
         <div className="space-y-3">
           {operationAlerts.map((item) => (
-            <button key={item.label} type="button" onClick={item.action} className="flex w-full items-center justify-between rounded-[18px] bg-gray-50 p-3 text-left transition hover:bg-[#EEF4FF]">
+            <button key={item.label} type="button" onClick={item.action} className="flex w-full items-center justify-between rounded-[18px] bg-gray-50 p-3 text-left transition hover:bg-mist">
               <span className="flex items-center gap-3">
                 <span className="grid size-10 place-items-center rounded-2xl bg-white text-blue shadow-soft">{item.icon}</span>
                 <span className="text-sm font-black text-gray-700">{item.label}</span>
@@ -2553,7 +2553,7 @@ function GymCard({ gym, onClick, compact = false }: { gym: Facility; onClick: ()
             </span>
           ))}
         </div>
-        <p className="mt-2 text-right text-lg font-black text-[#5B8C12] sm:text-xl">
+        <p className="mt-2 text-right text-lg font-black text-blue sm:text-xl">
           <span className="mr-1 text-xs font-bold">월</span>
           {formatWon(gym.monthlyPrice)}
         </p>
@@ -2611,7 +2611,7 @@ function MenuButton({ icon, label, onClick }: { icon: ReactNode; label: string; 
 }
 
 function AdminMetric({ label, value, tone = "dark" }: { label: string; value: string; tone?: "dark" | "blue" | "lime" }) {
-  const className = tone === "lime" ? "bg-lime text-brand" : tone === "blue" ? "bg-blue text-white" : "bg-white/10 text-white";
+  const className = tone === "lime" ? "bg-lime text-white" : tone === "blue" ? "bg-blue text-white" : "bg-white/10 text-white";
 
   return (
     <div className={cn("rounded-[20px] p-4 ring-1 ring-white/10", className)}>

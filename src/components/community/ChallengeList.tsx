@@ -22,7 +22,7 @@ export function ChallengeListScreen({
 
       <Card className="mb-5 bg-brand text-white">
         <div className="flex items-center gap-3">
-          <div className="grid size-12 place-items-center rounded-[16px] bg-lime text-brand">
+          <div className="grid size-12 place-items-center rounded-[16px] bg-lime text-white">
             <Trophy size={24} />
           </div>
           <div>

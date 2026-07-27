@@ -68,7 +68,7 @@ export function GuardrailNotice({
   return (
     <div className="space-y-4">
       <Card className="bg-brand text-white">
-        <div className="grid size-14 place-items-center rounded-[18px] bg-lime text-brand">
+        <div className="grid size-14 place-items-center rounded-[18px] bg-lime text-white">
           {isConsult ? <Stethoscope size={26} /> : <AlertCircle size={26} />}
         </div>
         <h2 className="mt-5 text-2xl font-black leading-snug">

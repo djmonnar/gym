@@ -57,7 +57,7 @@ export function LocationScreen({
       right={
         <div className="rounded-[28px] bg-white/[0.06] p-5 ring-1 ring-white/15 backdrop-blur-sm sm:p-6">
           <div className="flex items-center justify-between gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-lime px-3 py-1.5 text-[11px] font-black text-brand">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-lime px-3 py-1.5 text-[11px] font-black text-white">
               <MapPin size={12} />
               진주 가좌동
             </span>
