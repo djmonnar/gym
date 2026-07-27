@@ -83,11 +83,26 @@ export function ShopScreen({
                 <span className="absolute left-2 top-2">
                   <Badge tone={sellerTypeTone[product.sellerType]}>{sellerTypeLabel[product.sellerType]}</Badge>
                 </span>
+                {product.status === "soldOut" ? (
+                  <div className="absolute inset-0 grid place-items-center bg-white/70">
+                    <span className="rounded-full bg-brand px-3 py-1 text-xs font-black text-white">품절</span>
+                  </div>
+                ) : null}
               </div>
               <div className="p-3">
                 <p className="line-clamp-2 min-h-[38px] text-sm font-black leading-tight">{product.name}</p>
                 <p className="mt-1 truncate text-[11px] font-bold text-zinc-400">{product.sellerName}</p>
-                <p className="mt-2 text-base font-black text-brand">{formatWon(product.price)}</p>
+                <div className="mt-2 flex items-baseline gap-1.5">
+                  {product.originalPrice > product.price ? (
+                    <span className="text-sm font-black text-lime">
+                      {Math.round((1 - product.price / product.originalPrice) * 100)}%
+                    </span>
+                  ) : null}
+                  <span className="text-base font-black text-brand">{formatWon(product.price)}</span>
+                </div>
+                {product.originalPrice > product.price ? (
+                  <p className="text-[11px] font-bold text-zinc-400 line-through">{formatWon(product.originalPrice)}</p>
+                ) : null}
                 <p className="mt-1 flex items-center gap-1 text-[11px] font-bold text-zinc-500">
                   {product.fulfillment === "pickup" ? (
                     <>

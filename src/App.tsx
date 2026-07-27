@@ -98,6 +98,7 @@ import { ChallengeDetailScreen } from "./components/community/ChallengeDetail";
 import { AiDietScreen } from "./components/ai/AiDiet";
 import { AiRoutineScreen } from "./components/ai/AiRoutine";
 import { ShopScreen } from "./components/shop/Shop";
+import { ProductVisual, sellerTypeLabel, sellerTypeTone } from "./components/shop/shopMeta";
 import { ShopDetailScreen } from "./components/shop/ShopDetail";
 import { CartScreen } from "./components/shop/Cart";
 import { OrderCompleteScreen } from "./components/shop/OrderComplete";
@@ -387,7 +388,7 @@ export default function App() {
       case "locationPermission":
         return <LocationScreen navigate={navigate} facilities={facilities} />;
       case "home":
-        return <HomeScreen navigate={navigate} selectGym={selectGym} setCategory={setSelectedCategory} facilities={facilities} openContent={openContent} />;
+        return <HomeScreen navigate={navigate} selectGym={selectGym} setCategory={setSelectedCategory} facilities={facilities} openContent={openContent} products={shopProducts} selectProduct={selectProduct} />;
       case "search":
         return (
           <SearchScreen
@@ -792,16 +793,25 @@ function HomeScreen({
   selectGym,
   setCategory,
   facilities,
-  openContent
+  openContent,
+  products,
+  selectProduct
 }: {
   navigate: (screen: ScreenId) => void;
   selectGym: (gym: Facility) => void;
   setCategory: (category: FacilityCategory | "all") => void;
   facilities: Facility[];
   openContent: (content: Content) => void;
+  products: Product[];
+  selectProduct: (product: Product) => void;
 }) {
   const todayRoutine = weeklyRoutine.days[1] ?? weeklyRoutine.days[0];
   const todayContents = contents.filter((content) => content.access !== "pt").slice(0, 3);
+  // 홈 진열: 할인율이 큰 순으로 인기 상품을 앞세웁니다.
+  const shopHighlights = [...products]
+    .filter((product) => product.status !== "hidden")
+    .sort((a, b) => (b.originalPrice - b.price) / b.originalPrice - (a.originalPrice - a.price) / a.originalPrice)
+    .slice(0, 6);
   const categoryIcons: Record<FacilityCategory, ReactNode> = {
     gym: <Dumbbell size={22} />,
     pilates: <Activity size={22} />,
@@ -923,6 +933,51 @@ function HomeScreen({
           <p className="mt-4 text-xs font-bold text-zinc-400">오늘의 식단</p>
           <p className="mt-1 text-lg font-black">{dietRecommendation.calories}</p>
         </button>
+      </section>
+
+      <section className="mt-8">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <p className="text-xs font-black text-blue">RETURNSHOP</p>
+            <h2 className="mt-1 text-[25px] font-black">리턴샵 인기 상품</h2>
+          </div>
+          <button type="button" onClick={() => navigate("shop")} className="flex items-center gap-1 text-sm font-black text-brand">
+            전체 보기
+            <ChevronRight size={17} />
+          </button>
+        </div>
+        <div className="scrollbar-none mt-4 flex gap-3 overflow-x-auto pb-1">
+          {shopHighlights.map((product) => {
+            const discount = product.originalPrice > product.price
+              ? Math.round((1 - product.price / product.originalPrice) * 100)
+              : 0;
+            return (
+              <button
+                key={product.id}
+                type="button"
+                onClick={() => selectProduct(product)}
+                className="w-[150px] shrink-0 overflow-hidden rounded-[20px] bg-white text-left shadow-soft ring-1 ring-black/5 transition active:scale-[0.99]"
+              >
+                <div className="relative">
+                  <ProductVisual product={product} className="aspect-square w-full" />
+                  <span className="absolute left-2 top-2">
+                    <Badge tone={sellerTypeTone[product.sellerType]}>{sellerTypeLabel[product.sellerType]}</Badge>
+                  </span>
+                </div>
+                <div className="p-3">
+                  <p className="line-clamp-2 min-h-[36px] text-[13px] font-black leading-tight">{product.name}</p>
+                  <div className="mt-2 flex items-baseline gap-1.5">
+                    {discount > 0 ? <span className="text-xs font-black text-lime">{discount}%</span> : null}
+                    <span className="text-base font-black text-brand">{formatWon(product.price)}</span>
+                  </div>
+                  {discount > 0 ? (
+                    <p className="text-[11px] font-bold text-zinc-400 line-through">{formatWon(product.originalPrice)}</p>
+                  ) : null}
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </section>
 
       <section className="mt-8">

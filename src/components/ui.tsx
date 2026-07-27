@@ -7,7 +7,7 @@ import {
   ListChecks,
   MessagesSquare,
   MapPin,
-  Search,
+  ShoppingBag,
   UserRound
 } from "lucide-react";
 import type { ScreenId } from "../types";
@@ -171,8 +171,14 @@ export function AppShell({
 
 function BottomNav({ active, navigate }: { active: ScreenId; navigate: (screen: ScreenId) => void }) {
   const items: Array<{ label: string; screen: ScreenId; icon: ReactNode; activeScreens: ScreenId[] }> = [
-    { label: "홈", screen: "home", icon: <Home size={20} />, activeScreens: ["home"] },
-    { label: "검색", screen: "search", icon: <Search size={20} />, activeScreens: ["search", "detail", "facilityDetail"] },
+    // 검색 탭은 없앴습니다. 시설 검색은 홈 상단 검색바로 진입하며, 검색 계열 화면은 홈 탭을 활성 표시합니다.
+    { label: "홈", screen: "home", icon: <Home size={20} />, activeScreens: ["home", "search", "detail", "facilityDetail"] },
+    {
+      label: "샵",
+      screen: "shop",
+      icon: <ShoppingBag size={20} />,
+      activeScreens: ["shop", "shopDetail", "cart", "shopComplete", "orderSuccess"]
+    },
     {
       label: "콘텐츠",
       screen: "contentHome",
