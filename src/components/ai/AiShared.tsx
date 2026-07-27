@@ -26,7 +26,7 @@ export function SensitiveConsent({ checked, onChange }: { checked: boolean; onCh
       <span
         className={cn(
           "mt-0.5 grid size-5 shrink-0 place-items-center rounded-md ring-1 transition",
-          checked ? "bg-brand text-lime ring-brand" : "bg-white ring-zinc-300"
+          checked ? "bg-brand text-limeSoft ring-brand" : "bg-white ring-zinc-300"
         )}
       >
         {checked ? <ShieldCheck size={13} /> : null}
@@ -74,7 +74,7 @@ export function GuardrailNotice({
         <h2 className="mt-5 text-2xl font-black leading-snug">
           {isConsult ? "전문가 상담을 권해드려요" : block.kind === "minor" ? "지금은 제공하지 않는 기능이에요" : "동의가 필요해요"}
         </h2>
-        <p className="mt-3 text-sm font-bold leading-6 text-white/72">{block.message}</p>
+        <p className="mt-3 text-sm font-bold leading-6 text-white/70">{block.message}</p>
         {isConsult ? (
           <div className="mt-4 flex flex-wrap gap-2">
             {block.conditions.map((condition) => (
@@ -178,7 +178,7 @@ export function ChoiceGroup<T extends string | number>({
             onClick={() => onChange(option.value)}
             className={cn(
               "min-h-11 rounded-[14px] px-3 text-xs font-black ring-1 transition",
-              option.value === value ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-600 ring-black/5"
+              option.value === value ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-600 ring-black/5"
             )}
           >
             {option.label}
@@ -215,7 +215,7 @@ export function TagGroup({
             onClick={() => onToggle(option)}
             className={cn(
               "min-h-10 rounded-full px-4 text-xs font-black ring-1 transition",
-              values.includes(option) ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-600 ring-black/5"
+              values.includes(option) ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-600 ring-black/5"
             )}
           >
             {option}

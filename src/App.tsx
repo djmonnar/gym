@@ -773,7 +773,7 @@ function RoutePreviewScreen({ screen, navigate }: { screen: ScreenId; navigate: 
         <div className="grid size-14 place-items-center rounded-[18px] bg-lime text-brand">
           {screen.startsWith("hqAdmin") || screen.startsWith("owner") ? <ShieldCheck size={27} /> : screen.startsWith("community") || screen.startsWith("challenge") ? <MessagesSquare size={27} /> : <Sparkles size={27} />}
         </div>
-        <p className="mt-5 text-sm font-bold leading-6 text-white/72">{copy.description}</p>
+        <p className="mt-5 text-sm font-bold leading-6 text-white/70">{copy.description}</p>
         <Button className="mt-6 w-full" onClick={() => navigate(copy.actionScreen)}>
           {copy.actionLabel}
           <ChevronRight size={18} />
@@ -835,27 +835,25 @@ function HomeScreen({
 
       <section className="mt-5">
         <div className="grid grid-cols-6 gap-2">
-          {categoryItems.slice(0, 3).map((item, index) => (
+          {/* 선택 상태가 아니므로 특정 칸만 강조하지 않고 아이콘 색으로만 구분합니다. */}
+          {categoryItems.slice(0, 3).map((item) => (
             <button
               key={item.category}
               type="button"
               onClick={() => openCategory(item.category)}
-              className={cn(
-                "col-span-2 flex min-h-[82px] flex-col items-center justify-center gap-2 rounded-[16px] text-[11px] font-black shadow-soft ring-1 ring-black/5",
-                index === 0 ? "bg-lime" : "bg-white"
-              )}
+              className="col-span-2 flex min-h-[82px] flex-col items-center justify-center gap-2 rounded-[16px] bg-white text-[11px] font-black text-brand shadow-soft ring-1 ring-black/5 transition hover:ring-black/10"
             >
-              {item.icon}
+              <span className="text-blue">{item.icon}</span>
               {item.label}
             </button>
           ))}
-          <button type="button" onClick={() => navigate("ptMatchIntro")} className="col-span-2 flex min-h-[82px] flex-col items-center justify-center gap-2 rounded-[16px] bg-white text-[11px] font-black shadow-soft ring-1 ring-black/5">
-            <UserCheck size={22} />
+          <button type="button" onClick={() => navigate("ptMatchIntro")} className="col-span-2 flex min-h-[82px] flex-col items-center justify-center gap-2 rounded-[16px] bg-white text-[11px] font-black text-brand shadow-soft ring-1 ring-black/5 transition hover:ring-black/10">
+            <UserCheck size={22} className="text-blue" />
             PT
           </button>
           {categoryItems.slice(3).map((item) => (
-            <button key={item.category} type="button" onClick={() => openCategory(item.category)} className="col-span-2 flex min-h-[82px] flex-col items-center justify-center gap-2 rounded-[16px] bg-white text-[11px] font-black shadow-soft ring-1 ring-black/5">
-              {item.icon}
+            <button key={item.category} type="button" onClick={() => openCategory(item.category)} className="col-span-2 flex min-h-[82px] flex-col items-center justify-center gap-2 rounded-[16px] bg-white text-[11px] font-black text-brand shadow-soft ring-1 ring-black/5 transition hover:ring-black/10">
+              <span className="text-blue">{item.icon}</span>
               {item.label}
             </button>
           ))}
@@ -868,7 +866,7 @@ function HomeScreen({
           <p className="truncate text-sm font-black">{activePass.planName}</p>
           <p className="mt-1 truncate text-xs font-bold text-white/60">{activePass.gymName}</p>
         </div>
-        <div className="flex items-center gap-2 text-sm font-black text-lime">
+        <div className="flex items-center gap-2 text-sm font-black text-limeSoft">
           <QrCode size={22} />
           QR 입장
           <ChevronRight size={17} />
@@ -916,7 +914,7 @@ function HomeScreen({
 
       <section className="mt-8 grid grid-cols-2 gap-3">
         <button type="button" onClick={() => navigate("aiRoutine")} className="rounded-[18px] bg-brand p-4 text-left text-white shadow-soft">
-          <Activity size={22} className="text-lime" />
+          <Activity size={22} className="text-limeSoft" />
           <p className="mt-4 text-xs font-bold text-white/60">오늘의 루틴</p>
           <p className="mt-1 text-lg font-black">{todayRoutine.focus} · 45분</p>
         </button>
@@ -1057,7 +1055,7 @@ function SearchScreen({
             key={mode}
             type="button"
             onClick={() => setViewMode(mode)}
-              className={cn("rounded-[11px] px-3 py-2 text-xs font-black", viewMode === mode ? "bg-brand text-lime" : "text-gray-500")}
+              className={cn("rounded-[11px] px-3 py-2 text-xs font-black", viewMode === mode ? "bg-brand text-limeSoft" : "text-gray-500")}
           >
               {mode === "list" ? "목록" : "지도"}
           </button>
@@ -1099,7 +1097,7 @@ function DetailScreen({ gym, navigate }: { gym: Facility; navigate: (screen: Scr
             </div>
             <div>
               <h2 className="text-[31px] font-black leading-tight">{gym.name}</h2>
-              <p className="mt-2 text-sm font-bold text-white/72">{gym.distance} · {gym.hours} · {gym.location}</p>
+              <p className="mt-2 text-sm font-bold text-white/70">{gym.distance} · {gym.hours} · {gym.location}</p>
             </div>
           </div>
         </div>
@@ -1256,7 +1254,7 @@ function CheckoutScreen({
             <h2 className="mt-4 text-3xl font-black">{formatWon(plan.price)}</h2>
             <p className="mt-2 text-sm font-semibold text-white/70">실제 결제는 진행되지 않는 더미 결제입니다</p>
           </div>
-          <CreditCard className="shrink-0 text-lime" size={32} />
+          <CreditCard className="shrink-0 text-limeSoft" size={32} />
         </div>
       </Card>
       <Card className="space-y-3">
@@ -1394,7 +1392,7 @@ function PassScreen({ gym, navigate }: { gym: Facility; plan: Plan; navigate: (s
             <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-black text-white/70">{activePass.planName}</span>
           </div>
           <h2 className="mt-4 text-2xl font-black">{activePass.gymName}</h2>
-          <p className="mt-1 text-sm font-bold text-white/62">{activePass.expiresAt}까지 · 서버 검증용 임시 토큰 사용</p>
+          <p className="mt-1 text-sm font-bold text-white/60">{activePass.expiresAt}까지 · 서버 검증용 임시 토큰 사용</p>
         </div>
       </Card>
 
@@ -1526,7 +1524,7 @@ function SupportScreen() {
     <div className="space-y-5">
       <ScreenHeader title="고객센터/환불 안내" eyebrow="구독과 결제를 투명하게" />
       <Card className="bg-brand text-white">
-        <Headphones size={30} className="text-lime" />
+        <Headphones size={30} className="text-limeSoft" />
         <h2 className="mt-4 text-2xl font-black">구독/결제/환불은 앱에서 투명하게 확인할 수 있습니다</h2>
         <p className="mt-2 text-sm font-semibold leading-6 text-white/70">문의 전 결제 내역과 구독 상태를 먼저 확인하면 더 빠르게 처리됩니다.</p>
       </Card>
@@ -1609,7 +1607,7 @@ function MyPage({
 function QuickFeature({ icon, label, body, onClick }: { icon: ReactNode; label: string; body: string; onClick: () => void }) {
   return (
     <button type="button" onClick={onClick} className="rounded-[22px] bg-white p-4 text-left shadow-soft">
-      <span className="grid size-10 place-items-center rounded-2xl bg-brand text-lime">{icon}</span>
+      <span className="grid size-10 place-items-center rounded-2xl bg-brand text-limeSoft">{icon}</span>
       <p className="mt-3 text-base font-black">{label}</p>
       <p className="mt-1 text-xs font-bold text-gray-500">{body}</p>
     </button>
@@ -1718,7 +1716,7 @@ function PtMatchIntroScreen({ navigate }: { navigate: (screen: ScreenId) => void
         <div className="relative z-10 max-w-[62%]">
           <Badge tone="lime">30초 진단</Badge>
           <h1 className="mt-4 text-[27px] font-black leading-[1.18]">시설보다 먼저,<br />나와 맞는 사람부터</h1>
-          <p className="mt-3 text-sm font-bold leading-6 text-white/68">목표와 성향, 가능한 시간을 분석해 추천 이유가 분명한 트레이너를 찾아드려요.</p>
+          <p className="mt-3 text-sm font-bold leading-6 text-white/70">목표와 성향, 가능한 시간을 분석해 추천 이유가 분명한 트레이너를 찾아드려요.</p>
         </div>
         <TrainerPortrait trainer={ptTrainers[0]} className="absolute -bottom-5 -right-9 h-[250px] w-[190px]" />
       </section>
@@ -1829,7 +1827,7 @@ function PtMatchQuizScreen({
                     onClick={() => setAnswers({ ...answers, freq: option })}
                     className={cn(
                       "min-h-14 rounded-[16px] text-sm font-black ring-1 transition",
-                      answers.freq === option ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-600 ring-black/5"
+                      answers.freq === option ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-600 ring-black/5"
                     )}
                   >
                     {option}
@@ -1847,7 +1845,7 @@ function PtMatchQuizScreen({
                     onClick={() => setAnswers({ ...answers, budget: option })}
                     className={cn(
                       "min-h-14 rounded-[16px] px-2 text-sm font-black ring-1 transition",
-                      answers.budget === option ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-600 ring-black/5"
+                      answers.budget === option ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-600 ring-black/5"
                     )}
                   >
                     {option}
@@ -1909,7 +1907,7 @@ function PtMatchResultScreen({
       <section className="rounded-[24px] bg-brand p-5 text-white shadow-glow">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-black text-lime">MY EXERCISE TYPE</p>
+            <p className="text-xs font-black text-limeSoft">MY EXERCISE TYPE</p>
             <p className="mt-2 text-[34px] font-black tracking-normal">{matchType.code}</p>
           </div>
           <div className="grid size-14 place-items-center rounded-[18px] bg-lime text-brand">
@@ -1984,8 +1982,8 @@ function TrainerProfileScreen({
             </div>
             <Badge tone="lime">{match.matchRate}% 일치</Badge>
           </div>
-          <p className="mt-4 text-sm font-bold leading-6 text-white/78">{trainer.intro}</p>
-          <div className="mt-4 flex items-center gap-2 text-sm font-black text-lime">
+          <p className="mt-4 text-sm font-bold leading-6 text-white/80">{trainer.intro}</p>
+          <div className="mt-4 flex items-center gap-2 text-sm font-black text-limeSoft">
             <Star size={17} fill="currentColor" />
             {trainer.rating.toFixed(1)}
             <span className="text-xs text-white/50">후기 {trainer.reviewCount}개</span>
@@ -2070,7 +2068,7 @@ function PtPlanSelectScreen({
         <div className="min-w-0">
           <p className="truncate text-lg font-black">{trainer.name}</p>
           <p className="mt-1 text-xs font-bold text-white/60">{trainer.specialty}</p>
-          <p className="mt-2 text-sm font-black text-lime">1회 {formatWon(trainer.price)}</p>
+          <p className="mt-2 text-sm font-black text-limeSoft">1회 {formatWon(trainer.price)}</p>
         </div>
       </div>
 
@@ -2101,12 +2099,12 @@ function PtPlanSelectScreen({
                 </span>
               </div>
               <p className="mt-4 text-[24px] font-black">{formatWon(price)} <span className={cn("text-xs", selected ? "text-white/50" : "text-zinc-400")}>/ 월</span></p>
-              {plan.discountRate > 0 ? <p className="mt-1 text-xs font-black text-lime">회당 {formatWon(Math.round(price / plan.sessions))} · {Math.round(plan.discountRate * 100)}% 구독 할인</p> : null}
+              {plan.discountRate > 0 ? <p className="mt-1 text-xs font-black text-limeSoft">회당 {formatWon(Math.round(price / plan.sessions))} · {Math.round(plan.discountRate * 100)}% 구독 할인</p> : null}
               <p className={cn("mt-3 text-xs font-bold leading-5", selected ? "text-white/65" : "text-zinc-500")}>{plan.description}</p>
               <div className="mt-4 space-y-2">
                 {plan.benefits.map((benefit) => (
                   <p key={benefit} className="flex items-center gap-2 text-xs font-bold">
-                    <Check size={14} className={selected ? "text-lime" : "text-blue"} />
+                    <Check size={14} className={selected ? "text-limeSoft" : "text-blue"} />
                     {benefit}
                   </p>
                 ))}
@@ -2197,7 +2195,7 @@ function PtCheckoutScreen({
       <Card className="mt-4 bg-zinc-950 text-white">
         <div className="flex items-center justify-between gap-3">
           <span className="text-sm font-bold text-white/60">이번 달 결제</span>
-          <strong className="text-[24px] font-black text-lime">{formatWon(price)}</strong>
+          <strong className="text-[24px] font-black text-limeSoft">{formatWon(price)}</strong>
         </div>
         <p className="mt-3 text-xs font-bold text-white/45">실제 결제는 진행되지 않는 더미 PT 구독입니다.</p>
       </Card>
@@ -2236,7 +2234,7 @@ function MyPtScreen({
         <div className="mt-6 grid grid-cols-2 gap-3">
           <div className="rounded-[16px] bg-white/10 p-4">
             <p className="text-xs font-bold text-white/50">남은 세션</p>
-            <p className="mt-2 text-2xl font-black text-lime">{plan.sessions}회</p>
+            <p className="mt-2 text-2xl font-black text-limeSoft">{plan.sessions}회</p>
           </div>
           <div className="rounded-[16px] bg-white/10 p-4">
             <p className="text-xs font-bold text-white/50">다음 결제일</p>
@@ -2343,7 +2341,7 @@ function AdminHome({ navigate, notify }: { navigate: (screen: ScreenId) => void;
             <h2 className="mt-4 text-3xl font-black leading-tight">오늘 운영 현황</h2>
             <p className="mt-2 text-sm font-semibold text-white/65">입장, 구독, 결제, 문의를 한 화면에서 확인합니다.</p>
           </div>
-          <Settings className="shrink-0 text-lime" size={30} />
+          <Settings className="shrink-0 text-limeSoft" size={30} />
         </div>
         <div className="mt-5 grid grid-cols-2 gap-3">
           <AdminMetric label="오늘 입장 회원 수" value="38명" tone="lime" />
@@ -2365,7 +2363,7 @@ function AdminHome({ navigate, notify }: { navigate: (screen: ScreenId) => void;
                 <span className="grid size-10 place-items-center rounded-2xl bg-white text-blue shadow-soft">{item.icon}</span>
                 <span className="text-sm font-black text-gray-700">{item.label}</span>
               </span>
-              <span className="rounded-full bg-brand px-3 py-1 text-xs font-black text-lime">{item.value}</span>
+              <span className="rounded-full bg-brand px-3 py-1 text-xs font-black text-limeSoft">{item.value}</span>
             </button>
           ))}
         </div>
@@ -2437,7 +2435,7 @@ function AdminMembers({
               key={item}
               type="button"
               onClick={() => setStatus(item)}
-              className={cn("rounded-[18px] px-2 py-3 text-center text-xs font-black", status === item ? "bg-brand text-lime" : "bg-white text-gray-600 shadow-soft")}
+              className={cn("rounded-[18px] px-2 py-3 text-center text-xs font-black", status === item ? "bg-brand text-limeSoft" : "bg-white text-gray-600 shadow-soft")}
             >
               <span className="block">{item}</span>
               <span className="mt-1 block opacity-70">{count}명</span>
@@ -2448,10 +2446,10 @@ function AdminMembers({
       <Card className="bg-brand text-white">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-black text-lime">{status}</p>
+            <p className="text-xs font-black text-limeSoft">{status}</p>
             <h2 className="mt-2 text-2xl font-black">{members.length}명</h2>
           </div>
-          <UsersRound className="text-lime" size={30} />
+          <UsersRound className="text-limeSoft" size={30} />
         </div>
       </Card>
       <div className="space-y-3">
@@ -2493,7 +2491,7 @@ function AdminQr({
               <h2 className="mt-4 text-3xl font-black leading-tight">카메라 연결 전 더미 스캔</h2>
               <p className="mt-3 text-sm font-semibold leading-6 text-white/70">실제 카메라 연동 전, 토큰 상태별 검증 결과를 미리 확인합니다.</p>
             </div>
-            <div className="grid size-16 place-items-center rounded-[24px] bg-white/12 text-lime ring-1 ring-white/15">
+            <div className="grid size-16 place-items-center rounded-[24px] bg-white/10 text-limeSoft ring-1 ring-white/15">
               <ScanLine size={34} />
             </div>
           </div>
@@ -2512,7 +2510,7 @@ function AdminQr({
             key={status}
             type="button"
             onClick={() => setResult(status)}
-            className={cn("shrink-0 rounded-full px-4 py-2 text-sm font-bold", result === status ? "bg-brand text-lime" : "bg-white text-gray-600")}
+            className={cn("shrink-0 rounded-full px-4 py-2 text-sm font-bold", result === status ? "bg-brand text-limeSoft" : "bg-white text-gray-600")}
           >
             {status}
           </button>
@@ -2613,7 +2611,7 @@ function MenuButton({ icon, label, onClick }: { icon: ReactNode; label: string; 
 }
 
 function AdminMetric({ label, value, tone = "dark" }: { label: string; value: string; tone?: "dark" | "blue" | "lime" }) {
-  const className = tone === "lime" ? "bg-lime text-brand" : tone === "blue" ? "bg-blue text-white" : "bg-white/12 text-white";
+  const className = tone === "lime" ? "bg-lime text-brand" : tone === "blue" ? "bg-blue text-white" : "bg-white/10 text-white";
 
   return (
     <div className={cn("rounded-[20px] p-4 ring-1 ring-white/10", className)}>
@@ -2722,7 +2720,7 @@ function QrResultCard({ result, notify }: { result: (typeof qrVerificationResult
 
 function StatusInfo({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[16px] bg-white/14 p-3">
+    <div className="rounded-[16px] bg-white/15 p-3">
       <p className="text-[11px] font-bold opacity-70">{label}</p>
       <p className="mt-1 font-black leading-5">{value}</p>
     </div>

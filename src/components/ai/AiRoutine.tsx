@@ -53,7 +53,7 @@ function RoutineResult({
             onClick={() => setActiveWeek(index)}
             className={cn(
               "min-h-10 shrink-0 rounded-full px-4 text-xs font-black ring-1 transition",
-              index === activeWeek ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-600 ring-black/5"
+              index === activeWeek ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-600 ring-black/5"
             )}
           >
             {item.week}주차
@@ -65,7 +65,7 @@ function RoutineResult({
         <Card key={day.day}>
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <span className="grid size-9 place-items-center rounded-full bg-brand text-xs font-black text-lime">{day.day}</span>
+              <span className="grid size-9 place-items-center rounded-full bg-brand text-xs font-black text-limeSoft">{day.day}</span>
               <p className="text-sm font-black">{day.focus}</p>
             </div>
             <span className="flex items-center gap-1 text-xs font-black text-blue">

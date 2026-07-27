@@ -30,9 +30,9 @@ export function OrderCompleteScreen({
       <ScreenHeader title="주문이 접수되었어요" eyebrow="ORDER COMPLETE" />
 
       <Card className="bg-brand text-white">
-        <CheckCircle2 size={40} className="text-lime" />
+        <CheckCircle2 size={40} className="text-limeSoft" />
         <h2 className="mt-4 text-2xl font-black leading-snug">주문이 정상 접수되었습니다</h2>
-        <p className="mt-3 text-sm font-bold leading-6 text-white/72">
+        <p className="mt-3 text-sm font-bold leading-6 text-white/70">
           결제 금액 {formatWon(summary.grandTotal)} · 상품 {summary.itemCount}개
         </p>
         <p className="mt-2 text-xs font-bold leading-6 text-white/60">

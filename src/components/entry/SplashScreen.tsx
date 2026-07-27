@@ -18,7 +18,7 @@ export function SplashScreen({ navigate }: { navigate: (screen: ScreenId) => voi
             <span className="text-sm font-black text-white">리턴패스</span>
           </div>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[11px] font-bold text-white/75 ring-1 ring-white/10">
-            <MapPin size={12} className="text-lime" />
+            <MapPin size={12} className="text-limeSoft" />
             진주 가좌동
           </span>
         </div>
@@ -31,7 +31,7 @@ export function SplashScreen({ navigate }: { navigate: (screen: ScreenId) => voi
               <>
                 운동으로 돌아오는
                 <br />
-                <span className="text-lime">가장 쉬운 패스</span>
+                <span className="text-limeSoft">가장 쉬운 패스</span>
               </>
             }
             description="헬스·요가·필라테스를 한 달씩 구독하고, QR 하나로 바로 입장하세요. 이번 달은 요가, 다음 달은 헬스도 됩니다."

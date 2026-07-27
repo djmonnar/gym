@@ -31,7 +31,7 @@ export function LoginScreen({
               <>
                 지금 시작하고
                 <br />
-                <span className="text-lime">가까운 시설부터 찾아요</span>
+                <span className="text-limeSoft">가까운 시설부터 찾아요</span>
               </>
             }
             description="휴대폰 인증만 끝내면 구독권, QR 이용권, 결제 내역을 한곳에서 관리할 수 있습니다."

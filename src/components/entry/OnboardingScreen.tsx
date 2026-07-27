@@ -11,7 +11,7 @@ const steps = [
       <>
         헬스부터 요가까지,
         <br />
-        <span className="text-lime">원하는 운동을 한 달씩</span>
+        <span className="text-limeSoft">원하는 운동을 한 달씩</span>
       </>
     ),
     description: "가격과 거리, 운영시간을 비교하고 내 생활에 맞는 운동을 월 단위로 시작하세요.",
@@ -25,7 +25,7 @@ const steps = [
       <>
         결제하면
         <br />
-        <span className="text-lime">QR 이용권이 바로 열려요</span>
+        <span className="text-limeSoft">QR 이용권이 바로 열려요</span>
       </>
     ),
     description: "30초마다 갱신되는 동적 QR로 빠르고 안전하게 입장할 수 있습니다.",
@@ -39,7 +39,7 @@ const steps = [
       <>
         PT, 루틴, AI 식단까지
         <br />
-        <span className="text-lime">한 번에</span>
+        <span className="text-limeSoft">한 번에</span>
       </>
     ),
     description: "운동 목표에 맞춰 트레이너 매칭, 주간 루틴, 맞춤 식단, 상품 주문까지 연결합니다.",

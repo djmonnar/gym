@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --open /index.source.html",
-    "build": "node scripts/render-brand-assets.mjs && tsc -b && vite build && node scripts/publish-pages.mjs",
+    "build": "node scripts/render-brand-assets.mjs && tsc -b && vite build && node scripts/check-color-classes.mjs && node scripts/publish-pages.mjs",
+    "check:classes": "node scripts/check-color-classes.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "test:matching": "tsx --test src/lib/matching.test.ts",
     "test:ai": "tsx --test src/lib/ai.test.ts",

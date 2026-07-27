@@ -38,7 +38,7 @@ export function ShopScreen({
           >
             <ShoppingCart size={20} />
             {cartCount > 0 ? (
-              <span className="absolute -right-1 -top-1 grid size-6 place-items-center rounded-full bg-brand text-[11px] font-black text-lime">
+              <span className="absolute -right-1 -top-1 grid size-6 place-items-center rounded-full bg-brand text-[11px] font-black text-limeSoft">
                 {cartCount}
               </span>
             ) : null}
@@ -54,7 +54,7 @@ export function ShopScreen({
             onClick={() => setActiveTab(tab.id)}
             className={cn(
               "min-h-10 shrink-0 rounded-full px-4 text-xs font-black ring-1 transition",
-              tab.id === activeTab ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-600 ring-black/5"
+              tab.id === activeTab ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-600 ring-black/5"
             )}
           >
             {tab.label}

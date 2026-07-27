@@ -34,7 +34,7 @@ export function PostCard({
       <button type="button" onClick={onOpen} className="w-full text-left">
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2">
-            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand text-xs font-black text-lime">
+            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand text-xs font-black text-limeSoft">
               {post.authorName.slice(0, 1)}
             </span>
             <div className="min-w-0">
@@ -121,7 +121,7 @@ export function CommunityFeedScreen({
           <button
             type="button"
             onClick={() => navigate("communityWrite")}
-            className="grid size-11 place-items-center rounded-full bg-brand text-lime shadow-soft"
+            className="grid size-11 place-items-center rounded-full bg-brand text-limeSoft shadow-soft"
             aria-label="운동 인증 작성"
           >
             <Plus size={21} />
@@ -159,7 +159,7 @@ export function CommunityFeedScreen({
               onClick={() => setActiveTab(tab.id)}
               className={cn(
                 "min-h-10 rounded-full px-4 text-xs font-black ring-1 transition",
-                isActive ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-500 ring-black/5"
+                isActive ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-500 ring-black/5"
               )}
             >
               {tab.label}

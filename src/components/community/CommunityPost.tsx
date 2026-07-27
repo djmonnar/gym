@@ -74,7 +74,7 @@ export function CommunityPostScreen({
       <Card className="mb-4">
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2">
-            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-brand text-sm font-black text-lime">
+            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-brand text-sm font-black text-limeSoft">
               {post.authorName.slice(0, 1)}
             </span>
             <div className="min-w-0">
@@ -127,12 +127,12 @@ export function CommunityPostScreen({
           onClick={() => openChallenge(challenge)}
           className="mb-4 flex w-full items-center gap-3 rounded-[18px] bg-brand px-4 py-3 text-left text-white shadow-soft"
         >
-          <Trophy size={20} className="shrink-0 text-lime" />
+          <Trophy size={20} className="shrink-0 text-limeSoft" />
           <div className="min-w-0 flex-1">
             <p className="text-[11px] font-bold text-white/60">참여 챌린지</p>
             <p className="truncate text-sm font-black">{challenge.title}</p>
           </div>
-          <span className="text-xs font-black text-lime">보기</span>
+          <span className="text-xs font-black text-limeSoft">보기</span>
         </button>
       ) : null}
 

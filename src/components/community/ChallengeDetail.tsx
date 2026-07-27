@@ -113,7 +113,7 @@ export function ChallengeDetailScreen({
                 onClick={() => openPost(post)}
                 className="flex w-full items-center gap-3 rounded-[18px] bg-white p-3 text-left shadow-soft ring-1 ring-black/5"
               >
-                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand text-xs font-black text-lime">
+                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand text-xs font-black text-limeSoft">
                   {post.authorName.slice(0, 1)}
                 </span>
                 <div className="min-w-0 flex-1">

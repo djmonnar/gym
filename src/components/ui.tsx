@@ -59,7 +59,7 @@ export function Card({ children, className }: { children: ReactNode; className?:
 
 export function Badge({ children, tone = "gray" }: { children: ReactNode; tone?: "lime" | "blue" | "gray" | "red" | "green" }) {
   const tones = {
-    lime: "bg-lime text-brand shadow-[0_10px_28px_rgba(215,255,63,0.24)]",
+    lime: "bg-lime text-brand",
     blue: "bg-blue text-white ring-1 ring-blue/30",
     gray: "bg-zinc-100 text-zinc-700",
     red: "bg-red-600 text-white",
@@ -140,7 +140,7 @@ export function AppShell({
               <div className="min-w-0">
                 <p className="truncate text-sm font-black">리턴패스</p>
                 <p className="mt-0.5 flex items-center gap-1 text-[11px] font-bold text-white/65">
-                  <MapPin size={12} className="text-lime" />
+                  <MapPin size={12} className="text-limeSoft" />
                   진주 가좌동
                 </p>
               </div>

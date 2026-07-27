@@ -21,7 +21,7 @@ export function EntryLayout({
   return (
     <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(120%_90%_at_82%_8%,#1B4A37_0%,#12372A_46%,#0B2A20_100%)] text-white">
       {/* 라임 글로우 두 개로 단조로운 배경에 깊이를 줍니다. */}
-      <div className="pointer-events-none absolute -right-24 -top-32 size-[420px] rounded-full bg-lime/15 blur-[110px]" />
+      <div className="pointer-events-none absolute -right-24 -top-32 size-[420px] rounded-full bg-limeSoft/15 blur-[110px]" />
       <div className="pointer-events-none absolute -bottom-40 -left-28 size-[380px] rounded-full bg-blue/25 blur-[120px]" />
 
       <div className="relative mx-auto flex min-h-screen w-full max-w-[1180px] flex-col px-5 py-6 sm:px-8 lg:px-10">
@@ -55,7 +55,7 @@ export function EntryHeadline({
   return (
     <div className={className}>
       {eyebrow ? (
-        <p className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-[11px] font-black uppercase tracking-wide text-lime ring-1 ring-white/15 backdrop-blur">
+        <p className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-[11px] font-black uppercase tracking-wide text-limeSoft ring-1 ring-white/15 backdrop-blur">
           {eyebrow}
         </p>
       ) : null}
@@ -93,15 +93,15 @@ export function BrandVisual({
     >
       {/* 동심원 모티프 */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="size-[420px] rounded-full ring-1 ring-lime/10" />
-        <div className="absolute left-1/2 top-1/2 size-[310px] -translate-x-1/2 -translate-y-1/2 rounded-full ring-1 ring-lime/20" />
-        <div className="absolute left-1/2 top-1/2 size-[200px] -translate-x-1/2 -translate-y-1/2 rounded-full ring-1 ring-lime/30" />
+        <div className="size-[420px] rounded-full ring-1 ring-limeSoft/10" />
+        <div className="absolute left-1/2 top-1/2 size-[310px] -translate-x-1/2 -translate-y-1/2 rounded-full ring-1 ring-limeSoft/20" />
+        <div className="absolute left-1/2 top-1/2 size-[200px] -translate-x-1/2 -translate-y-1/2 rounded-full ring-1 ring-limeSoft/30" />
       </div>
 
       <div className="relative flex h-full flex-col justify-between p-6 sm:p-7">
         <div className="flex items-start justify-between gap-3">
           {badge ? (
-            <span className="inline-flex items-center rounded-full bg-lime px-3 py-1.5 text-[11px] font-black text-brand shadow-[0_10px_28px_rgba(215,255,63,0.24)]">
+            <span className="inline-flex items-center rounded-full bg-lime px-3 py-1.5 text-[11px] font-black text-brand">
               {badge}
             </span>
           ) : (
@@ -116,7 +116,7 @@ export function BrandVisual({
         </div>
 
         <div className="grid place-items-center py-2">
-          <span className="text-[64px] font-black leading-none tracking-[-0.04em] text-lime/90 sm:text-[76px]">R</span>
+          <span className="text-[64px] font-black leading-none tracking-[-0.04em] text-limeSoft/90 sm:text-[76px]">R</span>
         </div>
 
         <div>
@@ -154,7 +154,7 @@ export function EntryButton({
   className?: string;
 }) {
   const variants = {
-    primary: "bg-lime text-brand shadow-[0_16px_40px_rgba(215,255,63,0.22)] hover:brightness-105",
+    primary: "bg-lime text-brand shadow-soft hover:brightness-105",
     outline: "bg-white/10 text-white ring-1 ring-white/20 backdrop-blur hover:bg-white/15",
     ghost: "text-white/70 hover:bg-white/10 hover:text-white",
     kakao: "bg-[#FEE500] text-[#191919] hover:brightness-105"

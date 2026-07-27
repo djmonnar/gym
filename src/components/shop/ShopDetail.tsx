@@ -126,14 +126,14 @@ export function ShopDetailScreen({
                   !allowed && "cursor-not-allowed opacity-40"
                 )}
               >
-                <Icon size={18} className={cn("shrink-0", isActive && allowed ? "text-lime" : "text-blue")} />
+                <Icon size={18} className={cn("shrink-0", isActive && allowed ? "text-limeSoft" : "text-blue")} />
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-black">{option.label}</span>
                   <span className={cn("mt-0.5 block text-[11px] font-bold", isActive && allowed ? "text-white/70" : "text-zinc-400")}>
                     {allowed ? option.hint : "이 상품은 지원하지 않아요"}
                   </span>
                 </span>
-                {isActive && allowed ? <Check size={17} className="shrink-0 text-lime" /> : null}
+                {isActive && allowed ? <Check size={17} className="shrink-0 text-limeSoft" /> : null}
               </button>
             );
           })}

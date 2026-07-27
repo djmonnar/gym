@@ -57,7 +57,7 @@ function ContentRow({
       <div className="relative shrink-0">
         <ContentThumbnail content={content} className="size-[76px] rounded-[16px]" />
         {locked ? (
-          <span className="absolute inset-0 grid place-items-center rounded-[16px] bg-brand/55 text-lime">
+          <span className="absolute inset-0 grid place-items-center rounded-[16px] bg-brand/55 text-limeSoft">
             <LockKeyhole size={20} />
           </span>
         ) : null}
@@ -125,7 +125,7 @@ export function ContentHomeScreen({ contents, openContent, savedIds, completedId
               onClick={() => setActiveTab(tab.id)}
               className={cn(
                 "min-h-10 shrink-0 rounded-full px-4 text-xs font-black ring-1 transition",
-                isActive ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-600 ring-black/5"
+                isActive ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-600 ring-black/5"
               )}
             >
               {tab.label}
@@ -144,7 +144,7 @@ export function ContentHomeScreen({ contents, openContent, savedIds, completedId
             <ContentThumbnail content={featured} className="h-52 w-full transition duration-300 group-hover:scale-[1.02]" />
             <div className="absolute inset-0 bg-gradient-to-t from-brand via-brand/40 to-transparent" />
             {isContentLocked(featured) ? (
-              <span className="absolute right-4 top-4 grid size-10 place-items-center rounded-full bg-brand/70 text-lime ring-1 ring-white/20">
+              <span className="absolute right-4 top-4 grid size-10 place-items-center rounded-full bg-brand/70 text-limeSoft ring-1 ring-white/20">
                 <LockKeyhole size={18} />
               </span>
             ) : null}

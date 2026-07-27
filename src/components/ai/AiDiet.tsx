@@ -62,7 +62,7 @@ function DietResult({
         </Badge>
         <div className="mt-4 flex items-end gap-2">
           <p className="text-4xl font-black leading-none">{plan.summary.targetKcal.toLocaleString("ko-KR")}</p>
-          <p className="pb-1 text-sm font-black text-lime">kcal / 일</p>
+          <p className="pb-1 text-sm font-black text-limeSoft">kcal / 일</p>
         </div>
         <div className="mt-4 grid grid-cols-3 gap-2">
           {[
@@ -87,7 +87,7 @@ function DietResult({
             onClick={() => setActiveWeek(index)}
             className={cn(
               "min-h-10 shrink-0 rounded-full px-4 text-xs font-black ring-1 transition",
-              index === activeWeek ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-600 ring-black/5"
+              index === activeWeek ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-600 ring-black/5"
             )}
           >
             {item.week}주차

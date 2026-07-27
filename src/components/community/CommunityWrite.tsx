@@ -58,7 +58,7 @@ export function CommunityWriteScreen({
               onClick={() => setType(item)}
               className={cn(
                 "min-h-10 flex-1 rounded-full px-3 text-xs font-black ring-1 transition",
-                item === type ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-500 ring-black/5"
+                item === type ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-500 ring-black/5"
               )}
             >
               {postTypeLabel[item]}
@@ -102,7 +102,7 @@ export function CommunityWriteScreen({
             onClick={() => setFacilityId(null)}
             className={cn(
               "min-h-10 shrink-0 rounded-full px-4 text-xs font-black ring-1 transition",
-              facilityId === null ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-500 ring-black/5"
+              facilityId === null ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-500 ring-black/5"
             )}
           >
             선택 안 함
@@ -114,7 +114,7 @@ export function CommunityWriteScreen({
               onClick={() => setFacilityId(facility.id)}
               className={cn(
                 "min-h-10 shrink-0 rounded-full px-4 text-xs font-black ring-1 transition",
-                facilityId === facility.id ? "bg-brand text-lime ring-brand" : "bg-white text-zinc-500 ring-black/5"
+                facilityId === facility.id ? "bg-brand text-limeSoft ring-brand" : "bg-white text-zinc-500 ring-black/5"
               )}
             >
               {facility.name}

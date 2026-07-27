@@ -39,12 +39,12 @@ export function ChallengeBanner({
               {challenge.participantCount}명 참여 · {challenge.reward}
             </p>
           </div>
-          <Trophy size={32} className="shrink-0 text-lime" />
+          <Trophy size={32} className="shrink-0 text-limeSoft" />
         </div>
         <div>
           <div className="flex items-center justify-between text-xs font-black">
             <span className="text-white/75">내 진행</span>
-            <span className="text-lime">
+            <span className="text-limeSoft">
               {challenge.myCount} / {challenge.goalCount}회
             </span>
           </div>

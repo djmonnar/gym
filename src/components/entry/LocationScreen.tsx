@@ -31,14 +31,14 @@ export function LocationScreen({
               <>
                 가까운 운동시설을
                 <br />
-                <span className="text-lime">정확히 추천할게요</span>
+                <span className="text-limeSoft">정확히 추천할게요</span>
               </>
             }
             description="위치는 거리 계산과 주변 시설 추천에만 사용합니다. 결제·구독권·QR 토큰 정보와는 분리해 관리합니다."
           />
 
           <div className="mt-8 flex items-start gap-2.5 rounded-[16px] bg-white/[0.06] p-4 ring-1 ring-white/15 sm:max-w-[460px]">
-            <ShieldCheck size={17} className="mt-0.5 shrink-0 text-lime" />
+            <ShieldCheck size={17} className="mt-0.5 shrink-0 text-limeSoft" />
             <p className="text-xs font-semibold leading-5 text-white/70">
               더미 UI에서는 실제 위치를 저장하지 않습니다. 권한을 허용하지 않아도 지역을 직접 선택해 이용할 수 있어요.
             </p>
@@ -61,7 +61,7 @@ export function LocationScreen({
               <MapPin size={12} />
               진주 가좌동
             </span>
-            <span className="grid size-10 place-items-center rounded-full bg-white/10 text-lime ring-1 ring-white/15">
+            <span className="grid size-10 place-items-center rounded-full bg-white/10 text-limeSoft ring-1 ring-white/15">
               <LocateFixed size={18} />
             </span>
           </div>

@@ -6,7 +6,10 @@ export default {
     extend: {
       colors: {
         brand: "#12372A",
-        lime: "#D7FF3F",
+        // 액센트는 배경 밝기에 따라 두 단계로 씁니다.
+        // lime: 웜화이트 등 밝은 배경 위 / limeSoft: 딥그린 등 어두운 배경 위
+        lime: "#A3B84B",
+        limeSoft: "#C3D678",
         blue: "#2F6F5E",
         sand: "#E8DCC4",
         warm: "#F7F6F2",

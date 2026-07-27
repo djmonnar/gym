@@ -93,9 +93,9 @@ function VideoBody({ content }: { content: Content }) {
                       isActive ? "bg-brand text-white" : "hover:bg-zinc-50"
                     )}
                   >
-                    <span className={cn("font-black tabular-nums", isActive ? "text-lime" : "text-blue")}>{chapter.time}</span>
+                    <span className={cn("font-black tabular-nums", isActive ? "text-limeSoft" : "text-blue")}>{chapter.time}</span>
                     <span className="min-w-0 flex-1 truncate">{chapter.label}</span>
-                    {isActive ? <Play size={15} className="shrink-0 text-lime" /> : null}
+                    {isActive ? <Play size={15} className="shrink-0 text-limeSoft" /> : null}
                   </button>
                 </li>
               );
@@ -145,7 +145,7 @@ function MealPlanBody({ content, navigate }: { content: Content; navigate: (scre
         <ul className="mt-4 divide-y divide-black/5">
           {meals.map((meal) => (
             <li key={meal.day} className="flex items-start gap-3 py-3">
-              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand text-xs font-black text-lime">
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand text-xs font-black text-limeSoft">
                 {meal.day}
               </span>
               <div className="min-w-0 flex-1">
@@ -196,7 +196,7 @@ function ProgramBody({
         <ol className="mt-4 space-y-3">
           {weeks.map((week) => (
             <li key={week.week} className="flex gap-3 rounded-[16px] bg-zinc-50 p-3">
-              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand text-xs font-black text-lime">
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand text-xs font-black text-limeSoft">
                 {week.week}주
               </span>
               <div className="min-w-0">
