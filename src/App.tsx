@@ -54,6 +54,7 @@ import type {
   FacilityCategory,
   MatchAnswers,
   MemberStatus,
+  OrderRecord,
   PaymentRecord,
   Plan,
   Post,
@@ -109,7 +110,7 @@ import { ShopCheckoutScreen } from "./components/shop/ShopCheckout";
 import { OrderHistoryScreen } from "./components/shop/OrderHistory";
 import { PointsHistoryScreen } from "./components/shop/PointsHistory";
 import { OrderCompleteScreen } from "./components/shop/OrderComplete";
-import { addToCart, countCartItems, removeFromCart, setQuantity } from "./lib/cart";
+import { addToCart, countCartItems, removeFromCart, setQuantity, summarizeCart } from "./lib/cart";
 import { SplashScreen } from "./components/entry/SplashScreen";
 import { OnboardingScreen } from "./components/entry/OnboardingScreen";
 import { LoginScreen } from "./components/entry/LoginScreen";
@@ -235,9 +236,13 @@ export default function App() {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [adminStatus, setAdminStatus] = useState<MemberStatus>("이용중");
   const [qrResult, setQrResult] = useState<QrVerificationStatus>("입장 가능");
+  // 상품은 Firestore 조회(실패 시 더미 폴백)로 갱신되므로 상태로 들고 있습니다.
+  const [products, setProducts] = useState<Product[]>(shopProducts);
   const [selectedProduct, setSelectedProduct] = useState<Product>(shopProducts[0]);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [orderPaidAmount, setOrderPaidAmount] = useState<number | null>(null);
+  // 데모 주문 내역으로 시작하고, 이 세션에서 결제한 주문을 앞에 쌓습니다.
+  const [memberOrders, setMemberOrders] = useState<OrderRecord[]>(orderHistory);
   const [authPending, setAuthPending] = useState(false);
   const [matchAnswers, setMatchAnswers] = useState<MatchAnswers>(defaultMatchAnswers);
   const [selectedTrainer, setSelectedTrainer] = useState<Trainer>(ptTrainers[0]);
@@ -281,6 +286,12 @@ export default function App() {
       setSelectedGym((current) => nextFacilities.find((facility) => facility.id === current.id) ?? nextFacilities[0]);
     });
 
+    returnPassRepository.listProducts().then((nextProducts) => {
+      if (!mounted || !nextProducts.length) return;
+      setProducts(nextProducts);
+      setSelectedProduct((current) => nextProducts.find((product) => product.id === current.id) ?? nextProducts[0]);
+    });
+
     return () => {
       mounted = false;
     };
@@ -300,6 +311,33 @@ export default function App() {
   const selectProduct = (product: Product) => {
     setSelectedProduct(product);
     navigate("shopDetail");
+  };
+  // 결제 시점에 장바구니를 주문 기록으로 변환해 내역 맨 앞에 쌓습니다.
+  const recordOrder = (paidTotal: number) => {
+    const summary = summarizeCart(cartItems, products, sellerShippingPolicies);
+    if (!summary.groups.length) return;
+
+    const hasDelivery = summary.groups.some((group) => group.deliveryLines.length > 0);
+    const hasPickup = summary.hasPickup;
+    const now = new Date();
+    const pad = (value: number) => String(value).padStart(2, "0");
+    const dateCompact = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
+
+    const record: OrderRecord = {
+      id: `ORD-${dateCompact}-${String(Date.now() % 10000).padStart(4, "0")}`,
+      orderedAt: `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())}`,
+      status: "결제 완료",
+      total: paidTotal,
+      fulfillment: hasDelivery && hasPickup ? "mixed" : hasPickup ? "pickup" : "delivery",
+      lines: summary.groups.flatMap((group) =>
+        [...group.deliveryLines, ...group.pickupLines].map((line) => ({
+          name: line.product.name,
+          quantity: line.item.quantity,
+          sellerName: group.sellerName
+        }))
+      )
+    };
+    setMemberOrders((current) => [record, ...current]);
   };
   const notify = (message: string) => {
     setToast(message);
@@ -399,7 +437,7 @@ export default function App() {
       case "locationPermission":
         return <LocationScreen navigate={navigate} facilities={facilities} />;
       case "home":
-        return <HomeScreen navigate={navigate} selectGym={selectGym} setCategory={setSelectedCategory} facilities={facilities} openContent={openContent} products={shopProducts} selectProduct={selectProduct} />;
+        return <HomeScreen navigate={navigate} selectGym={selectGym} setCategory={setSelectedCategory} facilities={facilities} openContent={openContent} products={products} selectProduct={selectProduct} />;
       case "search":
         return (
           <SearchScreen
@@ -503,7 +541,7 @@ export default function App() {
       case "aiDiet":
         return (
           <AiDietScreen
-            products={shopProducts}
+            products={products}
             onAddToCart={addProductToCart}
             navigate={navigate}
             notify={notify}
@@ -589,7 +627,7 @@ export default function App() {
       case "shop":
         return (
           <ShopScreen
-            products={shopProducts}
+            products={products}
             cartCount={countCartItems(cartItems)}
             selectProduct={selectProduct}
             navigate={navigate}
@@ -610,7 +648,7 @@ export default function App() {
         return (
           <CartScreen
             items={cartItems}
-            products={shopProducts}
+            products={products}
             policies={sellerShippingPolicies}
             onSetQuantity={changeCartQuantity}
             onRemove={removeCartItem}
@@ -621,18 +659,21 @@ export default function App() {
         return (
           <ShopCheckoutScreen
             items={cartItems}
-            products={shopProducts}
+            products={products}
             policies={sellerShippingPolicies}
             facilities={facilities}
             coupons={memberCoupons}
             pointsBalance={pointsHistory.reduce((sum, item) => sum + item.amount, 0)}
             navigate={navigate}
             notify={notify}
-            onPaid={setOrderPaidAmount}
+            onPaid={(amount) => {
+              setOrderPaidAmount(amount);
+              recordOrder(amount);
+            }}
           />
         );
       case "orderHistory":
-        return <OrderHistoryScreen orders={orderHistory} navigate={navigate} />;
+        return <OrderHistoryScreen orders={memberOrders} navigate={navigate} />;
       case "pointsHistory":
         return <PointsHistoryScreen transactions={pointsHistory} navigate={navigate} />;
       case "shopComplete":
@@ -640,7 +681,7 @@ export default function App() {
         return (
           <OrderCompleteScreen
             items={cartItems}
-            products={shopProducts}
+            products={products}
             policies={sellerShippingPolicies}
             facilities={facilities}
             paidAmount={orderPaidAmount}
@@ -1192,6 +1233,13 @@ function DetailScreen({ gym, navigate }: { gym: Facility; navigate: (screen: Scr
         <div className="p-5">
           <p className="text-sm font-bold text-gray-500">월 구독 시작가</p>
           <h3 className="mt-1 text-4xl font-black">{formatWon(gym.monthlyPrice)}</h3>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {gym.tags.map((tag) => (
+              <span key={tag} className="rounded-full bg-mist px-2.5 py-1 text-[11px] font-black text-blue">
+                {tag}
+              </span>
+            ))}
+          </div>
           <div className="mt-4 grid grid-cols-3 gap-3">
             <InfoMini label="거리" value={gym.distance} />
             <InfoMini label="운영" value={gym.hours} />
@@ -1221,14 +1269,25 @@ function DetailScreen({ gym, navigate }: { gym: Facility; navigate: (screen: Scr
           </button>
         </div>
         <div className="space-y-3">
-          {gym.trainers.map((trainer) => (
-            <div key={trainer} className="flex items-center gap-3 rounded-[18px] bg-gray-50 p-3">
-              <div className="grid size-10 place-items-center rounded-full bg-blue/10 text-blue">
-                <UserRound size={19} />
+          {gym.trainers.map((trainerName) => {
+            // 이름이 PT 트레이너 풀과 일치하면 실제 포트레이트를 보여줍니다.
+            const matched = ptTrainers.find((candidate) => trainerName.includes(candidate.name));
+            return (
+              <div key={trainerName} className="flex items-center gap-3 rounded-[18px] bg-gray-50 p-3">
+                {matched ? (
+                  <TrainerPortrait trainer={matched} className="size-11 shrink-0 rounded-full" />
+                ) : (
+                  <div className="grid size-11 shrink-0 place-items-center rounded-full bg-blue/10 text-blue">
+                    <UserRound size={19} />
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-black text-gray-800">{trainerName}</p>
+                  {matched ? <p className="mt-0.5 truncate text-[11px] font-bold text-zinc-400">{matched.specialty}</p> : null}
+                </div>
               </div>
-              <p className="text-sm font-bold text-gray-700">{trainer}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </Card>
       <Card className="space-y-3 border border-blue/10 bg-mist">
@@ -1468,6 +1527,12 @@ function PassScreen({ gym, navigate }: { gym: Facility; plan: Plan; navigate: (s
   const seconds = remaining.toString().padStart(2, "0");
   const progress = `${(remaining / 30) * 100}%`;
   const refreshMessage = issueNumber > 8214 && remaining > 28 ? "새 QR이 발급되었습니다" : "현재 QR이 활성화되어 있습니다";
+  // 만료 임박(5초 이하)이면 카운트다운과 게이지를 딥 코럴로 바꿔 알립니다.
+  const expiring = remaining <= 5;
+  const refreshNow = () => {
+    setIssueNumber((seed) => seed + 1);
+    setRemaining(30);
+  };
 
   return (
     <div className="space-y-5">
@@ -1498,13 +1563,24 @@ function PassScreen({ gym, navigate }: { gym: Facility; plan: Plan; navigate: (s
           </p>
           <p className="mt-2 text-[10px] font-black text-white/50">발급 회차 #{issueNumber}</p>
         </div>
-        <div className="flex items-center justify-center gap-2 text-brand">
+        <div className={cn("flex items-center justify-center gap-2 transition-colors", expiring ? "text-blue" : "text-brand")}>
           <Clock size={18} />
-          <p className="text-3xl font-black">남은 시간 00:{seconds}</p>
+          <p className="text-3xl font-black tabular-nums">남은 시간 00:{seconds}</p>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-gray-100">
-          <div className="h-full rounded-full bg-lime transition-all" style={{ width: progress }} />
+          <div
+            className={cn("h-full rounded-full transition-all", expiring ? "bg-blue" : "bg-lime")}
+            style={{ width: progress }}
+          />
         </div>
+        <button
+          type="button"
+          onClick={refreshNow}
+          className="mx-auto flex items-center gap-1.5 rounded-full bg-zinc-100 px-4 py-2 text-xs font-black text-zinc-600 transition hover:bg-mist hover:text-blue"
+        >
+          <RefreshCw size={13} />
+          QR 바로 갱신
+        </button>
         <div className="grid grid-cols-2 gap-3 text-left">
           <InfoMini label="회원명" value={activePass.memberName} />
           <InfoMini label="회원번호" value={activePass.memberId} />

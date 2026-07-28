@@ -1,6 +1,6 @@
 import { applicationDefault, getApps, initializeApp } from "firebase-admin/app";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
-import { facilities, plans } from "../src/data/returnpass";
+import { facilities, plans, shopProducts } from "../src/data/returnpass";
 
 const projectId = process.env.FIREBASE_PROJECT_ID ?? "returnpass-d3000";
 
@@ -40,6 +40,19 @@ for (const plan of plans) {
   );
 }
 
+for (const product of shopProducts) {
+  batch.set(
+    database.collection("products").doc(product.id),
+    {
+      ...product,
+      seededAt: FieldValue.serverTimestamp()
+    },
+    { merge: true }
+  );
+}
+
 await batch.commit();
 
-console.log(`Seeded ${facilities.length} facilities and ${plans.length} plans into ${projectId}.`);
+console.log(
+  `Seeded ${facilities.length} facilities, ${plans.length} plans and ${shopProducts.length} products into ${projectId}.`
+);
